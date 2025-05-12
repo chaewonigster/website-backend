@@ -14,7 +14,7 @@ const app = express();
 app.use(express.json());
 app.use(cors({
     origin: "https://chaewonigster.github.io",  // Your frontend origin
-    credentials: include                // Allow sending cookies (session)
+    credentials: true             // Allow sending cookies (session)
 }));
 app.use(session({
     secret: "your_secret_key", 
