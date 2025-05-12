@@ -3,177 +3,367 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Others</title>
+    <title>Mahusay Frozen Goods - Others</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        :root {
+            --primary-color: #000000;
+            --secondary-color: #333333;
+            --accent-color: #666666;
+            --background-color: #f4f4f4;
+            --text-color: #000000;
+            --white-color: #ffffff;
+        }
+
+        * {
             margin: 0;
             padding: 0;
-            background-color: #f5f5f5;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+            z-index: 10;
+        }
+
+        .back-button:hover {
+            transform: translateX(-5px);
         }
 
         header {
-            background-color: #333;
-            color: white;
+            background-color: var(--primary-color);
+            color: var(--white-color);
             text-align: center;
-            padding: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255,255,255,0.05) 0,
+                rgba(255,255,255,0.05) 10px,
+                transparent 10px,
+                transparent 20px
+            );
+            transform: rotate(-45deg);
+            z-index: 1;
+        }
+
+        header .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.8;
         }
 
         .container {
-            width: 80%;
-            margin: 20px auto;
+            width: 90%;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
         }
 
         .products {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            justify-content: center;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
         }
 
         .product {
-            background: white;
-            padding: 15px;
+            background: var(--white-color);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             text-align: center;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .product:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
         }
 
         .product img {
-            width: 100%;
-            height: auto;
-            border-radius: 5px;
+            width: 80%;
+            height: 250px;
+            object-fit: contain;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .product:hover img {
+            transform: scale(1.05);
         }
 
         .product h3 {
-            font-size: 18px;
-            margin: 10px 0;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
         }
 
         .product p {
-            font-size: 16px;
+            font-size: 1.3rem;
             font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .product-description {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            color: var(--white-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            padding: 1rem;
+            text-align: center;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .product:hover .product-description {
+            opacity: 1;
+        }
+
+        .product-content {
+            position: relative;
+            z-index: 2;
         }
 
         .btn {
-            background: white;
-            color: black;
-            padding: 10px 20px;
-            text-decoration: none;
-            font-size: 18px;
-            border-radius: 5px;
             display: inline-block;
-            margin-top: 20px;
+            padding: 0.75rem 1.5rem;
+            margin: 0.5rem;
+            border: 2px solid var(--primary-color);
+            background-color: var(--white-color);
+            color: var(--primary-color);
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
             position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease-in-out;
-            box-shadow: inset 0 0.0625em 0 0 #f4f4f4, 0 0.0625em 0 0 #efefef,
-            0 0.125em 0 0 #ececec, 0 0.25em 0 0 #e0e0e0, 0 0.3125em 0 0 #dedede,
-            0 0.375em 0 0 #dcdcdc, 0 0.425em 0 0 #cacaca, 0 0.425em 0.5em 0 #cecece;
-        }
-        .btn:hover {
-            background: black;
-            color: white;
-            transform: scale(1.1);
+            z-index: 3;
         }
 
-        .btn.buy {
-            background-color: #ffffff;
+        .btn-cart {
+            border-color: var(--secondary-color);
+            color: var(--secondary-color);
+        }
+
+        .btn-buy {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
         }
 
         .btn:hover {
-            opacity: 0.8;
+            background-color: var(--primary-color);
+            color: var(--white-color);
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
         footer {
+            background-color: var(--primary-color);
+            color: var(--white-color);
             text-align: center;
-            padding: 10px;
-            background: #333;
-            color: white;
-            margin-top: 20px;
+            padding: 2rem;
+            margin-top: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255,255,255,0.05) 0,
+                rgba(255,255,255,0.05) 10px,
+                transparent 10px,
+                transparent 20px
+            );
+            transform: rotate(-45deg);
+            z-index: 1;
+        }
+
+        footer .footer-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .products {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <a button class="btn" href="LOGIN_USER.html" class="back-button">← Back</a>
+    <a href="LOGIN_USER.html" class="back-button">
+        <i class="fas fa-arrow-left"></i>
+    </a>
 
     <header>
-        <h1>Others</h1>
+        <div class="header-content">
+            <h1>Others</h1>
+            <p>A variety of delicious frozen food items beyond our main categories. Convenient, tasty, and ready to enjoy.</p>
+        </div>
     </header>
 
-    <section class="container">
+    <div class="container">
         <div class="products">
-            <div class="product" data-name="Kikiam 1/2">
-                <img src="2.png" alt="Kikiam 1/2">
-                <h3>Kikiam 1/2</h3>
-                <p>₱45.00</p>
-                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
-                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
-            </div>
-
-            <div class="product" data-name="Chicken Ball 1/4">
-                <img src="3.png" alt="Chicken Ball 1/4">
-                <h3>Chicken Ball 1/4</h3>
-                <p>₱27.00</p>
-                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
-                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
-            </div>
-
-            <div class="product" data-name="Squid Ball 1/4">
-                <img src="4.png" alt="Squid Ball 1/4">
-                <h3>Squid Ball 1/4</h3>
-                <p>₱27.00</p>
-                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
-                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
-            </div>
-
-            <div class="product" data-name="Fish Ball 1kg">
-                <img src="5.png" alt="Fish Ball 1kg">
-                <h3>Fish Ball 1kg</h3>
-                <p>₱55.00</p>
-                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
-                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
-            </div>
-
-            <div class="product" data-name="CDO Crispy Burger">
-                <img src="25.png" alt="CDO Crispy Burger">
-                <h3>CDO Crispy Burger</h3>
-                <p>₱60.00</p>
-                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
-                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
-            </div>
-
-            <div class="product" data-name="CDO Ulam Burger">
-                <img src="26.png" alt="CDO Ulam Burger">
-                <h3>CDO Ulam Burger</h3>
-                <p>₱60.00</p>
-                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
-                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
-            </div>
-
-            <div class="product" data-name="Noypi Patty">
-                <img src="31.png" alt="Noypi Patty">
-                <h3>Noypi Patty</h3>
-                <p>₱40.00</p>
-                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
-                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
-            </div>
-
-            <div class="product" data-name="Almar Patty">
-                <img src="32.png" alt="Almar Patty">
-                <h3>Almar Patty</h3>
-                <p>₱40.00</p>
-                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
-                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
-            </div>
-
-
+            ${generateProductsHTML(others)}
         </div>
-    </section>
+    </div>
 
     <footer>
-        <p>&copy; 2025 Mahusay Frozen Goods. All rights reserved.</p>
+        <div class="footer-content">
+            <p>© 2025 Mahusay Frozen Goods. Bringing quality frozen foods to your table with taste and convenience.</p>
+        </div>
     </footer>
 
+    <script>
+        const others = [
+            {
+                name: "Kikiam 1/2",
+                price: "₱45.00",
+                image: "2.png",
+                description: "Traditional Filipino kikiam, made with ground meat and vegetables. A delightful snack or side dish with authentic flavors."
+            },
+            {
+                name: "Chicken Ball 1/4",
+                price: "₱27.00",
+                image: "3.png",
+                description: "Crispy and flavorful chicken balls, perfect for appetizers or as a quick snack. Made with high-quality chicken meat."
+            },
+            {
+                name: "Squid Ball 1/4",
+                price: "₱27.00",
+                image: "4.png",
+                description: "Delicious squid balls with a smooth texture and rich seafood flavor. Great for dipping or enjoying on their own."
+            },
+            {
+                name: "Fish Ball 1kg",
+                price: "₱55.00",
+                image: "5.png",
+                description: "Classic fish balls in a convenient 1kg pack. Versatile and tasty, perfect for various cooking methods."
+            },
+            {
+                name: "CDO Crispy Burger",
+                price: "₱60.00",
+                image: "25.png",
+                description: "Crispy burger patties with a golden-brown exterior. Quick to prepare and satisfying for burger lovers."
+            },
+            {
+                name: "CDO Ulam Burger",
+                price: "₱60.00",
+                image: "26.png",
+                description: "Ready-to-cook burger patties perfect for a quick meal. Packed with flavor and easy to prepare."
+            },
+            {
+                name: "Noypi Patty",
+                price: "₱40.00",
+                image: "31.png",
+                description: "Local-style burger patty with a distinct Filipino flavor. Great for quick meals and sandwiches."
+            },
+            {
+                name: "Almar Patty",
+                price: "₱40.00",
+                image: "32.png",
+                description: "Delicious burger patties made with quality meat. Perfect for burgers, sandwiches, or as a main dish."
+            }
+        ];
+
+        function generateProductsHTML(products) {
+            return products.map(product => `
+                <div class="product" data-name="${product.name}">
+                    <div class="product-description">
+                        ${product.description}
+                    </div>
+                    <div class="product-content">
+                        <img src="${product.image}" alt="${product.name}">
+                        <h3>${product.name}</h3>
+                        <p>${product.price}</p>
+                        <div>
+                            <button class="btn btn-cart" onclick="addToCart(this)">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                            <button class="btn btn-buy" onclick="buyNow(this)">
+                                <i class="fas fa-bolt"></i> Buy Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(element) {
+            const productName = element.closest('.product').getAttribute('data-name');
+            alert(`Added ${productName} to cart!`);
+        }
+
+        function buyNow(element) {
+            const productName = element.closest('.product').getAttribute('data-name');
+            alert(`Proceeding to buy ${productName}`);
+        }
+
+        // Dynamically generate products
+        document.querySelector('.products').innerHTML = generateProductsHTML(others);
+    </script>
 </body>
 </html>
