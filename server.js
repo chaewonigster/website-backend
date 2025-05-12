@@ -1,13 +1,15 @@
 const express = require("express");
 const mongoose = require("mongoose");
+require('dotenv').config();
 const cors = require("cors");
 const session = require('express-session');
 const bcrypt = require("bcryptjs");
 
+
 const app = express(); 
 app.use(express.json());
 app.use(cors({
-    origin: "http://127.0.0.1:5500",  // Your frontend origin
+    origin: "https://chaewonigster.github.io",  // Your frontend origin
     credentials: true                // Allow sending cookies (session)
 }));
 app.use(session({
@@ -18,10 +20,13 @@ app.use(session({
 }));
 
 
-mongoose.connect("mongodb://localhost:27017/Frozen", {
+mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-});
+})
+.then(() => console.log('✅ Connected to MongoDB Atlas'))
+.catch(err => console.error('❌ MongoDB connection error:', err));
+
 
 
 const orderSchema = new mongoose.Schema({
@@ -33,6 +38,16 @@ const orderSchema = new mongoose.Schema({
 });
 
 const Order = mongoose.model("Order", orderSchema);
+
+// Optional test route
+app.get("/", (req, res) => {
+    res.send("🎉 Backend is live!");
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`🚀 Server is running on port ${PORT}`);
+});
 
 
 app.post("/order", async (req, res) => {
