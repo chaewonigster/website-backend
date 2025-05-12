@@ -1,6 +1,8 @@
+require('dotenv').config();
+
 const express = require("express");
 const mongoose = require("mongoose");
-require('dotenv').config();
+
 const cors = require("cors");
 const session = require('express-session');
 const bcrypt = require("bcryptjs");
