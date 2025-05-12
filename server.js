@@ -1,4 +1,6 @@
 require('dotenv').config();
+const BASE_API_URL = "https://website-backend-1-w1qd.onrender.com";
+
 
 const express = require("express");
 const mongoose = require("mongoose");
