@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     // 🔐 Check session login status
-    fetch("http://localhost:3000/status", {
+    fetch(`${BASE_API_URL}/status`, {
         credentials: "include"
     })
     .then(res => res.json())
@@ -104,7 +104,7 @@ cart.forEach(item => {
             timestamp: new Date().toISOString()
         };
 
-        fetch("http://127.0.0.1:3000/orders", {
+        fetch(`${BASE_API_URL}/orders`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
@@ -201,7 +201,7 @@ async function handleLogin(event) {
     const password = document.getElementById("loginPassword").value;
 
     try {
-        const response = await fetch("http://127.0.0.1:3000/login", {
+        fetch(`${BASE_API_URL}/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
