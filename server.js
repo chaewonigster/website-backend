@@ -119,7 +119,7 @@ const User = mongoose.model("User", new mongoose.Schema({
     contact: String  
 }));
 
-app.post("/register", async (req, res) => {
+app.post("/api/register", async (req, res) => {
     
     try {
         const { firstname, middlename, lastname, email, password, address, contact } = req.body;
@@ -151,7 +151,7 @@ app.post("/register", async (req, res) => {
 });
 
 
-app.post("/login", async (req, res) => {
+app.post("/api/login", async (req, res) => {
     const { email, password } = req.body;
 
     try {

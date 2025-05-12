@@ -931,60 +931,6 @@
             }
         });
 
-        // Register Form Submission with loading animation
-        registerForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            registerErrorMessage.style.display = 'none';
-            registerSuccessMessage.style.display = 'none';
-            
-            // Show loading animation
-            registerBtn.classList.add('loading');
-
-            const firstname = document.getElementById("registerFirstName").value;
-            const middlename = document.getElementById("registerMiddleName").value;
-            const lastname = document.getElementById("registerLastName").value;
-            const email = document.getElementById("registerEmail").value;
-            const password = document.getElementById("registerPassword").value;
-            const address = document.getElementById("registerAddress").value;
-            const contact = document.getElementById("registerContact").value;
-
-            try {
-                const response = await fetch("https://website-backend-1-w1qd.onrender.com/api/register", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    credentials: "include",
-                    body: JSON.stringify({ firstname, middlename, lastname, email, password, address, contact })
-                });
-
-                const data = await response.json();
-                
-                // Hide loading animation
-                registerBtn.classList.remove('loading');
-
-                if (data.success) {
-                    registerSuccessMessage.textContent = "Registration successful! Please log in.";
-                    registerSuccessMessage.style.display = 'block';
-                    
-                    // Delay transition for animation
-                    setTimeout(() => {
-                        registerSection.classList.add('slide-exit');
-                        setTimeout(() => {
-                            showLogin();
-                        }, 300);
-                    }, 1500);
-                } else {
-                    registerErrorMessage.textContent = data.message || "Registration failed. Please try again.";
-                    registerErrorMessage.style.display = 'block';
-                }
-            } catch (error) {
-                console.error('Registration error:', error);
-                registerErrorMessage.textContent = "An error occurred. Please try again.";
-                registerErrorMessage.style.display = 'block';
-                registerBtn.classList.remove('loading');
-            }
-        });
         
         // Password visibility toggle functionality
         function setupPasswordToggles() {
