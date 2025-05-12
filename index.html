@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frozen Goods</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background-color: #f8f8f8;
+        }
+        .footer {
+            background: linear-gradient(to right, #5a98f2, #5a78f2);
+            color: white;
+            padding: 30px 50px;
+            text-align: left;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .footer-column {
+            flex: 1;
+            min-width: 250px;
+            margin: 10px;
+        }
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .footer-column p, .footer-column a {
+            font-size: 14px;
+            color: white;
+            text-decoration: none;
+            line-height: 1.5;
+        }
+        .footer-column img {
+            width: 50px; /* Adjust the size of the icons */
+            height: auto; /* Keeps aspect ratio */
+            margin: 5px; /* Adds space around images */
+            display: inline-block; /* Prevents stacking */
+            vertical-align: middle;
+        }
+        .footer-column a:hover {
+            text-decoration: underline;
+        }
+        .contact-info {
+            display: flex;
+            align-items: center;
+        }
+        .contact-info img {
+            width: 15px;
+            margin-right: 10px;
+        }
+        .newsletter {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .newsletter input {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 20px;
+            margin-right: 10px;
+        }
+        .newsletter button {
+            padding: 8px 15px;
+            border: none;
+            background: black;
+            color: white;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        .newsletter button:hover {
+            background: #333;
+        }
+        .social-icons img {
+            width: 25px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        .bottom-footer {
+            text-align: center;
+            background: #2c2c2c;
+            color: white;
+            padding: 10px;
+            font-size: 12px;
+        }
+        .bottom-footer a {
+            color: lightgray;
+            text-decoration: none;
+            margin: 0 5px;
+        }
+        .bottom-footer a:hover {
+            text-decoration: underline;
+        }
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 50px;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+        }
+        .nav-brand {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        .nav-links a, .nav-icons a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            transition: all 0.3s ease-in-out;
+        }
+        .nav-links a:hover {
+            color: #ffcc00;
+            transform: scale(1.1);
+        }
+        .nav-icons a {
+            background: white;
+            color: black;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s ease-in-out;
+            box-shadow: inset 0 0.0625em 0 0 #f4f4f4, 0 0.0625em 0 0 #efefef,
+            0 0.125em 0 0 #ececec, 0 0.25em 0 0 #e0e0e0, 0 0.3125em 0 0 #dedede,
+            0 0.375em 0 0 #dcdcdc, 0 0.425em 0 0 #cacaca, 0 0.425em 0.5em 0 #cecece;
+        }
+        .nav-icons a:hover {
+            background: black;
+            color: white;
+            transform: scale(1.1);
+        }
+        .hero {
+            background: url('food.jpg') center/cover no-repeat;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        .btn {
+            background: white;
+            color: black;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 18px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease-in-out;
+            box-shadow: inset 0 0.0625em 0 0 #f4f4f4, 0 0.0625em 0 0 #efefef,
+            0 0.125em 0 0 #ececec, 0 0.25em 0 0 #e0e0e0, 0 0.3125em 0 0 #dedede,
+            0 0.375em 0 0 #dcdcdc, 0 0.425em 0 0 #cacaca, 0 0.425em 0.5em 0 #cecece;
+        }
+        .btn:hover {
+            background: black;
+            color: white;
+            transform: scale(1.1);
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            text-align: center;
+        }
+        .product {
+            flex: 1 1 200px; /* ✅ Ensure proper spacing */
+            max-width: 200px;
+        }
+        .productContainer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+            min-height: 500px; /* ✅ Ensures normal layout */
+        }
+        .product[style*="visibility: hidden"] {
+            height: 0;
+            opacity: 0;
+        }
+        .product img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            transition: transform 0.5s;
+        }
+        .product img:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+        .product h3, .product p {
+            color: white;
+        }
+        .search-results {
+            display: none;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            min-height: 400px; /* ✅ Prevents footer from overlapping */
+            width: 100%;
+            position: relative;
+        }
+    
+        button {
+  font: inherit;
+  background-color: #f0f0f0;
+  border: 0;
+  color: #242424;
+  border-radius: 0.5em;
+  font-size: 1.35rem;
+  padding: 0.375em 1em;
+  font-weight: 600;
+  text-shadow: 0 0.0625em 0 #fff;
+  box-shadow: inset 0 0.0625em 0 0 #f4f4f4, 0 0.0625em 0 0 #efefef,
+    0 0.125em 0 0 #ececec, 0 0.25em 0 0 #e0e0e0, 0 0.3125em 0 0 #dedede,
+    0 0.375em 0 0 #dcdcdc, 0 0.425em 0 0 #cacaca, 0 0.425em 0.5em 0 #cecece;
+  transition: 0.15s ease;
+  cursor: pointer;
+}
+button:active {
+  translate: 0 0.225em;
+  box-shadow: inset 0 0.03em 0 0 #f4f4f4, 0 0.03em 0 0 #efefef,
+    0 0.0625em 0 0 #ececec, 0 0.125em 0 0 #e0e0e0, 0 0.125em 0 0 #dedede,
+    0 0.2em 0 0 #dcdcdc, 0 0.225em 0 0 #cacaca, 0 0.225em 0.375em 0 #cecece;
+}
+        img {
+            width: 200px;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        img:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background-color: #f8f8f8;
+        }
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 50px;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+        }
+        .nav-brand {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .nav-icons {
+            display: flex;
+            gap: 15px;
+        }
+        .nav-icons i {
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .hero {
+            background-image: url('food.jpg'); 
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        .btn {
+            background: white;
+            color: black;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 18px;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: inline-block;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            padding: 20px;
+        }
+        .product {
+            background: rgba(128, 128, 128, 0.75);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .product img {
+            width: 100%;
+            height: 50%;
+            border-radius: 50px;
+        }
+        .product h3, .product p {
+            color: white;
+        }
+        .product-placeholder {
+            width: 200px;
+            height: 350px;
+            background: transparent;
+            display: inline-block;
+            margin: 10px;
+            visibility: hidden; /* This prevents unwanted empty spaces */
+        }
+        .product {
+            min-height: 250px; /* Adjust based on your layout */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .product[style*="visibility: hidden"] {
+            opacity: 0;
+            height: 0;
+            overflow: hidden;
+        }
+        .pagination {
+            display: inline-block; /* Ensures buttons stay in one line */
+            padding: 10px;
+        }
+        
+.pagination button.active {
+    background: black;
+    color: white;
+    font-weight: bold;
+}
+.pagination button.active {
+    background: black;
+    color: white;
+    font-weight: bold;
+}
+.pagination-wrapper {
+    text-align: center;
+    width: 100%;
+    margin-top: 20px; /* Space between products and paginator */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination button {
+    padding: 10px 15px;
+    margin: 5px;
+    border: 1px solid #000;
+    background: white;
+    color: black;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.pagination button.active {
+    background: black;
+    color: white;
+    font-weight: bold;
+}
+.cart-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+.cart-popup {
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 320px;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border-left: 5px solid #28a745;
+    z-index: 1000;
+}
+.cart-popup-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.cart-item {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.cart-item img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    background: #f1f1f1;
+    border-radius: 5px;
+}
+.cart-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.view-cart {
+    position: relative;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 5px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 140px;
+    height: 40px;
+    background: white;
+    color: red;
+    border: 2px solid red;
+}
+.view-cart {
+    position: relative;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 5px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 140px;
+    height: 40px;
+    background: white;
+    color: red;
+    border: 2px solid red;
+}
+.view-cart span {
+    background: red;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 3px 7px;
+    border-radius: 50%;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+.view-cart .cart-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: red;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 3px 7px;
+    border-radius: 50%;
+    min-width: 22px;
+    min-height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cart-count {
+    position: absolute;
+    top: 10px; 
+    right: 10px;
+    font-size: 14px;
+    color: white;
+    background: red;
+    padding: 4px 8px;
+    border-radius: 50%;
+    font-weight: bold;
+    z-index: 1000; 
+}
+.view-cart {
+    background: white;
+    color: red;
+    border: 1px solid red;
+}
+.checkout {
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 5px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 130px;
+    height: 40px;
+    background: red;
+    color: white;
+    border: 2px solid red;
+}
+.close {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 18px;
+}
+.search-container {
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 30px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    width: 250px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.search-input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    outline: none;
+}
+
+.search-button {
+    background: rgb(167, 167, 167);
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+}
+
+.search-btn {
+    background: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    right: 5px;
+}
+.search-btn img {
+    width: 20px;
+    height: 20px;
+}
+.search-bar {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 5px 10px;
+    font-size: 14px;
+    border-radius: 30px;
+}
+
+.search-results {
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    width: 500px;
+    background: white;
+    display: none;
+    position: absolute;
+    z-index: 1000;
+}
+
+.search-results div {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+}
+
+.search-results div:hover {
+    background: #f8f8f8;
+}
+
+    </style>
+</head>
+
+<body>
+
+  
+    <div id="product-list"></div>
+    <nav>        
+        <div class="nav-brand">Frozen Goods</div>
+        <div class="nav-links">
+            <a href="HANDB.html">Ham & Bacon</a>
+            <a href="Hotdogs.html">Hotdogs</a>
+            <a href="Nuggets.html">Nuggets</a>
+            <a href="Others.html">Others</a>
+            <a href="Vegetables.html">Vegetables</a>
+            
+            
+        </div>
+        <div class="nav-icons">
+            <i class="fas fa-user"></i> 
+            <i class="fas fa-lock"></i> 
+            <a href="Login.html" button class="btn">LOGIN</button></a>  
+        </div>
+    </nav>
+
+    <div class="hero">
+        <div class="overlay"></div>
+        <div class="hero-content">
+            <h1>Discover Premium Frozen Meats</h1>
+            <p>Experience the convenience of our high-quality frozen meats. <br> Perfect for home cooking or business needs, our products ensure easy and hassle-free meal preparation.</p>
+            <a href="#" class="btn">Shop Now</a>
+        </div>
+    </div>
+
+        <div class="search-container">
+            <input type="text" id="search-bar" placeholder="Search product..." onkeyup="searchProducts()">
+            <button class="search-btn" onclick="searchProducts()">🔍</button>
+        </div>
+        <div class="search-results" id="searchResults"></div>
+        <div class="container" id="productContainer">
+        <section class="container" id="productContainer">
+
+            <div class="product" data-name="TJ Classic">
+            <img src="1.png" alt="TJ Classic">
+            <h3>TJ Classic</h3>
+            <p>₱195.00</p>
+            <button onclick="addToCart(this)">Add to Cart</button>
+            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+        </div>
+    
+        <div class="product" data-name="Kikiam 1/2">
+            <img src="2.png" alt="Kikiam 1/2">
+            <h3>Kikiam 1/2</h3>
+            <p>₱45.00</p>
+            <button class="btn" button onclick="addToCart('Kikiam 1/2', 45)">Add to Cart</button>
+            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+        </div>
+    
+        <div class="product" data-name="Chicken Ball 1/4">
+            <img src="3.png" alt="Chicken Ball 1/4">
+            <h3>Chicken Ball 1/4</h3>
+            <p>₱27.00</p>
+            <button class="btn" button onclick="addToCart('Chicken Ball 1/4', 27)">Add to Cart</button>
+            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+        </div>
+    
+        <div class="product" data-name="Squid Ball 1/4">
+            <img src="4.png" alt="Squid Ball 1/4">
+            <h3>Squid Ball 1/4</h3>
+            <p>₱27.00</p>
+            <button class="btn" button onclick="addToCart('Squid Ball 1/4', 27)">Add to Cart</button>
+            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+        </div>
+    
+        <div class="product" data-name="Fish Ball 1kg">
+            <img src="5.png" alt="Fish Ball 1kg">
+            <h3>Fish Ball 1kg</h3>
+            <p>₱55.00</p>
+            <button class="btn" button onclick="addToCart('Fish Ball 1Kg', 55)">Add to Cart</button>
+            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+        </div>
+    
+        <div class="product" data-name="TJ Jumbo">
+            <img src="6.png" alt="TJ Jumbo">
+            <h3>TJ Jumbo</h3>
+            <p>₱195.00</p>
+            <button class="btn" button onclick="addToCart('TJ Jumbo', 195)">Add to Cart</button>
+            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+        </div>
+    
+        <div class="product" data-name="TJ Cheesedog">
+            <img src="7.png" alt="TJ Cheesedog">
+            <h3>TJ Cheesedog</h3>
+            <p>₱210.00</p>
+            <button class="btn" button onclick="addToCart('TJ Cheesedog', 210)">Add to Cart</button>
+            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+        </div>
+    
+        <div class="product" data-name="TJ Cocktail">
+            <img src="8.png" alt="TJ Cocktail">
+            <h3>TJ Cocktail</h3>
+            <p>₱210.00</p>
+            <button class="btn" button onclick="addToCart('TJ Cocktail', 210)">Add to Cart</button>
+            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+        </div>
+    
+        <div class="product" data-name="TJ Chicken and Cheese">
+            <img src="9.png" alt="TJ Chicken and Cheese">
+            <h3>TJ Chicken and Cheese</h3>
+            <p>₱210.00</p>
+            <button class="btn" button onclick="addToCart('TJ Chicken and Chees', 210)">Add to Cart</button>
+            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+        </div>
+    
+        <div class="product" data-name="Pinoy Hotdog">
+            <img src="10.png" alt="Pinoy Hotdog">
+            <h3>Pinoy Hotdog</h3>
+            <p>₱155.00</p>
+            <button class="btn" button onclick="addToCart('Pinoy Hotdog', 155)">Add to Cart</button>
+            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+        </div>
+       
+        <div class="product" data-name="Pinoy Cheesedog">
+            <img src="11.png" alt="Pinoy Cheesedog">
+            <h3>Pinoy Cheesedog</h3>
+            <p>₱160.00</p> 
+            <button class="btn" button onclick="addToCart('Pinoy Cheesedog', 160)">Add to Cart</button>
+            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+        </div>
+        
+        <div class="product" data-name="Bossing Cheesedog">
+            <img src="12.png" alt="Bossing Cheesedog">
+            <h3>Bossing Cheesedog</h3>
+            <p>₱160.00</p>
+            <button class="btn" button onclick="addToCart('Bossing Cheesedog', 160)">Add to Cart</button>
+            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+        </div>
+        
+        <div class="product" data-name="Bossing Cheesedog King Size">
+            <img src="13.png" alt="Bossing Cheesedog King Size">
+            <h3>Bossing Cheesedog King Size</h3>
+            <p>₱165.00</p>
+            <button class="btn" button onclick="addToCart('FBossing Cheesedog King SIze', 165)">Add to Cart</button>
+            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+        </div>
+        
+        <div class="product" data-name="Bossing Chicken Franks">
+            <img src="14.png" alt="Bossing Chicken Franks">
+            <h3>Bossing Chicken Franks</h3>
+            <p>₱175.00</p>
+            <button class="btn" button onclick="addToCart('BOssing Chicken Franks', 175)">Add to Cart</button>
+            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+        </div>
+        
+        <div class="product" data-name="Bossing Hotdog Regular 8pcs">
+            <img src="15.png" alt="Bossing Hotdog Regular 8pcs">
+            <h3>Bossing Hotdog Regular 8pcs</h3>
+            <p>₱40.00</p>
+            <button class="btn" button onclick="addToCart('Bosssing Hotdog Regular 8pcs', 40)">Add to Cart</button>
+            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+        </div>
+        
+        <div class="product" data-name="Bigtime King Size">
+            <img src="16.png" alt="Bigtime King Size">
+            <h3>Bigtime King Size</h3>
+            <p>₱160.00</p>
+            <button class="btn" button onclick="addToCart('Bigtime King Size', 160)">Add to Cart</button>
+            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+        </div>
+        
+        <div class="product" data-name="Idol Jumbo Cheesedog">
+            <img src="17.png" alt="Idol Jumbo Cheesedog">
+            <h3>Idol Jumbo Cheesedog</h3>
+            <p>₱185.00</p>
+            <button class="btn" button onclick="addToCart('Idol Jumbo Cheesedog', 185)">Add to Cart</button>
+            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+        </div>
+        
+        <div class="product" data-name="Idol Regular Cheesedog 10pcs">
+            <img src="18.png" alt="Idol Regular Cheesedog 10pcs">
+            <h3>Idol Regular Cheesedog 10pcs</h3>
+            <p>₱50.00</p>
+            <button class="btn" button onclick="addToCart('Idol Regular Cheesedog 10pcs', 50)">Add to Cart</button>
+            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+        </div>
+        
+        <div class="product" data-name="Pampanga's Best Tocino 1/4">
+            <img src="19.png" alt="Pampanga's Best Tocino 1/4">
+            <h3>Pampanga's Best Tocino 1/4</h3>
+            <p>₱65.00</p>
+            <button class="btn" button onclick="addToCart('Pampangas Best Tocino 1/4', 65)">Add to Cart</button>
+            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+        </div>
+        
+        <div class="product" data-name="CDO Young Pork Tocino">
+            <img src="20.png" alt="CDO Young Pork Tocino">
+            <h3>CDO Young Pork Tocino</h3>
+            <p>₱65.00</p>
+            <button class="btn" button onclick="addToCart('CDO Young Pork Tocino', 65)">Add to Cart</button>
+            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+        
+
+            </div>
+            <div class="product" data-name="Purefoods Chicken Breast Nuggets 1/4">
+                <img src="21.png" alt="Purefoods Chicken Breast Nuggets 1/4">
+                <h3>Purefoods Chicken Breast Nuggets 1/4</h3>
+                <p>₱60.00</p>
+                <button class="btn" button onclick="addToCart('Purefoods Chicken Breast Nuggets 1/4', 60)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Purefoods Crazy Cuts Nuggets 1/4">
+                <img src="22.png" alt="Purefoods Crazy Cuts Nuggets 1/4">
+                <h3>Purefoods Crazy Cuts Nuggets 1/4</h3>
+                <p>₱Purefoods Crazy Cuts Nuggets 1/4.00</p>
+                <button class="btn" button onclick="addToCart('Purefoods Crazy Cuts Nuggets 1/4', 60)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Star Nuggets">
+                <img src="23.png" alt="Star Nuggets">
+                <h3>Star Nuggets</h3>
+                <p>₱50.00</p>
+                <button class="btn" button onclick="addToCart('Star Nuggets', 50)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Star Nuggets w/ Cheese">
+                <img src="24.png" alt="Star Nuggets w/ Cheese">
+                <h3>Star Nuggets w/ Cheese</h3>
+                <p>₱50.00</p>
+                <button class="btn" button onclick="addToCart('Star Nuggets w/ Cheese', 50)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="CDO Crispy Burger">
+                <img src="25.png" alt="CDO Crispy Burger">
+                <h3>CDO Crispy Burger</h3>
+                <p>₱60.00</p>
+                <button class="btn" button onclick="addToCart('CDO Crispy Burger', 60)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="CDO Ulam Burger">
+                <img src="26.png" alt="CDO Ulam Burger">
+                <h3>CDO Ulam Burger</h3>
+                <p>₱60.00</p>
+                <button class="btn" button onclick="addToCart('CDO Ulam Burger', 60)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Almar Slice Ham">
+                <img src="27.png" alt="Almar Slice Ham">
+                <h3>Almar Slice Ham</h3>
+                <p>₱45.00</p>
+                <button class="btn" button onclick="addToCart('Almar Slice Ham', 45)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Almar Sweet Ham">
+                <img src="28.png" alt="Almar Sweet Ham">
+                <h3>Almar Sweet Ham</h3>
+                <p>₱45.00</p>
+                <button class="btn" button onclick="addToCart('Almar Sweet Ham', 45)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="CDO Sweet Ham">
+                <img src="29.png" alt="CDO Sweet Ham">
+                <h3>CDO Sweet Ham</h3>
+                <p>₱85.00</p>
+                <button class="btn" button onclick="addToCart('CDO', 45)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Pampanga's Best Sweet Ham">
+                <img src="30.png" alt="Pampanga's Best Sweet Ham">
+                <h3>Pampanga's Best Sweet Ham</h3>
+                <p>₱65.00</p>
+                <button class="btn" button onclick="addToCart('Pampangas Best Sweet Ham', 65)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Noypi Patty">
+                <img src="31.png" alt="Noypi Patty">
+                <h3>Noypi Patty</h3>
+                <p>₱40.00</p>
+                <button class="btn" button onclick="addToCart('Noypi Patty', 40)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Almar Patty">
+                <img src="32.png" alt="Almar Patty">
+                <h3>Almar Patty</h3>
+                <p>₱40.00</p>
+                <button class="btn" button onclick="addToCart('Almar Patty', 40)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Hamonado Skinless">
+                <img src="33.png" alt="Hamonado Skinless">
+                <h3>Hamonado Skinless</h3>
+                <p>₱45.00</p>
+                <button class="btn" button onclick="addToCart('Hamonado Skinless', 45)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Pampanga's Best Skinless Longganisa">
+                <img src="34.png" alt="Pampanga's Best Skinless Longganisa">
+                <h3>Pampanga's Best Skinless Longganisa</h3>
+                <p>₱65.00</p>
+                <button class="btn" button onclick="addToCart('Pampangas Best Skinless Longganisa', 65)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Pampanga's Best Native Longganisa">
+                <img src="35.png" alt="Pampanga's Best Native Longganisa">
+                <h3>Pampanga's Best Native Longganisa</h3>
+                <p>₱65.00</p>
+                <button class="btn" button onclick="addToCart('Pampangas Best Native Longganisa', 65)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="TJ Chicken and Cheese">
+                <img src="36.png" alt="TJ Chicken and Cheese">
+                <h3>TJ Chicken and Cheese</h3>
+                <p>₱240.00</p>
+                <button class="btn" button onclick="addToCart('TJ Chicken and Cheese', 240)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Star Hotdog 1/4">
+                <img src="37.png" alt="Star Hotdog 1/4">
+                <h3>Star Hotdog 1/4</h3>
+                <p>₱50.00</p>
+                <button class="btn" button onclick="addToCart('Star Hotdog 1/4', 50)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Star Cheesedog 1/4">
+                <img src="38.png" alt="Star Cheesedog 1/4">
+                <h3>Star Cheesedog 1/4</h3>
+                <p>₱50.00</p>
+                <button class="btn" button onclick="addToCart('Star Cheesedog 1/4', 50)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Bossing Cheesedog 8pcs">
+                <img src="39.png" alt="Bossing Cheesedog 8pcs">
+                <h3>Bossing Cheesedog 8pcs</h3>
+                <p>₱45.00</p>
+                <button class="btn" button onclick="addToCart('Bossing Cheesedog 8pcs', 45)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Bossing Cheesedog 10pcs">
+                <img src="40.png" alt="Bossing Cheesedog 10pcs">
+                <h3>Bossing Cheesedog 10pcs</h3>
+                <p>₱50.00</p>
+                <button class="btn" button onclick="addToCart('Bossing Cheesedog 10pcs', 50)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+
+            <div class="product" data-name="Bingo Hotdog 1/4">
+                <img src="41.png" alt="Bingo Hotdog 1/4">
+                <h3>Bingo Hotdog 1/4</h3>
+                <p>₱40.00</p>
+                <button class="btn" button onclick="addToCart('Bingo Hotdog 1/4', 40)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Holiday Cheesedog 1/4">
+                <img src="42.png" alt="Holiday Cheesedog 1/4">
+                <h3>Holiday Cheesedog 1/4</h3>
+                <p>₱55.00</p>
+                <button class="btn" button onclick="addToCart('Holiday Cheesedog 1/4', 40)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="IDOL Cheesedog 1/4">
+                <img src="43.png" alt="IDOL Cheesedog 1/4">
+                <h3>IDOL Cheesedog 1/4</h3>
+                <p>₱55.00</p>
+                <button class="btn" button onclick="addToCart('IDOL Cheesedog 1/4', 55)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Vida Bacon">
+                <img src="44.png" alt="Vida Bacon">
+                <h3>Vida Bacon</h3>
+                <p>₱95.00</p>
+                <button class="btn" button onclick="addToCart('Vida Bacon', 95)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Bossing Bacon">
+                <img src="45.png" alt="Bossing Bacon">
+                <h3>Bossing Bacon</h3>
+                <p>₱100.00</p>
+                <button class="btn" button onclick="addToCart('Bossing Bacon', 100)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Holiday Footlong">
+                <img src="46.png" alt="Holiday Footlong">
+                <h3>Holiday Footlong</h3>
+                <p>₱175.00</p>
+                <button class="btn" button onclick="addToCart('Holiday Footlong', 175)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Greenpeas 1kg">
+                <img src="47.png" alt="Greenpeas 1kg">
+                <h3>Greenpeas 1kg</h3>
+                <p>₱160.00</p>
+                <button class="btn" button onclick="addToCart('Greenpeas 1kg', 160)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Mix Vegetables 1kg">
+                <img src="48.png" alt="Mix Vegetables 1kg">
+                <h3>Mix Vegetables 1kg</h3>
+                <p>₱160.00</p>
+                <button class="btn" button onclick="addToCart('Mix Vegetables 1kg', 160)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Promeat Ham 1kg">
+                <img src="49.png" alt="Promeat Ham 1kg">
+                <h3>Promeat Ham 1kg</h3>
+                <p>₱260.00</p>
+                <button class="btn" button onclick="addToCart('Promeat Ham 1kg', 260)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+         
+            </div>
+            </div>
+            </section>
+
+            
+            <div class="pagination-wrapper">
+                <div id="pagination" class="pagination"></div>
+            </div>
+            
+            
+                <footer class="footer">
+                    <div class="footer-column">
+                        <h3>MAHUSAY FROZEN</h3>
+                        <p>Frozen Goods is your trusted destination for premium frozen products, offering a carefully curated selection of high-quality local and international brands. We bring convenience and freshness straight to your kitchen.</p>
+                    </div>
+            
+                    <div class="footer-column">
+                        <h3>MAIN OFFICE</h3>
+                        <p>📍San Rafael Flea Market (Montalban) Rodriguez Rizal</p>
+                        <p>📧 <a href="mailto:hello@wholemart.com.ph">hello@wholemart.com.ph</a></p>
+                        <p>📞 +63 (965) 605-8681</p>
+                    </div>
+            
+                    <div class="footer-column">
+                        <h3>DELIVERY</h3>
+                        <p>FREE DELIVERY within Metro Manila for orders above ₱3,500</p>
+                        <img src="Visa.jpg" alt="Visa">
+                        <img src="Master.png" alt="Mastercard">
+                        <img src="Gcash.png" alt="GCash">
+                        <img src="Maya.png" alt="Maya">
+                    </div>
+            
+                    <div class="footer-column">
+                        <h3>Newsletter Signup</h3>
+                        <p>Subscribe to our newsletter and get the latest information on our products.</p>
+                        <div class="newsletter">
+                            <input type="email" placeholder="Your email address">
+                            <button>Subscribe</button>
+                        </div>
+                    </div>
+                </footer>
+            
+                <div class="bottom-footer">
+                    <p>Copyright © 2025 Mahusay Frozen. All rights reserved. Powered by iSolve</p>
+                    <p>
+                        <a href="index.html">Home Page</a> | 
+                        <a href="FAQ.html">FAQ</a> | 
+                        <a href="Shipping.html">Delivery Policy</a> | 
+                        <a href="User.html">User Policies</a> | 
+                        <a href="Privacy.html">Privacy Policy</a>
+                    </p>
+                    </div>
+                
+    <div id="cartPopup" class="cart-popup">
+        <div class="cart-popup-content">
+            <span class="close" onclick="closeCartPopup()">&times;</span>
+            <p>✔️ Added to your cart:</p>
+            <div class="cart-item">
+                <img id="cartPopupImage" src="" alt="Product Image">
+                <div>
+                    <h4 id="cartPopupName"></h4>
+                    <p id="cartPopupPrice"></p>
+                </div>
+            </div>
+            <div class="cart-summary">
+                <p>Cart subtotal: <strong id="cartSubtotal">₱0.00</strong></p>
+                <button class="view-cart">View cart  &nbsp; <span id="cartCount">0</span> &nbsp; </button>
+                <button class="btn" id="checkout-btn">Checkout</button>
+                </a>
+        </div>
+    </div>
+
+
+    <div id="pagination"></div>
+    <script>
+            function buyNow(productName, price) {
+                fetch("http://localhost:3000/order", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        product: productName,
+                        price: price,
+                        quantity: 1,  // Default quantity
+                        buyer: "guest@example.com"  // Replace with actual user info if available
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    showBuyNowPopup(productName, price);
+                })
+                .catch(err => console.error("Order failed:", err));
+            }
+
+            document.addEventListener("DOMContentLoaded", function () {
+                const itemsPerPage = 10; 
+                let currentPage = 1;
+                let allProducts = Array.from(document.querySelectorAll(".product"));
+                let filteredProducts = [...allProducts]; 
+            
+                const paginationContainer = document.getElementById("pagination");
+            
+        
+                function showPage(page) {
+                    let start = (page - 1) * itemsPerPage;
+                    let end = start + itemsPerPage;
+            
+                    allProducts.forEach(product => product.style.display = "none");
+                    filteredProducts.slice(start, end).forEach(product => product.style.display = "block");
+            
+                    updatePagination();
+                }
+            
+        
+                function updatePagination() {
+                    paginationContainer.innerHTML = "";
+                    let totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+            
+                    if (totalPages <= 1) {
+                        paginationContainer.style.display = "none"; 
+                        return;
+                    } else {
+                        paginationContainer.style.display = "flex";
+                    }
+            
+                    for (let i = 1; i <= totalPages; i++) {
+                        let btn = document.createElement("button");
+                        btn.innerText = i;
+                        btn.className = currentPage === i ? "active" : "";
+                        btn.onclick = function () {
+                            currentPage = i;
+                            showPage(i);
+                        };
+                        paginationContainer.appendChild(btn);
+                    }
+                }
+            
+                function searchProducts() {
+                    let input = document.getElementById("search-bar").value.toLowerCase();
+            
+                    if (input === "") {
+                        filteredProducts = [...allProducts]; 
+                    } else {
+                        filteredProducts = allProducts.filter(product =>
+                            product.getAttribute("data-name").toLowerCase().includes(input)
+                        );
+                    }
+            
+                    currentPage = 1;
+                    showPage(currentPage);
+                }
+                document.getElementById("search-bar").addEventListener("input", searchProducts);
+                showPage(currentPage);
+            })
+            
+            function addToCart(button) {
+                let product = button.closest(".product");
+                let name = product.querySelector("h3").innerText;
+                let priceText = product.querySelector("p").innerText;
+                let price = parseFloat(priceText.replace("₱", ""));
+                let imageSrc = product.querySelector("img").src;
+            
+                let cart = JSON.parse(localStorage.getItem("cart")) || [];
+                cart.push({ name, price, quantity: 1, imageSrc });
+                localStorage.setItem("cart", JSON.stringify(cart));
+            
+                document.getElementById("cartCount").innerText = cart.length;
+                document.getElementById("cartSubtotal").innerText = `₱${cart.reduce((sum, item) => sum + item.price, 0).toFixed(2)}`;
+            
+                document.getElementById("cartPopupName").innerText = name;
+                document.getElementById("cartPopupPrice").innerText = `₱${price.toFixed(2)}`;
+                document.getElementById("cartPopupImage").src = imageSrc;
+                document.getElementById("cartPopupImage").style.display = "block";
+            
+                let popup = document.getElementById("cartPopup");
+                popup.style.display = "block";
+            
+                setTimeout(() => {
+                    popup.style.display = "none";
+                }, 5000);
+            }
+            
+            
+            function closeCartPopup() {
+                document.getElementById("cartPopup").style.display = "none";
+            }
+            
+            window.addToCart = addToCart;
+            window.closeCartPopup = closeCartPopup;
+            
+            
+                function showCartPopup(productName, price, imageSrc) {
+                    let popup = document.getElementById("cartPopup");
+                    if (!popup) return;
+            
+                    document.getElementById("cartPopupName").innerText = productName;
+                    document.getElementById("cartPopupPrice").innerText = `₱${price.toFixed(2)}`;
+                    document.getElementById("cartPopupImage").src = imageSrc;
+                    document.getElementById("cartPopupImage").style.display = "block";
+                    popup.style.display = "block";
+            
+                    setTimeout(() => {
+                        popup.style.display = "none";
+                    }, 5000);
+                }
+            
+                function closeCartPopup() {
+                    document.getElementById("cartPopup").style.display = "none";
+                }
+            
+                async function buyNow(productName, price) {
+                    try {
+                        let response = await fetch("http://localhost:3000/order", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            credentials: "include",
+
+                            body: JSON.stringify({
+                                product: productName,
+                                price: price,
+                                quantity: 1,
+                                buyer: "guest@example.com",
+                            }),
+                        });
+            
+                        let data = await response.json();
+                        showBuyNowPopup(productName, price);
+                    } catch (error) {
+                        console.error("Order failed:", error);
+                    }
+                }
+            
+                function showBuyNowPopup(productName, price) {
+                    document.getElementById("buyNowPopupName").textContent = productName;
+                    document.getElementById("buyNowPopupPrice").textContent = "₱" + price;
+                    document.getElementById("buyNowPopup").style.display = "block";
+                }
+            
+                function closeBuyNowPopup() {
+                    document.getElementById("buyNowPopup").style.display = "none";
+                }
+            
+                function goToOrders() {
+                    window.location.href = "orders.html";
+                }
+            
+                document.getElementById("search-bar").addEventListener("input", searchProducts);
+                fetchProducts();
+           
+
+    </script>
+    <script src="script.js"></script>
+   
+    
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

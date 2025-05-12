@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vegetables</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 15px;
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .product {
+            background: white;
+            padding: 15px;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .product img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .product h3 {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .product p {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .btn {
+            background: white;
+            color: black;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 18px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease-in-out;
+            box-shadow: inset 0 0.0625em 0 0 #f4f4f4, 0 0.0625em 0 0 #efefef,
+            0 0.125em 0 0 #ececec, 0 0.25em 0 0 #e0e0e0, 0 0.3125em 0 0 #dedede,
+            0 0.375em 0 0 #dcdcdc, 0 0.425em 0 0 #cacaca, 0 0.425em 0.5em 0 #cecece;
+        }
+        .btn:hover {
+            background: black;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .btn.buy {
+            background-color: #ffffff;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            background: #333;
+            color: white;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <a button class="btn" href="LOGIN_USER.html" class="back-button">← Back</a>
+    <header>
+        <h1>Frozen Vegetables</h1>
+    </header>
+
+    <section class="container">
+        <div class="products">
+            <div class="product" data-name="Greenpeas 1kg">
+                <img src="47.png" alt="Greenpeas 1kg">
+                <h3>Greenpeas 1kg</h3>
+                <p>₱160.00</p>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+
+            <div class="product" data-name="Mix Vegetables 1kg">
+                <img src="48.png" alt="Mix Vegetables 1kg">
+                <h3>Mix Vegetables 1kg</h3>
+                <p>₱160.00</p>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Mahusay Frozen Goods. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

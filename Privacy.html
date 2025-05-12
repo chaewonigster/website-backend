@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f8f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+        nav {
+            display: flex;
+            list-style: none;
+            padding: 0;
+        }
+        nav li {
+            margin-right: 20px;
+        }
+        .faq-section {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .faq-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+        }
+        .faq-item h4 {
+            cursor: pointer;
+            margin: 0;
+        }
+        .faq-item p {
+            display: none;
+            margin: 10px 0 0;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Frequently Asked Questions (FAQ)</h1>
+    <nav>
+        <ul>
+            <li><a href="SHIPPING-DELIVERY.html">Shipping + Delivery</a></li>
+            <li><a href="PRODUCT.html">Product</a></li>
+            <li><a href="PRIVACY.html">Privacy policy?</a></li>
+            
+        </ul>
+    </nav>
+</header>
+
+<section class="faq-section">
+    <h2>Privacy Policy</h2>
+    
+    <div class="faq-item" onclick="toggleAnswer(this)">
+        <h4>How do you protect my personal information?</h4>
+        <p>We take your privacy and security seriously. We use industry-standard encryption 
+            (SSL) to protect sensitive information like credit card details. Additionally, we regularly monitor our systems for vulnerabilities to ensure your data is safe from unauthorized access.</p>
+    </div>
+
+    <div class="faq-item" onclick="toggleAnswer(this)">
+        <h4>What personal information do you collect?</h4>
+        <p>We collect personal information such as your name, email address, shipping and billing address, phone number, 
+            and payment details when you make a purchase or create an account. We may also collect non-personal information like your browsing behavior on our website.</p>
+    </div>
+
+    <div class="faq-item" onclick="toggleAnswer(this)">
+        <h4>Will you share my personal information with third parties?</h4>
+        <p>We do not sell your personal information. However, we may share it with trusted third-party service providers who help us process payments, fulfill orders,
+             and provide customer service. These third parties are required to protect your information and use it only for the services they provide.</p>
+    </div>
+
+    <div class="faq-item" onclick="toggleAnswer(this)">
+        <h4>How can I contact you regarding privacy concerns?</h4>
+        <p>If you have any questions or concerns about your privacy or this policy, please contact us at [email address], and we’ll be happy to assist you.</p>
+    </div>
+
+    <div class="faq-item" onclick="toggleAnswer(this)">
+        <h4>How do I opt-out of receiving promotional emails?</h4>
+        <p>If you no longer wish to receive promotional emails, you can unsubscribe at any time by clicking the "unsubscribe" link found in the footer of our emails or by updating your email preferences in your account settings.</p>
+    </div>
+    <div class="bottom-footer">
+        <p>Copyright © 2025 MahusayFrozen. All rights reserved.</p>
+        <p>
+            <a href="Homepage.html">Home Page</a> |                            
+        </p>
+        </div>
+</section>
+
+<script>
+    function toggleAnswer(faqItem) {
+        const answer = faqItem.querySelector('p');
+        answer.style.display = answer.style.display === 'block' ? 'none' : 'block';
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: #fff;
+        }
+        header {
+            background-color: #000;
+            padding: 20px;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 0;
+            display: flex;
+            justify-content: center;
+        }
+        nav ul li {
+            margin: 0 15px;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .profile-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+        .profile-card {
+            background-color: #1e1e1e;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.1);
+            width: 400px;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+        .profile-card p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        a {
+            color: #aaa;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+        .order-item {
+            background-color: #2a2a2a;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .order-item h4 {
+            margin: 0 0 10px 0;
+        }
+        .order-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        .no-orders {
+            font-style: italic;
+            color: #aaa;
+        }
+        .order-date {
+            color: #aaa;
+            font-size: 14px;
+        }
+        .order-total {
+            font-weight: bold;
+            color: #fff;
+        }
+        .order-items ul {
+            margin: 5px 0;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Frozen Goods</h1>
+        <nav>
+            <ul>
+                <li><a href="LOGIN_USER.html">Home</a></li>
+                <li><a href="checkout.html">Orders</a></li>
+                <li><a href="index.html">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <section class="profile-container">
+        <div class="profile-card">
+            <h2>My Account</h2>
+            <p><strong>First Name:</strong> <span id="profileFirstName"></span></p>
+            <p><strong>Middle Name:</strong> <span id="profileMiddleName"></span></p>
+            <p><strong>Last Name:</strong> <span id="profileLastName"></span></p>
+            <p><strong>Email:</strong> <span id="profileEmail"></span></p>
+            <p><strong>Address:</strong> <span id="profileAddress"></span></p>
+            <p><strong>Contact#:</strong> <span id="profileContact"></span></p>
+        </div>
+
+        <div class="profile-card">
+            <h3>Order History</h3>
+            <div id="orderHistoryContainer">
+                <!-- Order history will be displayed here -->
+                <p class="no-orders">Loading order history...</p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Load user profile data
+            let user = JSON.parse(localStorage.getItem("user"));
+
+            if (user) {
+                document.getElementById("profileFirstName").textContent = user.firstname || "N/A";
+                document.getElementById("profileMiddleName").textContent = user.middlename || "N/A";
+                document.getElementById("profileLastName").textContent = user.lastname || "N/A";
+                document.getElementById("profileEmail").textContent = user.email || "N/A";
+                document.getElementById("profileAddress").textContent = user.address || "N/A";
+                document.getElementById("profileContact").textContent = user.contact || "N/A";
+            } else {
+                window.location.href = "Login.html";
+                return;
+            }
+            
+            // Load order history
+            displayOrderHistory();
+            
+            function displayOrderHistory() {
+                const orderHistoryContainer = document.getElementById("orderHistoryContainer");
+                
+                // Get orders from localStorage
+                const orders = JSON.parse(localStorage.getItem("orders")) || [];
+                
+                // Filter orders for current user
+                const userOrders = orders.filter(order => order.userId === user.id);
+                
+                // Clear loading message
+                orderHistoryContainer.innerHTML = "";
+                
+                if (userOrders.length === 0) {
+                    // No orders found
+                    orderHistoryContainer.innerHTML = `
+                        <div>
+                            <p class="no-orders">You haven't placed any orders yet.</p>
+                            <a href="LOGIN_USER.html">Make your first order</a>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Sort orders by date (newest first)
+                userOrders.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                // Display each order
+                userOrders.forEach(order => {
+                    const orderElement = document.createElement("div");
+                    orderElement.className = "order-item";
+                    
+                    const orderDate = new Date(order.date);
+                    const formattedDate = orderDate.toLocaleDateString() + " " + 
+                                        orderDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    
+                    let itemsList = "";
+                    order.items.forEach(item => {
+                        itemsList += `<li>${item.name} × ${item.quantity} - ₱${(item.price * item.quantity).toFixed(2)}</li>`;
+                    });
+                    
+                    orderElement.innerHTML = `
+                        <h4>Order #${order.id}</h4>
+                        <div class="order-date">${formattedDate}</div>
+                        <div class="order-details">
+                            <span>Status:</span>
+                            <span>${order.status || "Processing"}</span>
+                        </div>
+                        <div class="order-items">
+                            <strong>Items:</strong>
+                            <ul>${itemsList}</ul>
+                        </div>
+                        <div class="order-details order-total">
+                            <span>Total:</span>
+                            <span>₱${order.total.toFixed(2)}</span>
+                        </div>
+                    `;
+                    
+                    orderHistoryContainer.appendChild(orderElement);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

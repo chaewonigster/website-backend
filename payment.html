@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Checkout Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: #fff;
+      margin: 0;
+      padding: 20px;
+    }
+    .form-container {
+      background-color: #1e1e1e;
+      padding: 30px;
+      border-radius: 10px;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    }
+    h2 {
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin: 15px 0 5px;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      background-color: #333;
+      color: #fff;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 5px;
+      background-color: #4caf50;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+<div class="form-container">
+  <h2>Order Checkout Form</h2>
+  <form id="checkoutForm">
+    <label for="location">Delivery Location</label>
+    <textarea id="location" name="location" rows="3" required></textarea>
+
+    <label for="contact">Contact Number</label>
+    <input type="tel" id="contact" name="contact" placeholder="09XXXXXXXXX" required>
+
+    <label for="payment">Payment Method</label>
+    <select id="payment" name="payment" required>
+      <option value="">-- Select Payment Method --</option>
+      <option value="Gcash">Gcash</option>
+      <option value="PayMaya">PayMaya</option>
+      <option value="MasterCard">MasterCard</option>
+      <option value="Visa">Visa</option>
+    </select>
+
+    <button type="submit">Place Order</button>
+  </form>
+</div>
+
+<script>
+  document.getElementById("checkoutForm").addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const user = JSON.parse(localStorage.getItem("user")) || { name: "Guest", email: "" };
+
+    const order = {
+      buyer: user.name,
+      email: user.email,
+      location: document.getElementById("location").value,
+      contact: document.getElementById("contact").value,
+      paymentMethod: document.getElementById("payment").value,
+      timestamp: new Date().toISOString()
+    };
+
+    console.log("Order details:", order);
+
+    fetch("http://127.0.0.1:3000/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(order)
+    })
+      .then(res => res.json())
+      .then(data => {
+        alert("Order placed successfully!");
+        window.location.href = "LOGIN_USER.html";
+      })
+      .catch(err => {
+        console.error("Error placing order:", err);
+        alert("There was a problem placing your order.");
+      });
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHIPPING-DELIVERY</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f8f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+        nav {
+            display: flex;
+            list-style: none;
+            padding: 0;
+        }
+        nav li {
+            margin-right: 20px;
+        }
+        .faq-section {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .faq-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+        }
+        .faq-item h4 {
+            cursor: pointer;
+            margin: 0;
+        }
+        .faq-item p {
+            display: none;
+            margin: 10px 0 0;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Frequently Asked Questions (FAQ)</h1>
+    <nav>
+        <ul>
+            <li><a href="SHIPPING-DELIVERY.html">Shipping + Delivery</a></li>
+            <li><a href="PRODUCT.html">Product</a></li>
+            <li><a href="PRIVACY.html">Privacy policy?</a></li>
+            
+        </ul>
+    </nav>
+</header>
+
+<section class="faq-section">
+    <h2>Shipping + Delivery</h2>
+    
+    <div class="faq-item" onclick="toggleAnswer(this)">
+        <h4>What shipping methods do you offer?</h4>
+        <p>Local delivery, Lalamove or Pickup </p>
+    </div>
+
+    <div class="faq-item" onclick="toggleAnswer(this)">
+        <h4>Do you ship internationally?</h4>
+        <p>Currently, we do not ship internationally.</p>
+    </div>
+
+    <div class="faq-item" onclick="toggleAnswer(this)">
+        <h4>Why have I only received part of my order?</h4>
+        <p>Your order may have been split into multiple shipments. Please check your tracking information for details.</p>
+    </div>
+
+    <div class="faq-item" onclick="toggleAnswer(this)">
+        <h4>I received a notice my package has arrived and it's not here yet, what should I do?</h4>
+        <p>Please check with your local delivery service or your neighbors to see if it was delivered elsewhere. If it still hasn't arrived, contact our support team.</p>
+    </div>
+
+    <div class="faq-item" onclick="toggleAnswer(this)">
+        <h4>My order arrived damaged. What should I do?</h4>
+        <p>We’re sorry to hear that! Please contact our support team with your order details to resolve the issue.</p>
+    </div>
+    <div class="bottom-footer">
+        <p>Copyright © 2025 MahusayFrozen. All rights reserved.</p>
+        <p>
+            <a href="Homepage.html">Home Page</a> |                            
+        </p>
+        </div>
+</section>
+
+<script>
+    function toggleAnswer(faqItem) {
+        const answer = faqItem.querySelector('p');
+        answer.style.display = answer.style.display === 'block' ? 'none' : 'block';
+    }
+</script>
+
+</body>
+</html>

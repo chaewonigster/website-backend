@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Frozen Goods</title>
+    <script src="script.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f8f8f8; padding: 20px; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); }
+        h2 { text-align: center; }
+        .cart-item { display: flex; justify-content: space-between; margin: 10px 0; padding: 10px; border-bottom: 1px solid #ddd; }
+        .total { font-size: 20px; font-weight: bold; text-align: right; margin-top: 20px; }
+        .btn { width: 100%; padding: 10px; background-color: #ff0000; color: white; border: none; cursor: pointer; font-size: 18px; margin-top: 20px; }
+        .btn:hover { background-color: #cc0000; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Checkout</h2>
+        <div id="cart-items"></div>
+        <div class="total">Total: <span id="total-price">0</span></div>
+        <button class="btn" id="place-order-btn">Place Order</button>
+    </div>
+    <script>
+                document.addEventListener("DOMContentLoaded", function () {
+        const user = JSON.parse(localStorage.getItem("user"));
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        if (!user || cart.length === 0) {
+            alert("Please log in and add items to your cart before checking out.");
+            return;
+        }
+
+        document.getElementById("placeOrderBtn").addEventListener("click", function () {
+            let orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+            const newOrder = {
+                id: Date.now(), // unique ID
+                userId: user.id, // link to the current user
+                date: new Date().toISOString(),
+                items: cart, // format: [{name, price, quantity}]
+                total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+                status: "Processing"
+            };
+
+            orders.push(newOrder);
+            localStorage.setItem("orders", JSON.stringify(orders));
+
+            // Clear cart
+            localStorage.removeItem("cart");
+
+            // Redirect to profile
+            window.location.href = "Profile.html";
+        });
+    });
+            document.addEventListener("DOMContentLoaded", () => {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];  // Get cart from localStorage or initialize to empty array
+            
+            const cartItemsContainer = document.getElementById("cart-items");
+            const totalPriceElement = document.getElementById("total-price");
+            let total = 0;
+            console.log("Loaded cart data:", cart);
+            
+    
+            // Check if the cart is empty
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = "<p>Your cart is empty.</p>";
+            } else {
+                // Loop through the cart items to display them
+                cart.forEach(item => {
+                    const price = Number(item.price) || 0;
+                    const quantity = Number(item.quantity) || 1;
+    
+                    const itemTotal = price * quantity;
+                    total += itemTotal;
+    
+                    const itemDiv = document.createElement("div");
+                    itemDiv.classList.add("cart-item");
+
+                });
+
+    // Display the total price
+    totalPriceElement.innerText = `₱${total.toFixed(2)}`;
+}
+
+    
+            document.getElementById("place-order-btn").addEventListener("click", async () => {
+    // First, check if the cart is empty.
+    if (cart.length === 0) {
+        alert("Your cart is empty!");
+        return;
+    }
+
+    // ✅ Get user from localStorage
+    const user = JSON.parse(localStorage.getItem("user")); 
+    const buyer = user?.firstname || "guest";
+    
+
+    // 🐞 Debug logs
+    console.log("localStorage user:", localStorage.getItem("user"));
+    console.log("parsed user object:", user);
+    console.log("buyer value:", buyer);
+
+    try {
+        // Loop through each cart item and send the order to the server
+        for (let item of cart) {
+            console.log("Sending order data:", item);
+
+            const response = await fetch("http://localhost:3000/order", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+body: JSON.stringify({
+    product: item.name,
+    price: item.price,
+    quantity: item.quantity,
+    buyer: user ? `${(user.firstname || "")} ${(user.middlename || "")} ${(user.lastname || "")}`.trim() : "guest"
+})
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                console.error("Error placing order:", data);
+                alert("Failed to place order: " + data.message);
+                return; // Stop if there's an error
+            }
+        }
+
+        // Success
+        alert("Order placed successfully!");
+        localStorage.removeItem("cart");  // Clear cart
+        window.location.href = "LOGIN_USER.html";  // Redirect
+
+    } catch (error) {
+        console.error("Error placing order:", error);
+        alert("Failed to place order. Try again.");
+                }
+            });
+        });
+    </script>
+    
+    
+
+</body>
+</html>

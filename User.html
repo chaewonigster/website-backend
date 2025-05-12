@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f8f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+        nav {
+            display: flex;
+            list-style: none;
+            padding: 0;
+        }
+        nav li {
+            margin-right: 20px;
+        }
+        .faq-section {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .faq-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+        }
+        .faq-item h4 {
+            cursor: pointer;
+            margin: 0;
+        }
+        .faq-item p {
+            display: none;
+            margin: 10px 0 0;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Frequently Asked Questions (FAQ)</h1>
+    <nav>
+        <ul>
+            <li><a href="SHIPPING-DELIVERY.html">Shipping + Delivery</a></li>
+            <li><a href="PRODUCT.html">Product</a></li>
+            <li><a href="PRIVACY.html">Privacy policy?</a></li>
+            
+        </ul>
+    </nav>
+</header>
+
+<section class="faq-section">
+    <h2>Product</h2>
+    
+    <div class="faq-item" onclick="toggleAnswer(this)">
+        <h4>What is the return policy?</h4>
+        <p>We offer a 1-day return policy on most items. If you’re not completely satisfied with your purchase, you can return the product for a full refund or exchange. Please ensure the item is in its original condition and packaging. </p>
+    </div>
+
+    <div class="faq-item" onclick="toggleAnswer(this)">
+        <h4>Can I change or cancel my order?</h4>
+        <p>If you need to modify or cancel your order, please contact us right away of placing your order. our orders are processed and shipped, and we may not be able to make changes.</p>
+    </div>
+
+    <div class="faq-item" onclick="toggleAnswer(this)">
+        <h4>What payment methods do you accept?</h4>
+        <p>We accept a variety of payment methods, including credit/debit cards (Visa, MasterCard), Gcash, Pay MAYA.</p>
+    </div>
+
+    <div class="faq-item" onclick="toggleAnswer(this)">
+        <h4>Is it safe to shop on your website?</h4>
+        <p>Please check with your local delivery service or your neighbors to see if it was delivered elsewhere. If it still hasn't arrived, contact our support team.</p>
+    </div>
+
+    <div class="faq-item" onclick="toggleAnswer(this)">
+        <h4>How do I place an order??</h4>
+        <p>To place an order, simply browse our product listings, add items to your cart, and proceed to checkout. You'll be prompted to provide your shipping information, choose a payment method, and confirm your order.</p>
+    </div>
+    <div class="bottom-footer">
+        <p>Copyright © 2025 MahusayFrozen. All rights reserved.</p>
+        <p>
+            <a href="Homepage.html">Home Page</a> |                            
+        </p>
+        </div>
+</section>
+
+<script>
+    function toggleAnswer(faqItem) {
+        const answer = faqItem.querySelector('p');
+        answer.style.display = answer.style.display === 'block' ? 'none' : 'block';
+    }
+</script>
+
+</body>
+</html>

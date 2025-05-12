@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wholemart Footer</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+        }
+        .footer {
+            background: linear-gradient(to right, #5a98f2, #5a78f2);
+            color: white;
+            padding: 30px 50px;
+            text-align: left;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .footer-column {
+            flex: 1;
+            min-width: 250px;
+            margin: 10px;
+        }
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .footer-column p, .footer-column a {
+            font-size: 14px;
+            color: white;
+            text-decoration: none;
+            line-height: 1.5;
+        }
+        .footer-column a:hover {
+            text-decoration: underline;
+        }
+        .contact-info {
+            display: flex;
+            align-items: center;
+        }
+        .contact-info img {
+            width: 15px;
+            margin-right: 10px;
+        }
+        .newsletter {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .newsletter input {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 20px;
+            margin-right: 10px;
+        }
+        .newsletter button {
+            padding: 8px 15px;
+            border: none;
+            background: black;
+            color: white;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        .newsletter button:hover {
+            background: #333;
+        }
+        .social-icons img {
+            width: 25px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        .bottom-footer {
+            text-align: center;
+            background: #2c2c2c;
+            color: white;
+            padding: 10px;
+            font-size: 12px;
+        }
+        .bottom-footer a {
+            color: lightgray;
+            text-decoration: none;
+            margin: 0 5px;
+        }
+        .bottom-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <footer class="footer">
+        <div class="footer-column">
+            <h3>WHOLEMART</h3>
+            <p>Wholemart is your go-to, full-service hypermarket that brings a whole new shopping experience by offering curated, quality global and local brands to consumers conveniently.</p>
+        </div>
+
+        <div class="footer-column">
+            <h3>MAIN OFFICE</h3>
+            <p>📍 Unit 1007, One Park Drive, 9th Ave. cor. 11th Drive, Fort Bonifacio, Taguig City, NCR, Philippines</p>
+            <p>📧 <a href="mailto:hello@wholemart.com.ph">hello@wholemart.com.ph</a></p>
+            <p>📞 +63 (917) 534-7732</p>
+        </div>
+
+        <div class="footer-column">
+            <h3>DELIVERY</h3>
+            <p>FREE DELIVERY within Metro Manila for orders above ₱3,500</p>
+            <img src="visa.png" alt="Visa">
+            <img src="mastercard.png" alt="Mastercard">
+            <img src="gcash.png" alt="GCash">
+            <img src="maya.png" alt="Maya">
+        </div>
+
+        <div class="footer-column">
+            <h3>Newsletter Signup</h3>
+            <p>Subscribe to our newsletter and get the latest information on our products.</p>
+            <div class="newsletter">
+                <input type="email" placeholder="Your email address">
+                <button>Subscribe</button>
+            </div>
+        </div>
+    </footer>
+
+    <div class="bottom-footer">
+        <p>Copyright © 2025 Wholemart. All rights reserved. Powered by iSolve</p>
+        <p>
+            <a href="#">Home Page</a> | 
+            <a href="#">All Collections</a> | 
+            <a href="#">FAQ</a> | 
+            <a href="#">Delivery Policy</a> | 
+            <a href="#">User Policies</a> | 
+            <a href="#">Privacy Policy</a>
+        </p>
+    </div>
+
+</body>
+</html>
