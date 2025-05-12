@@ -29,18 +29,28 @@
         }
 
         .back-button {
+            display: inline-block;
             position: absolute;
-            top: 20px;
+            top: 35px;
             left: 20px;
             text-decoration: none;
             color: var(--white-color);
-            font-size: 1.2rem;
-            transition: transform 0.3s ease;
+            background-color: var(--primary-color);
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            font-size: 1rem;
+            transition: transform 0.3s ease, background-color 0.3s ease;
             z-index: 10;
+            border: 2px solid var(--white-color);
         }
 
         .back-button:hover {
             transform: translateX(-5px);
+            background-color: var(--secondary-color);
+        }
+
+        .back-button i {
+            margin-right: 0.5rem;
         }
 
         header {
@@ -281,8 +291,8 @@
 
     <header>
         <div class="header-content">
-            <h1>Mahusay Frozen Vegetables</h1>
-            <p>Delivering farm-fresh frozen vegetables directly to your kitchen. Quality, convenience, and nutrition in every package.</p>
+            <h1>Vegetables</h1>
+            <p>Enjoy the freshness of premium frozen vegetables with every pack. From crisp greenpeas to colorful mixed veggies, our selection brings nutrition, convenience, and taste straight to your kitchen.</p>
         </div>
     </header>
 
@@ -332,8 +342,8 @@
         <div class="footer-content">
             <p>© 2025 Mahusay Frozen Goods. Committed to bringing the freshest frozen vegetables to your table with quality and care.</p>
             <div class="footer-links">
-                <a href="#" title="Privacy Policy"><i class="fas fa-shield-alt"></i> Privacy</a>
-                <a href="#" title="Terms of Service"><i class="fas fa-file-contract"></i> Terms</a>
+                <a href="Privacy.html" title="Privacy Policy"><i class="fas fa-shield-alt"></i> Privacy</a>
+                <a href="Shipping.html" title="Terms of Service"><i class="fas fa-file-contract"></i> Terms</a>
                 <a href="#" title="Contact Us"><i class="fas fa-envelope"></i> Contact</a>
             </div>
         </div>

@@ -36,8 +36,6 @@
             margin-bottom: 5px;
         }
         input[type="text"],
-        input[type="text"],
-        input[type="text"],
         input[type="email"],
         input[type="address"],
         input[type="contact"],
@@ -55,6 +53,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
         button:hover {
             background-color: #218838;
@@ -62,6 +61,12 @@
         .toggle-form {
             text-align: center;
             margin-top: 15px;
+        }
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-bottom: 15px;
+            display: none;
         }
     </style>
 </head>
@@ -72,132 +77,172 @@
 </header>
 
 <div class="container">
-    <h2>Login</h2>
-    <form id="loginForm">
-        <div class="form-group">
-            <label for="loginEmail">Email</label>
-            <input type="email" id="loginEmail" name="loginEmail" required>
-        </div>
-        <div class="form-group">
-            <label for="loginPassword">Password</label>
-            <input type="password" id="loginPassword" name="loginPassword" required>
-        </div>
-        <button type="submit">Login</button>
-    </form>
+    <div id="loginSection">
+        <h2>Login</h2>
+        <div id="loginErrorMessage" class="error-message"></div>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="loginEmail">Email</label>
+                <input type="email" id="loginEmail" name="loginEmail" required>
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" name="loginPassword" required>
+            </div>
+            <button type="submit">Login</button>
+        </form>
 
-    <div class="toggle-form">
-        <p>Don't have an account? <a href="#" id="showRegister">Register here</a></p>
+        <div class="toggle-form">
+            <p>Don't have an account? <a href="#" id="showRegister">Register here</a></p>
+        </div>
     </div>
 
-    <h2 style="display:none;">Register</h2>
-    <form id="registerForm" style="display:none;">
-        <div class="form-group">
-            <label for="registerFirstName">First Name</label>
-            <input type="text" id="registerFirstName" name="registerFirstName" required>
-        </div>
-        <div class="form-group">
-            <label for="registerMiddleName">Middle Name</label>
-            <input type="text" id="registerMiddleName" name="registerMiddleName">
-        </div>
-        <div class="form-group">
-            <label for="registerLastName">Last Name</label>
-            <input type="text" id="registerLastName" name="registerLastName" required>
-        </div>
+    <div id="registerSection" style="display:none;">
+        <h2>Register</h2>
+        <div id="registerErrorMessage" class="error-message"></div>
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="registerFirstName">First Name</label>
+                <input type="text" id="registerFirstName" name="registerFirstName" required>
+            </div>
+            <div class="form-group">
+                <label for="registerMiddleName">Middle Name</label>
+                <input type="text" id="registerMiddleName" name="registerMiddleName">
+            </div>
+            <div class="form-group">
+                <label for="registerLastName">Last Name</label>
+                <input type="text" id="registerLastName" name="registerLastName" required>
+            </div>
 
-        <div class="form-group">
-            <label for="registerEmail">Email</label>
-            <input type="email" id="registerEmail" name="registerEmail" required>
-        </div>
-        <div class="form-group">
-            <label for="registerAddress">Address</label>
-            <input type="address" id="registerAddress" name="registerAddress" required>
-        </div>
-        <div class="form-group">
-            <label for="registerContact">Contact #</label>
-            <input type="contact" id="registerContact" name="registerContact" required>
-        </div>
-        <div class="form-group">
-            <label for="registerPassword">Password</label>
-            <input type="password" id="registerPassword" name="registerPassword" required>
-        </div>
-        <button type="submit">Register</button>
-    </form>
+            <div class="form-group">
+                <label for="registerEmail">Email</label>
+                <input type="email" id="registerEmail" name="registerEmail" required>
+            </div>
+            <div class="form-group">
+                <label for="registerAddress">Address</label>
+                <input type="text" id="registerAddress" name="registerAddress" required>
+            </div>
+            <div class="form-group">
+                <label for="registerContact">Contact #</label>
+                <input type="text" id="registerContact" name="registerContact" required>
+            </div>
+            <div class="form-group">
+                <label for="registerPassword">Password</label>
+                <input type="password" id="registerPassword" name="registerPassword" required>
+            </div>
+            <button type="submit">Register</button>
+        </form>
 
-    <div class="toggle-form" style="display:none;">
-        <p>Already have an account? <a href="#" id="showLogin">Login here</a></p>
+        <div class="toggle-form">
+            <p>Already have an account? <a href="#" id="showLogin">Login here</a></p>
+        </div>
     </div>
 </div>
 
 <script>
-    document.getElementById('showRegister').onclick = function() {
-        document.getElementById('loginForm').style.display = 'none';
-        document.querySelector('h2').style.display = 'none';
-        document.getElementById('registerForm').style.display = 'block';
-        document.querySelectorAll('.toggle-form')[1].style.display = 'block';
-    };
+    document.addEventListener('DOMContentLoaded', function() {
+        const loginSection = document.getElementById('loginSection');
+        const registerSection = document.getElementById('registerSection');
+        const showRegisterLink = document.getElementById('showRegister');
+        const showLoginLink = document.getElementById('showLogin');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const loginErrorMessage = document.getElementById('loginErrorMessage');
+        const registerErrorMessage = document.getElementById('registerErrorMessage');
 
-    document.getElementById('showLogin').onclick = function() {
-        document.getElementById('registerForm').style.display = 'none';
-        document.querySelector('h2').style.display = 'block';
-        document.getElementById('loginForm').style.display = 'block';
-        document.querySelectorAll('.toggle-form')[0].style.display = 'block';
-    };
-    document.getElementById("registerForm").addEventListener("submit", async function (e) {
-        e.preventDefault(); 
-
-        const firstname = document.getElementById("registerFirstName").value;
-        const middlename = document.getElementById("registerMiddleName").value;
-        const lastname = document.getElementById("registerLastName").value;
-        const email = document.getElementById("registerEmail").value;
-        const password = document.getElementById("registerPassword").value;
-        const address = document.getElementById("registerAddress").value;
-        const contact = document.getElementById("registerContact").value;
-
-        const response = await fetch("https://chaewonigster.github.io/register", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ firstname, middlename, lastname, email, address,contact ,password })
+        // Toggle to Register Form
+        showRegisterLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            loginSection.style.display = 'none';
+            registerSection.style.display = 'block';
+            loginErrorMessage.style.display = 'none';
         });
 
-        const data = await response.json();
-        alert(data.message);
-    });
-async function loginUser(event) {
-    event.preventDefault();
+        // Toggle to Login Form
+        showLoginLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            registerSection.style.display = 'none';
+            loginSection.style.display = 'block';
+            registerErrorMessage.style.display = 'none';
+        });
 
-    const email = document.getElementById("loginEmail").value;
-    const password = document.getElementById("loginPassword").value;
+        // Login Form Submission
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            loginErrorMessage.style.display = 'none';
 
-    console.log("Attempting login with:", email, password); 
+            const email = document.getElementById("loginEmail").value;
+            const password = document.getElementById("loginPassword").value;
 
-const response = await fetch("https://chaewonigster.github.io/login", {
+            try {
+const response = await fetch("https://website-backend-1-w1qd.onrender.com/api/login", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    credentials: "include",  // This ensures cookies (session) are sent
     body: JSON.stringify({ email, password })
 });
 
-    const data = await response.json();
-    console.log("Response received:", data); 
+                const data = await response.json();
 
-    if (data.success) {
-        alert("Login successful!");
-        console.log("Redirecting to LOGIN_USER.html..."); 
-        localStorage.setItem("user", JSON.stringify(data.user));
-        window.location.href = "LOGIN_USER.html"; 
-    } else {
-        alert("Login failed: " + data.message);
-    }
-}
-    
-    document.addEventListener("DOMContentLoaded", function () {
-        console.log("DOM fully loaded. Checking loginForm:", document.getElementById("loginForm"));
+                if (data.success) {
+                    alert("Login successful!");
+                    localStorage.setItem("user", JSON.stringify(data.user));
+                    window.location.href = "LOGIN_USER.html";
+                } else {
+                    loginErrorMessage.textContent = data.message || "Login failed. Please try again.";
+                    loginErrorMessage.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                loginErrorMessage.textContent = "An error occurred. Please try again.";
+                loginErrorMessage.style.display = 'block';
+            }
+        });
+
+        // Register Form Submission
+        registerForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            registerErrorMessage.style.display = 'none';
+
+            const firstname = document.getElementById("registerFirstName").value;
+            const middlename = document.getElementById("registerMiddleName").value;
+            const lastname = document.getElementById("registerLastName").value;
+            const email = document.getElementById("registerEmail").value;
+            const password = document.getElementById("registerPassword").value;
+            const address = document.getElementById("registerAddress").value;
+            const contact = document.getElementById("registerContact").value;
+
+            try {
+const response = await fetch("https://website-backend-1-w1qd.onrender.com/api/register", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    credentials: "include",
+    body: JSON.stringify({ firstname, middlename, lastname, email, password, address, contact })
+
+});
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert("Registration successful! Please log in.");
+                    registerSection.style.display = 'none';
+                    loginSection.style.display = 'block';
+                } else {
+                    registerErrorMessage.textContent = data.message || "Registration failed. Please try again.";
+                    registerErrorMessage.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                registerErrorMessage.textContent = "An error occurred. Please try again.";
+                registerErrorMessage.style.display = 'block';
+            }
+        });
     });
-    document.getElementById("loginForm").addEventListener("submit", loginUser);
 </script>
-<script src="script.js"></script>
 
 </body>
 </html>

@@ -12,10 +12,24 @@ const bcrypt = require("bcryptjs");
 
 const app = express(); 
 app.use(express.json());
+const allowedOrigins = [
+  "https://chaewonigster.github.io",
+  "http://127.0.0.1:5500",   // This should be allowed
+  "http://localhost:5500"    // You can also try adding this, just in case.
+];
+
 app.use(cors({
-    origin: "https://chaewonigster.github.io",  // Your frontend origin
-    credentials: true             // Allow sending cookies (session)
+  origin: function(origin, callback) {
+    console.log('Origin:', origin);  // Log to check what origin is being sent
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
 }));
+
 app.use(session({
     secret: "your_secret_key", 
     resave: false,
