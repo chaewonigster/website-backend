@@ -246,7 +246,8 @@ async function handleRegister(event) {
     const contact = document.getElementById("registerContact").value;
 
     try {
-        const response = await fetch("http://localhost:3000/register", {
+        const apiUrl = 'https://website-backend-1-w1qd.onrender.com/api/register';
+        const response = await fetch(apiUrl, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ firstname, middlename, lastname, email, address, contact, password })
