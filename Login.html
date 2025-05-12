@@ -275,6 +275,17 @@
             transition: all 0.3s ease;
             transform: translateX(-50%);
         }
+        
+        .success-message {
+    background-color: var(--success-color); /* green */
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    text-align: center;
+    box-shadow: var(--card-shadow);
+}
+
 
         .toggle-link:hover::after {
             width: 100%;
@@ -600,8 +611,9 @@
 
         <div id="registerSection" class="form-section" style="display:none;">
             <h2>Create Account</h2>
-            <div id="registerErrorMessage" class="error-message"></div>
             <div id="registerSuccessMessage" class="success-message"></div>
+            <div id="registerErrorMessage" class="success-message"></div>
+            
             
             <form id="registerForm">
                 <div class="form-group floating-label">
@@ -908,11 +920,11 @@
                 const data = await response.json();
 
                 // Hide loading animation
-                loginBtn.classList.remove('loading');
+                registerBtn.classList.remove('loading');
 
                 if (data.success) {
-                    loginSuccessMessage.textContent = "Login successful! Redirecting...";
-                    loginSuccessMessage.style.display = 'block';
+registerSuccessMessage.textContent = "Registration successful! Redirecting...";
+registerSuccessMessage.style.display = 'block';
                     localStorage.setItem("user", JSON.stringify(data.user));
                     
                     // Delay redirect for animation
@@ -920,14 +932,14 @@
                         window.location.href = "LOGIN_USER.html";
                     }, 1500);
                 } else {
-                    loginErrorMessage.textContent = data.message || "Login failed. Please try again.";
-                    loginErrorMessage.style.display = 'block';
+registerErrorMessage.textContent = data.message || "Registration failed.";
+registerErrorMessage.style.display = 'block';
                 }
             } catch (error) {
-                console.error('Login error:', error);
-                loginErrorMessage.textContent = "An error occurred. Please try again.";
-                loginErrorMessage.style.display = 'block';
-                loginBtn.classList.remove('loading');
+                console.error('Register error:', error);
+                registerErrorMessage.textContent = "An error occurred. Please try again.";
+                registerErrorMessage.style.display = 'block';
+                registerBtn.classList.remove('loading');
             }
         });
 
