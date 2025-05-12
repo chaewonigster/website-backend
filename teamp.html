@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Meet Our Team</title>
+    <style>
+        :root {
+            --primary-color: #000000;
+            --secondary-color: #000000;
+            --text-color: #000000;
+            --bg-color: #f4f4f4;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--text-color);
+        }
+
+        .section-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-header p {
+            color: #757575;
+            font-style: italic;
+        }
+
+        .team-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .team-member {
+            background: rgb(145, 145, 145);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 280px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-member:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .team-member::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg, 
+                transparent, 
+                var(--primary-color), 
+                var(--secondary-color)
+            );
+            transform-origin: bottom right;
+            animation: border-shine 3s linear infinite;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .team-member:hover::before {
+            opacity: 0.1;
+        }
+
+        @keyframes border-shine {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .team-member-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary-color);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .team-member:hover .team-member-image {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .team-member h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .team-member .role {
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .team-member p {
+            color: #030303;
+            margin-bottom: 10px;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-icon {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .profile-link {
+            display: inline-block;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        
+        .profile-link:hover::after {
+            content: 'View Profile';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: rgb(0, 0, 0);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            opacity: 0;
+            animation: fadeIn 0.3s forwards;
+        }
+        
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                bottom: -25px;
+            }
+        }
+        
+        .name-link {
+            text-decoration: none;
+            color: var(--text-color);
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        .name-link:hover {
+            color: var(--primary-color);
+        }
+        
+        .name-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+        
+        .name-link:hover::after {
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .team-container {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        .top-left-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 10px 20px;
+  background-color: #545555;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.top-left-button:hover {
+  background-color: #000000;
+}
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="section-header">
+          <a href="doc.html" class="top-left-button">BACK</a>
+            <h1>Meet Our Team</h1>
+            <p>Passionate professionals driving innovation and excellence</p>
+        </div>
+
+        <div class="team-container">
+            <div class="team-member">
+                <a href="laurice.html" class="profile-link">
+                    <img src="kaye.png" alt="Laurice Cabrera" class="team-member-image">
+                </a>
+                <h3><a href="laurice.html" class="name-link">Laurice Cabrera</a></h3>
+                <div class="role">Project Manager</div>
+                <p>Orchestrating success through strategic leadership</p>
+                <div class="social-icons">
+                    <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+
+            <div class="team-member">
+                <a href="ainie.html" class="profile-link">
+                    <img src="aine.jpg" alt="Ainie Montoya" class="team-member-image">
+                </a>
+                <h3><a href="ainie.html" class="name-link">Ainie Montoya</a></h3>
+                <div class="role">Analyst</div>
+                <p>Transforming data into actionable insights</p>
+                <div class="social-icons">
+                    <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+
+            <div class="team-member">
+                <a href="nathaniel.html" class="profile-link">
+                    <img src="nathaniel.jpg" alt="Nathaniel Jarme" class="team-member-image">
+                </a>
+                <h3><a href="nathaniel.html" class="name-link">Nathaniel Jarme</a></h3>
+                <div class="role">Web Developer</div>
+                <p>Crafting robust and scalable web solutions</p>
+                <div class="social-icons">
+                    <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+
+            <div class="team-member">
+                <a href="julian.html" class="profile-link">
+                    <img src="jhulian.jpg" alt="Julian Manalo" class="team-member-image">
+                </a>
+                <h3><a href="julian.html" class="name-link">Julian Manalo</a></h3>
+                <div class="role">Front-end Developer</div>
+                <p>Creating intuitive and beautiful user interfaces</p>
+                <div class="social-icons">
+                    <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+
+            <div class="team-member">
+                <a href="keith.html" class="profile-link">
+                    <img src="aki.jpg" alt="Keith Barozo" class="team-member-image">
+                </a>
+                <h3><a href="keith.html" class="name-link">Keith Barozo</a></h3>
+                <div class="role">Web Designer</div>
+                <p>Designing experiences that delight and inspire</p>
+                <div class="social-icons">
+                    <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-dribbble"></i></a>
+                </div>
+            </div>
+
+            <div class="team-member">
+                <a href="lene.html" class="profile-link">
+                    <img src="lene.jpg" alt="Lene Bocabal" class="team-member-image">
+                </a>
+                <h3><a href="lene.html" class="name-link">Lene Bocabal</a></h3>
+                <div class="role">Team Member</div>
+                <p>Contributing to our collective success</p>
+                <div class="social-icons">
+                    <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+
+            <div class="team-member">
+                <a href="jerico.html" class="profile-link">
+                    <img src="seno.jpg" alt="Jerico Seno" class="team-member-image">
+                </a>
+                <h3><a href="jerico.html" class="name-link">Jerico Seno</a></h3>
+                <div class="role">Team Member</div>
+                <p>Driving innovation through collaboration</p>
+                <div class="social-icons">
+                    <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+
+            
+        </div>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Member Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .team-member {
+            width: 250px;
+            text-align: center;
+            padding: 50px;
+            background-color: #949494;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            margin: 20px auto;
+        }
+        
+        .team-member:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .profile-link {
+            display: block;
+            cursor: pointer;
+        }
+        
+        .team-member-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #000000;
+            transition: transform 0.3s ease;
+        }
+        
+        .team-member-image:hover {
+            transform: scale(1.05);
+        }
+        h1 {
+            
+            color: #000000;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        
+        h3 {
+            margin: 15px 0 5px;
+            color: #fafafa;
+        }
+        
+        .name-link {
+            text-decoration: none;
+            color: #000000;
+            font-weight: bold;
+        }
+        
+        .name-link:hover {
+            color: #ffffff;
+        }
+        
+        .role {
+            color: #ffffff;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        p {
+            color: #000000;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .social-icon {
+            color: #000000;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            color: #000000;
+        }
+
+        .footer {
+            background: linear-gradient(to right, #5a98f2, #5a78f2);
+            color: white;
+            padding: 30px 50px;
+            text-align: left;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .footer-column {
+            flex: 1;
+            min-width: 250px;
+            margin: 10px;
+        }
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .footer-column p, .footer-column a {
+            font-size: 20px;
+            color: rgb(255, 255, 255);
+            text-decoration: none;
+            line-height: 1.5;
+        }
+        .footer-column img {
+            width: 50px; /* Adjust the size of the icons */
+            height: auto; /* Keeps aspect ratio */
+            margin: 5px; /* Adds space around images */
+            display: inline-block; /* Prevents stacking */
+            vertical-align: middle;
+        }
+        .footer-column a:hover {
+            text-decoration: underline;
+        }
+        .top-left-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 10px 20px;
+  background-color: #545555;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.top-left-button:hover {
+  background-color: #000000;
+}
+
+    </style>
+</head>
+<body>
+    <h1>__TITLE__</h1>
+    <a href="index.html" class="top-left-button">BACK</a>
+    <div class="team-member">
+        <a href="teamp.html" class="profile-link">
+            <img src="awi.jpg" alt="Jerico Seno" class="team-member-image">
+        </a>
+        <h3><a href="teamp.html" class="name-link">Doc Awi</a></h3>
+        <div class="role">Professor</div>
+        <p>Driving innovation through collaboration</p>
+        <div class="social-icons">
+            <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    
+    <footer class="footer">
+                    <div class="footer-column">
+                        <h3>MAHUSAY FROZEN</h3>
+                        <p>Frozen Goods is your trusted destination for premium frozen products, offering a carefully curated selection of high-quality local and international brands. We bring convenience and freshness straight to your kitchen.</p>
+                    </div>
+            
+                    <div class="footer-column">
+                        <h3>MAIN OFFICE</h3>
+                        <p>📍San Rafael Flea Market (Montalban) Rodriguez Rizal</p>
+                        <p>📧 <a href="mailto:hello@wholemart.com.ph">hello@wholemart.com.ph</a></p>
+                        <p>📞 +63 (965) 605-8681</p>
+                    </div>
+            
+                    
+            
+                    <div class="footer-column">
+                        <h3>Newsletter Signup</h3>
+                        <p>Subscribe to our newsletter and get the latest information on our products.</p>
+                        <div class="newsletter">
+                            <input type="email" placeholder="Your email address">
+                            <button>Subscribe</button>
+                        </div>
+                    </div>
+                </footer>
+            
+                
+</body>
+</html>
