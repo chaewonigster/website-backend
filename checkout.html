@@ -883,9 +883,9 @@ placeOrderButton.addEventListener("click", async (e) => {
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
 
     // Get user data
-    const firstname = document.getElementById('firstname').value;
-    const lastname = document.getElementById('lastname').value;
-    const buyerName = `${firstname} ${lastname}`.trim() || "guest";
+    const orderFirstname = document.getElementById('firstname').value;
+    const orderLastname = document.getElementById('lastname').value;
+    const buyerName = `${orderFirstname} ${orderLastname}`.trim() || "guest";
     
     // Get user ID from localStorage (crucial for order history)
     const userData = JSON.parse(localStorage.getItem("user")) || {};
@@ -899,71 +899,68 @@ placeOrderButton.addEventListener("click", async (e) => {
         const orderPromises = [];
         
         // Loop through each cart item and prepare the order
-        for (let item of cart) {
-            console.log("Preparing order data:", item);
-            
-            const orderData = {
-                product: item.name,
-                price: item.price,
-                quantity: item.quantity,
-                buyer: buyerName,
-                userId: userId, // This connects the order to the user account
-                paymentMethod: selectedPaymentMethod,
-                orderDate: new Date().toISOString()
-            };
-            
-            console.log("Sending order data:", orderData);
-            
-            // Create the promise for this order
-            const orderPromise = fetch("http://localhost:3000/order", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
-                body: JSON.stringify(orderData)
-            })
-            .then(response => {
-                console.log(`Order response status for ${item.name}:`, response.status);
-                if (!response.ok) {
-                    throw new Error(`Server returned ${response.status} for ${item.name}`);
+                for (let item of cart) {
+                    console.log("Preparing order data:", item);
+                    
+                    const orderData = {
+                        product: item.name,
+                        price: item.price,
+                        quantity: item.quantity,
+                        buyer: buyerName,
+                        userId: userId, // This connects the order to the user account
+                        paymentMethod: selectedPaymentMethod,
+                        orderDate: new Date().toISOString()
+                    };
+                    
+                    console.log("Sending order data:", orderData);
+                    
+                    // Create the promise for this order
+                    const orderPromise = fetch("http://localhost:3000/order", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        credentials: "include",
+                        body: JSON.stringify(orderData)
+                    })
+                    .then(response => {
+                        console.log(`Order response status for ${item.name}:`, response.status);
+                        if (!response.ok) {
+                            throw new Error(`Server returned ${response.status} for ${item.name}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log(`Order success for ${item.name}:`, data);
+                        return data;
+                    });
+                    
+                    orderPromises.push(orderPromise);
                 }
-                return response.json();
-            })
-            .then(data => {
-                console.log(`Order success for ${item.name}:`, data);
-                return data;
-            });
-            
-            orderPromises.push(orderPromise);
-        }
         
-        // Wait for all orders to complete
-        const results = await Promise.all(orderPromises);
-        console.log("All orders completed:", results);
+                // Wait for all orders to complete
+                await Promise.all(orderPromises);
         
-        // Success animation
-        btn.classList.remove('loading');
-        btn.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
-        btn.innerHTML = '<i class="fas fa-check-circle"></i> Order Successful!';
+                // Optionally, clear the cart and show a confirmation message
+                localStorage.removeItem("cart");
+                alert("Order placed successfully!");
         
-        setTimeout(() => {
-            // Success
-            alert("Order placed successfully!");
-            localStorage.removeItem("cart");  // Clear cart
-            window.location.href = "LOGIN_USER.html";  // Redirect
-        }, 1500);
-
-    } catch (error) {
-        console.error("Error placing order:", error);
-        alert("Failed to place order: " + error.message);
-        btn.classList.remove('loading');
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-check-circle"></i> Place Order';
-    }
-});
-            
-            // Load cart items on page load
-            loadCartItems();
+                // Redirect or update UI as needed
+                window.location.reload();
+        
+            } catch (error) {
+                console.error("Order placement failed:", error);
+                alert("There was an error placing your order. Please try again.");
+            } finally {
+                // Remove loading state
+                btn.classList.remove('loading');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check-circle"></i> Place Order';
+            }
         });
+        
+        // Load cart items on page load
+        loadCartItems();
+        // End of DOMContentLoaded event listener
+    });
     </script>
 </body>
 </html>
