@@ -867,74 +867,99 @@
             }
             
             // Place order
-            placeOrderButton.addEventListener("click", async (e) => {
-                const btn = e.target.closest('.btn');
-                
-                // First, check if the cart is empty.
-                if (cart.length === 0) {
-                    alert("Your cart is empty!");
-                    return;
+// Place order with improved error handling and user tracking
+placeOrderButton.addEventListener("click", async (e) => {
+    const btn = e.target.closest('.btn');
+    
+    // First, check if the cart is empty
+    if (cart.length === 0) {
+        alert("Your cart is empty!");
+        return;
+    }
+
+    // Show loading state
+    btn.classList.add('loading');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+    // Get user data
+    const firstname = document.getElementById('firstname').value;
+    const lastname = document.getElementById('lastname').value;
+    const buyerName = `${firstname} ${lastname}`.trim() || "guest";
+    
+    // Get user ID from localStorage (crucial for order history)
+    const userData = JSON.parse(localStorage.getItem("user")) || {};
+    const userId = userData.id || userData._id || userData.userId;
+    
+    console.log("Current user data:", userData);
+    console.log("User ID for order:", userId);
+
+    try {
+        // Create an array to store all order promises
+        const orderPromises = [];
+        
+        // Loop through each cart item and prepare the order
+        for (let item of cart) {
+            console.log("Preparing order data:", item);
+            
+            const orderData = {
+                product: item.name,
+                price: item.price,
+                quantity: item.quantity,
+                buyer: buyerName,
+                userId: userId, // This connects the order to the user account
+                paymentMethod: selectedPaymentMethod,
+                orderDate: new Date().toISOString()
+            };
+            
+            console.log("Sending order data:", orderData);
+            
+            // Create the promise for this order
+            const orderPromise = fetch("http://localhost:3000/order", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify(orderData)
+            })
+            .then(response => {
+                console.log(`Order response status for ${item.name}:`, response.status);
+                if (!response.ok) {
+                    throw new Error(`Server returned ${response.status} for ${item.name}`);
                 }
-
-                // Show loading state
-                btn.classList.add('loading');
-                btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-
-                // Get user data
-                const firstname = document.getElementById('firstname').value;
-                const lastname = document.getElementById('lastname').value;
-                const buyerName = `${firstname} ${lastname}`.trim() || "guest";
-
-                try {
-                    // Loop through each cart item and send the order to the server
-                    for (let item of cart) {
-                        console.log("Sending order data:", item);
-
-                        const response = await fetch("http://localhost:3000/order", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            credentials: "include",
-                            body: JSON.stringify({
-                                product: item.name,
-                                price: item.price,
-                                quantity: item.quantity,
-                                buyer: buyerName
-                            })
-                        });
-
-                        const data = await response.json();
-
-                        if (!response.ok) {
-                            console.error("Error placing order:", data);
-                            alert("Failed to place order: " + data.message);
-                            btn.classList.remove('loading');
-                            btn.disabled = false;
-                            btn.innerHTML = '<i class="fas fa-check-circle"></i> Place Order';
-                            return; // Stop if there's an error
-                        }
-                    }
-
-                    // Success animation
-                    btn.classList.remove('loading');
-                    btn.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
-                    btn.innerHTML = '<i class="fas fa-check-circle"></i> Order Successful!';
-                    
-                    setTimeout(() => {
-                        // Success
-                        alert("Order placed successfully!");
-                        localStorage.removeItem("cart");  // Clear cart
-                        window.location.href = "LOGIN_USER.html";  // Redirect
-                    }, 1500);
-
-                } catch (error) {
-                    console.error("Error placing order:", error);
-                    alert("Failed to place order. Try again.");
-                    btn.classList.remove('loading');
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-check-circle"></i> Place Order';
-                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(`Order success for ${item.name}:`, data);
+                return data;
             });
+            
+            orderPromises.push(orderPromise);
+        }
+        
+        // Wait for all orders to complete
+        const results = await Promise.all(orderPromises);
+        console.log("All orders completed:", results);
+        
+        // Success animation
+        btn.classList.remove('loading');
+        btn.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
+        btn.innerHTML = '<i class="fas fa-check-circle"></i> Order Successful!';
+        
+        setTimeout(() => {
+            // Success
+            alert("Order placed successfully!");
+            localStorage.removeItem("cart");  // Clear cart
+            window.location.href = "LOGIN_USER.html";  // Redirect
+        }, 1500);
+
+    } catch (error) {
+        console.error("Error placing order:", error);
+        alert("Failed to place order: " + error.message);
+        btn.classList.remove('loading');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-check-circle"></i> Place Order';
+    }
+});
             
             // Load cart items on page load
             loadCartItems();

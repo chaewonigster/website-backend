@@ -3,106 +3,477 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHIPPING-DELIVERY</title>
+    <title>Shipping + Delivery FAQ - MahusayFrozen</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f7f8f4;
-            color: #333;
-            margin: 0;
-            padding: 20px;
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --accent-color: #f39c12;
+            --text-color: #2c3e50;
+            --light-bg: #f8f9fa;
+            --white: #ffffff;
+            --shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f7f9fc, #edf2f7);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
         header {
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 15px 0;
+        }
+        
+        .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 0;
         }
-        nav {
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            margin-left: 10px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+        }
+        
+        nav ul {
             display: flex;
             list-style: none;
-            padding: 0;
         }
+        
         nav li {
-            margin-right: 20px;
+            margin-left: 25px;
+            position: relative;
         }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        nav a:hover {
+            color: var(--primary-color);
+        }
+        
+        nav a i {
+            margin-right: 6px;
+        }
+        
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transition: width 0.3s ease;
+        }
+        
+        nav a:hover::after {
+            width: 100%;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 60px 0 30px;
+        }
+        
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+        
+        .hero p {
+            max-width: 700px;
+            margin: 0 auto;
+            color: #666;
+        }
+        
         .faq-section {
-            background-color: #fff;
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 20px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 20px auto 60px;
+            box-shadow: var(--shadow);
+            max-width: 900px;
         }
+        
+        .faq-section h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            padding-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .faq-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+        
         .faq-item {
-            margin-bottom: 15px;
-            padding: 10px;
-            border: 1px solid #e0e0e0;
-            border-radius: 5px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow: hidden;
+            transition: all 0.3s ease;
         }
-        .faq-item h4 {
+        
+        .faq-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .faq-question {
+            padding: 18px 20px;
             cursor: pointer;
-            margin: 0;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
         }
-        .faq-item p {
-            display: none;
-            margin: 10px 0 0;
+        
+        .faq-question h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0;
+            color: var(--text-color);
+        }
+        
+        .faq-icon {
+            transition: transform 0.3s ease;
+            color: var(--primary-color);
+        }
+        
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            background-color: var(--white);
+            border-top: 1px solid #eee;
+        }
+        
+        .faq-answer p {
+            padding: 15px 0;
+            margin: 0;
+            color: #555;
+            line-height: 1.7;
+        }
+        
+        .faq-item.active .faq-question {
+            background-color: #f0f7ff;
+        }
+        
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+        }
+        
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+            padding: 0 20px;
+        }
+        
+        .search-box {
+            margin: 0 auto 30px;
+            max-width: 500px;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 15px 20px;
+            border-radius: 30px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            padding-left: 50px;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 15px rgba(52, 152, 219, 0.2);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+        
+        footer {
+            background-color: var(--white);
+            padding: 30px 0;
+            text-align: center;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .bottom-footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            text-align: center;
+        }
+        
+        .bottom-footer p {
+            margin-bottom: 10px;
+            color: #666;
+        }
+        
+        .bottom-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .bottom-footer a:hover {
+            color: var(--secondary-color);
+        }
+        
+        /* Animation for FAQ items */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .faq-item {
+            animation: fadeIn 0.5s ease forwards;
+            opacity: 0;
+        }
+        
+        .faq-item:nth-child(1) { animation-delay: 0.1s; }
+        .faq-item:nth-child(2) { animation-delay: 0.2s; }
+        .faq-item:nth-child(3) { animation-delay: 0.3s; }
+        .faq-item:nth-child(4) { animation-delay: 0.4s; }
+        .faq-item:nth-child(5) { animation-delay: 0.5s; }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+            }
+            
+            nav ul {
+                margin-top: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            nav li {
+                margin: 5px 10px;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>Frequently Asked Questions (FAQ)</h1>
-    <nav>
-        <ul>
-            <li><a href="SHIPPING-DELIVERY.html">Shipping + Delivery</a></li>
-            <li><a href="PRODUCT.html">Product</a></li>
-            <li><a href="PRIVACY.html">Privacy policy?</a></li>
-            
-        </ul>
-    </nav>
+    <div class="container">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-snowflake fa-2x" style="color: #3498db;"></i>
+                <h1>MahusayFrozen</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="LOGIN_USER.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="Shipping.html"><i class="fas fa-truck"></i> Shipping + Delivery</a></li>
+                    <li><a href="User.html"><i class="fas fa-box-open"></i> Product</a></li>
+                    <li><a href="FAQ.html"><i class="fas fa-shield-alt"></i> Privacy Policy</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
 </header>
 
-<section class="faq-section">
-    <h2>Shipping + Delivery</h2>
+<div class="container">
+    <div class="hero">
+        <h2>Shipping + Delivery FAQ</h2>
+        <p>Find answers to common questions about our shipping and delivery services.</p>
+    </div>
     
-    <div class="faq-item" onclick="toggleAnswer(this)">
-        <h4>What shipping methods do you offer?</h4>
-        <p>Local delivery, Lalamove or Pickup </p>
+    <div class="search-box">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" id="faqSearch" placeholder="Search for shipping questions..." onkeyup="searchFAQ()">
     </div>
-
-    <div class="faq-item" onclick="toggleAnswer(this)">
-        <h4>Do you ship internationally?</h4>
-        <p>Currently, we do not ship internationally.</p>
-    </div>
-
-    <div class="faq-item" onclick="toggleAnswer(this)">
-        <h4>Why have I only received part of my order?</h4>
-        <p>Your order may have been split into multiple shipments. Please check your tracking information for details.</p>
-    </div>
-
-    <div class="faq-item" onclick="toggleAnswer(this)">
-        <h4>I received a notice my package has arrived and it's not here yet, what should I do?</h4>
-        <p>Please check with your local delivery service or your neighbors to see if it was delivered elsewhere. If it still hasn't arrived, contact our support team.</p>
-    </div>
-
-    <div class="faq-item" onclick="toggleAnswer(this)">
-        <h4>My order arrived damaged. What should I do?</h4>
-        <p>We’re sorry to hear that! Please contact our support team with your order details to resolve the issue.</p>
-    </div>
-    <div class="bottom-footer">
-        <p>Copyright © 2025 MahusayFrozen. All rights reserved.</p>
-        <p>
-            <a href="Homepage.html">Home Page</a> |                            
-        </p>
+    
+    <section class="faq-section">
+        <h2>Shipping + Delivery</h2>
+        
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h4>What shipping methods do you offer?</h4>
+                <i class="fas fa-chevron-down faq-icon"></i>
+            </div>
+            <div class="faq-answer">
+                <p>We offer three convenient delivery options: Local delivery, Lalamove delivery service, or you can choose to pick up your order from our location. Each option is designed to provide you with flexibility based on your needs.</p>
+            </div>
         </div>
-</section>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h4>Do you ship internationally?</h4>
+                <i class="fas fa-chevron-down faq-icon"></i>
+            </div>
+            <div class="faq-answer">
+                <p>Currently, we do not ship internationally. We're focused on providing the best service to our local customers while maintaining the quality of our frozen products. We may expand our shipping options in the future.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h4>Why have I only received part of my order?</h4>
+                <i class="fas fa-chevron-down faq-icon"></i>
+            </div>
+            <div class="faq-answer">
+                <p>Your order may have been split into multiple shipments due to product availability or to ensure optimal freshness of certain items. Please check your order confirmation email for tracking information on all packages. If you have concerns about missing items, please contact our customer service team.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h4>I received a notice my package has arrived and it's not here yet, what should I do?</h4>
+                <i class="fas fa-chevron-down faq-icon"></i>
+            </div>
+            <div class="faq-answer">
+                <p>First, please check with your local delivery service or neighbors to see if the package was delivered elsewhere. If you still cannot locate your package, contact our support team with your order number and delivery details, and we'll help track down your order right away.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h4>My order arrived damaged. What should I do?</h4>
+                <i class="fas fa-chevron-down faq-icon"></i>
+            </div>
+            <div class="faq-answer">
+                <p>We're sorry to hear that your order arrived damaged! Please take photos of the damaged items and packaging, then contact our customer support team immediately with your order number and the photos. We'll process a replacement or refund as quickly as possible to resolve the issue.</p>
+            </div>
+        </div>
+        
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h4>How long does shipping usually take?</h4>
+                <i class="fas fa-chevron-down faq-icon"></i>
+            </div>
+            <div class="faq-answer">
+                <p>For local delivery, orders are typically delivered within 24-48 hours. Lalamove deliveries depend on their availability and your location but usually arrive same-day or next-day. For pickup orders, you can collect your items as soon as we notify you that they're ready, typically within a few hours of placing your order.</p>
+            </div>
+        </div>
+        
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h4>Are there any shipping fees?</h4>
+                <i class="fas fa-chevron-down faq-icon"></i>
+            </div>
+            <div class="faq-answer">
+                <p>Yes, shipping fees vary based on your delivery method and location. Local delivery has a base fee with additional charges for longer distances. Lalamove fees are calculated based on their current rates. Pickup orders do not incur shipping fees. The exact cost will be calculated and displayed during checkout before you complete your purchase.</p>
+            </div>
+        </div>
+        
+        <div class="bottom-footer">
+            <p>Copyright © 2025 MahusayFrozen. All rights reserved.</p>
+            <p>
+                <a href="LOGIN_USER.html">Home</a> |
+                <a href="Shipping.html">Shipping</a> |
+                <a href="User.html">Products</a> |
+                <a href="FAQ.html">Privacy</a>
+            </p>
+        </div>
+    </section>
+</div>
 
 <script>
-    function toggleAnswer(faqItem) {
-        const answer = faqItem.querySelector('p');
-        answer.style.display = answer.style.display === 'block' ? 'none' : 'block';
+    function toggleFAQ(element) {
+        const faqItem = element.parentElement;
+        const isActive = faqItem.classList.contains('active');
+        
+        // Close all FAQ items
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        
+        // If the clicked item wasn't active before, open it
+        if (!isActive) {
+            faqItem.classList.add('active');
+        }
     }
+    
+    function searchFAQ() {
+        const input = document.getElementById('faqSearch');
+        const filter = input.value.toUpperCase();
+        const faqItems = document.querySelectorAll('.faq-item');
+        
+        faqItems.forEach(item => {
+            const question = item.querySelector('h4').textContent;
+            const answer = item.querySelector('.faq-answer p').textContent;
+            
+            if (question.toUpperCase().indexOf(filter) > -1 || answer.toUpperCase().indexOf(filter) > -1) {
+                item.style.display = "";
+            } else {
+                item.style.display = "none";
+            }
+        });
+    }
+    
+    // Add animation delay to FAQ items
+    document.addEventListener('DOMContentLoaded', function() {
+        const faqItems = document.querySelectorAll('.faq-item');
+        faqItems.forEach((item, index) => {
+            item.style.animationDelay = `${0.1 * (index + 1)}s`;
+        });
+    });
 </script>
 
 </body>

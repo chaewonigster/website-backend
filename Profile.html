@@ -212,6 +212,16 @@
             color: #4CAF50;
         }
 
+        .debug-info {
+            background-color: #333;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            display: none;
+        }
+
         .order-items ul {
             margin: 5px 0;
             padding-left: 20px;
@@ -224,6 +234,22 @@
         .profile-card p:nth-child(4) { --delay: 4; }
         .profile-card p:nth-child(5) { --delay: 5; }
         .profile-card p:nth-child(6) { --delay: 6; }
+
+        .refresh-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
@@ -233,7 +259,7 @@
             <ul>
                 <li><a href="LOGIN_USER.html">Home</a></li>
                 <li><a href="checkout.html">Orders</a></li>
-                <li><a href="index.html">Logout</a></li>
+                <li><a href="index.html" id="logoutBtn">Logout</a></li>
             </ul>
         </nav>
     </header>
@@ -255,25 +281,68 @@
                 <!-- Order history will be displayed here -->
                 <p class="no-orders">Loading order history...</p>
             </div>
+            <button class="refresh-btn" id="refreshOrdersBtn">Refresh Orders</button>
         </div>
     </section>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            console.log("Profile page loaded");
+            
             // Load user profile data
-            let user = JSON.parse(localStorage.getItem("user"));
-
-            if (user) {
-                document.getElementById("profileFirstName").textContent = user.firstname || "N/A";
-                document.getElementById("profileMiddleName").textContent = user.middlename || "N/A";
-                document.getElementById("profileLastName").textContent = user.lastname || "N/A";
-                document.getElementById("profileEmail").textContent = user.email || "N/A";
-                document.getElementById("profileAddress").textContent = user.address || "N/A";
-                document.getElementById("profileContact").textContent = user.contact || "N/A";
-            } else {
-                window.location.href = "Login.html";
-                return;
+            let user = JSON.parse(localStorage.getItem("currentUser"));
+            
+            if (!user) {
+                // Try the old key for backward compatibility
+                user = JSON.parse(localStorage.getItem("user"));
+                
+                // If found, migrate to the new key for future use
+                if (user) {
+                    localStorage.setItem("currentUser", JSON.stringify(user));
+                    // Remove old format to prevent conflicts
+                    localStorage.removeItem("user");
+                } else {
+                    console.log("No user found, redirecting to login");
+                    window.location.href = "Login.html";
+                    return;
+                }
             }
+            
+            // Ensure user has an ID
+            if (!user.id || user.id === "undefined") {
+                console.log("User has no valid ID, assigning one");
+                user.id = Date.now().toString(); // Use timestamp as unique ID
+                localStorage.setItem("currentUser", JSON.stringify(user));
+            }
+            
+            // Convert to string for consistency
+            user.id = String(user.id);
+            
+            // Debug user info
+            console.log("Current user:", JSON.stringify(user));
+            
+            // Set up logout functionality
+            document.getElementById("logoutBtn").addEventListener("click", function(e) {
+                e.preventDefault();
+                console.log("Logging out");
+                // Clear only the current user info, keep other data
+                localStorage.removeItem("currentUser");
+                // Redirect to login page
+                window.location.href = "index.html";
+            });
+
+            // Populate profile information
+            document.getElementById("profileFirstName").textContent = user.firstname || "N/A";
+            document.getElementById("profileMiddleName").textContent = user.middlename || "N/A";
+            document.getElementById("profileLastName").textContent = user.lastname || "N/A";
+            document.getElementById("profileEmail").textContent = user.email || "N/A";
+            document.getElementById("profileAddress").textContent = user.address || "N/A";
+            document.getElementById("profileContact").textContent = user.contact || "N/A";
+            
+            // Set up refresh button
+            document.getElementById("refreshOrdersBtn").addEventListener("click", function() {
+                displayOrderHistory();
+            });
             
             // Load order history
             displayOrderHistory();
@@ -281,45 +350,76 @@
             function displayOrderHistory() {
                 const orderHistoryContainer = document.getElementById("orderHistoryContainer");
                 
-                // Get orders from localStorage
-                const orders = JSON.parse(localStorage.getItem("orders")) || [];
+                // Clear previous content and show loading message
+                orderHistoryContainer.innerHTML = '<p class="no-orders">Loading order history...</p>';
                 
-                // Filter orders for current user
-                const userOrders = orders.filter(order => order.userId === user.id);
+                // Get orders from localStorage
+                let allOrders = JSON.parse(localStorage.getItem("orders")) || [];
+                
+                // Debug orders
+                console.log("All orders:", allOrders);
+                console.log("User ID to match:", user.id);
+                
+                // Enhanced order filtering with fallback methods
+                let userOrders = findUserOrders(allOrders, user);
+                
+                // Debug matched orders
+                console.log("Matched orders:", userOrders);
                 
                 // Clear loading message
                 orderHistoryContainer.innerHTML = "";
                 
-                if (userOrders.length === 0) {
+                if (!userOrders || userOrders.length === 0) {
                     // No orders found
                     orderHistoryContainer.innerHTML = `
                         <div>
                             <p class="no-orders">You haven't placed any orders yet.</p>
                             <a href="LOGIN_USER.html">Make your first order</a>
                         </div>
+                        <div class="debug-info">
+                            <p>Debug Info:</p>
+                            <p>User ID: ${user.id}</p>
+                            <p>User Email: ${user.email}</p>
+                            <p>Total orders in system: ${allOrders.length}</p>
+                        </div>
                     `;
                     return;
                 }
                 
                 // Sort orders by date (newest first)
-                userOrders.sort((a, b) => new Date(b.date) - new Date(a.date));
+                userOrders.sort((a, b) => {
+                    const dateA = a.date ? new Date(a.date) : new Date(0);
+                    const dateB = b.date ? new Date(b.date) : new Date(0);
+                    return dateB - dateA;
+                });
                 
                 // Display each order
                 userOrders.forEach(order => {
                     const orderElement = document.createElement("div");
                     orderElement.className = "order-item";
                     
-                    const orderDate = new Date(order.date);
-                    const formattedDate = orderDate.toLocaleDateString() + " " + 
-                                        orderDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    let formattedDate = "N/A";
+                    if (order.date) {
+                        const orderDate = new Date(order.date);
+                        formattedDate = orderDate.toLocaleDateString() + " " + 
+                                      orderDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    }
                     
                     let itemsList = "";
-                    order.items.forEach(item => {
-                        itemsList += `<li>${item.name} × ${item.quantity} - ₱${(item.price * item.quantity).toFixed(2)}</li>`;
-                    });
+                    if (order.items && Array.isArray(order.items)) {
+                        order.items.forEach(item => {
+                            if (item && item.name) {
+                                const quantity = item.quantity || 1;
+                                const price = item.price || 0;
+                                itemsList += `<li>${item.name} × ${quantity} - ₱${(price * quantity).toFixed(2)}</li>`;
+                            }
+                        });
+                    } else {
+                        itemsList = "<li>No items data available</li>";
+                    }
                     
                     orderElement.innerHTML = `
-                        <h4>Order #${order.id}</h4>
+                        <h4>Order #${order.id || "Unknown"}</h4>
                         <div class="order-date">${formattedDate}</div>
                         <div class="order-details">
                             <span>Status:</span>
@@ -331,14 +431,255 @@
                         </div>
                         <div class="order-details order-total">
                             <span>Total:</span>
-                            <span>₱${order.total.toFixed(2)}</span>
+                            <span>₱${order.total ? order.total.toFixed(2) : "0.00"}</span>
                         </div>
                     `;
                     
                     orderHistoryContainer.appendChild(orderElement);
                 });
             }
+            
+            // Function to find user orders using multiple matching strategies
+            function findUserOrders(allOrders, user) {
+                if (!allOrders || !Array.isArray(allOrders) || allOrders.length === 0) {
+                    return [];
+                }
+                
+                // Strategy 1: Match by user ID (exact match)
+                let userOrders = allOrders.filter(order => {
+                    if (!order) return false;
+                    return String(order.userId) === String(user.id);
+                });
+                
+                // If no orders found, try matching by email
+                if (userOrders.length === 0 && user.email) {
+                    userOrders = allOrders.filter(order => {
+                        if (!order || !order.userEmail) return false;
+                        return order.userEmail.toLowerCase() === user.email.toLowerCase();
+                    });
+                }
+                
+                // If still no orders, check if user info is stored in the order
+                if (userOrders.length === 0) {
+                    userOrders = allOrders.filter(order => {
+                        if (!order || !order.user) return false;
+                        
+                        // Try to match by ID in the user object
+                        if (order.user.id && String(order.user.id) === String(user.id)) {
+                            return true;
+                        }
+                        
+                        // Try to match by email in the user object
+                        if (user.email && order.user.email && 
+                            order.user.email.toLowerCase() === user.email.toLowerCase()) {
+                            return true;
+                        }
+                        
+                        return false;
+                    });
+                }
+                
+                // Auto-fix: If orders found but userId doesn't match, update them
+                if (userOrders.length > 0) {
+                    // First, check if any orders need updating
+                    const needsUpdate = userOrders.some(order => String(order.userId) !== String(user.id));
+                    
+                    if (needsUpdate) {
+                        // Update all matching orders with the current user ID
+                        allOrders = allOrders.map(order => {
+                            // If this is one of the user's orders but has wrong ID
+                            if (userOrders.some(userOrder => userOrder.id === order.id) && 
+                                String(order.userId) !== String(user.id)) {
+                                // Update the user ID
+                                order.userId = String(user.id);
+                            }
+                            return order;
+                        });
+                        
+                        // Save the updated orders back to localStorage
+                        localStorage.setItem("orders", JSON.stringify(allOrders));
+                        console.log("Updated order user IDs to match current user");
+                    }
+                }
+                
+                return userOrders;
+            }
         });
+
+        function fixOrderHistorySystem() {
+    // Get all existing data
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    const allOrders = JSON.parse(localStorage.getItem("orders")) || [];
+    
+    if (!currentUser) {
+        console.error("No user is currently logged in!");
+        return false;
+    }
+    
+    // Ensure user has a valid ID
+    if (!currentUser.id || currentUser.id === "undefined") {
+        currentUser.id = Date.now().toString();
+        localStorage.setItem("currentUser", JSON.stringify(currentUser));
+        console.log("Fixed missing user ID:", currentUser.id);
+    }
+    
+    // Standardize user ID format to string
+    currentUser.id = String(currentUser.id);
+    localStorage.setItem("currentUser", JSON.stringify(currentUser));
+    
+    // Check your most recent order
+    const orderChecks = [];
+    
+    allOrders.forEach(order => {
+        if (!order) return;
+        
+        let belongsToUser = false;
+        let needsUpdate = false;
+        
+        // Check if this order belongs to the current user
+        if (order.userEmail && currentUser.email && 
+            order.userEmail.toLowerCase() === currentUser.email.toLowerCase()) {
+            belongsToUser = true;
+            
+            // Check if it has the correct user ID
+            if (!order.userId || String(order.userId) !== String(currentUser.id)) {
+                order.userId = String(currentUser.id);
+                needsUpdate = true;
+            }
+        }
+        
+        // Also check user object if present
+        if (!belongsToUser && order.user && order.user.email && currentUser.email &&
+            order.user.email.toLowerCase() === currentUser.email.toLowerCase()) {
+            belongsToUser = true;
+            
+            // Update both userId and user.id
+            if (!order.userId || String(order.userId) !== String(currentUser.id)) {
+                order.userId = String(currentUser.id);
+                needsUpdate = true;
+            }
+            
+            if (!order.user.id || String(order.user.id) !== String(currentUser.id)) {
+                order.user.id = String(currentUser.id);
+                needsUpdate = true;
+            }
+        }
+        
+        // One more check directly by userId
+        if (!belongsToUser && order.userId && String(order.userId) === String(currentUser.id)) {
+            belongsToUser = true;
+        }
+        
+        // If order belongs to user, ensure it has all required fields
+        if (belongsToUser) {
+            // Ensure order has an ID
+            if (!order.id) {
+                order.id = "order-" + Date.now() + "-" + Math.floor(Math.random() * 1000);
+                needsUpdate = true;
+            }
+            
+            // Ensure order has a date
+            if (!order.date) {
+                order.date = new Date().toISOString();
+                needsUpdate = true;
+            }
+            
+            // Ensure order has a status
+            if (!order.status) {
+                order.status = "Processing";
+                needsUpdate = true;
+            }
+            
+            // Ensure order has items array
+            if (!order.items || !Array.isArray(order.items)) {
+                order.items = order.items ? [order.items] : [];
+                needsUpdate = true;
+            }
+            
+            // Ensure each item has proper structure
+            if (order.items.length > 0) {
+                order.items = order.items.map(item => {
+                    if (typeof item === 'string') {
+                        return { name: item, quantity: 1, price: 0 };
+                    }
+                    return {
+                        name: item.name || "Unknown Item",
+                        quantity: item.quantity || 1,
+                        price: item.price || 0
+                    };
+                });
+                needsUpdate = true;
+            }
+            
+            // Calculate/verify total
+            if (!order.total || typeof order.total !== 'number') {
+                order.total = order.items.reduce((sum, item) => 
+                    sum + (item.price || 0) * (item.quantity || 1), 0);
+                needsUpdate = true;
+            }
+            
+            orderChecks.push({
+                orderId: order.id,
+                belongsToUser,
+                needsUpdate
+            });
+        }
+    });
+    
+    // Save updated orders if any changes were made
+    if (orderChecks.some(check => check.needsUpdate)) {
+        localStorage.setItem("orders", JSON.stringify(allOrders));
+        console.log("Fixed orders:", orderChecks);
+        return true;
+    }
+    
+    console.log("Order checks completed:", orderChecks);
+    return orderChecks.some(check => check.belongsToUser);
+}
+
+// Create a test order if none exists
+function createTestOrder() {
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    if (!currentUser) {
+        console.error("No user is logged in!");
+        return;
+    }
+    
+    const newOrder = {
+        id: "order-" + Date.now(),
+        userId: String(currentUser.id),
+        userEmail: currentUser.email,
+        date: new Date().toISOString(),
+        status: "Processing",
+        items: [
+            { name: "Ice Cream - Vanilla", quantity: 2, price: 150 },
+            { name: "Frozen Pizza", quantity: 1, price: 350 }
+        ],
+        total: 650,
+        user: {
+            id: String(currentUser.id),
+            email: currentUser.email
+        }
+    };
+    
+    const orders = JSON.parse(localStorage.getItem("orders")) || [];
+    orders.push(newOrder);
+    localStorage.setItem("orders", JSON.stringify(orders));
+    console.log("Test order created!");
+    
+    // Reload the page to show the new order
+    window.location.reload();
+}
+
+// Run the fix
+const hasOrders = fixOrderHistorySystem();
+console.log("Fix complete! You " + (hasOrders ? "should" : "may not") + " see your orders now.");
+if (!hasOrders) {
+    console.log("No orders found for your account. You can create a test order by running: createTestOrder()");
+}
+
+// Make createTestOrder available globally
+window.createTestOrder = createTestOrder;
     </script>
 </body>
-</html>`
+</html>
