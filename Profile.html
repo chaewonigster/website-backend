@@ -1,685 +1,565 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>User Profile</title>
-    <link rel="stylesheet" href="styles.css">
     <style>
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
         }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
+      }
 
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #121212, #1e1e1e);
-            color: #fff;
-            min-height: 100vh;
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
         }
-
-        header {
-            background: linear-gradient(to right, #000000, #434343);
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            animation: fadeIn 0.8s ease-out;
+        50% {
+          transform: scale(1.05);
         }
-
-        header h1 {
-            margin: 0;
-            font-size: 28px;
-            font-weight: bold;
-            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+        100% {
+          transform: scale(1);
         }
+      }
 
-        nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 10px 0 0;
-            display: flex;
-            justify-content: center;
-        }
+      body {
+        font-family: "Arial", sans-serif;
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(135deg, #121212, #1e1e1e);
+        color: #fff;
+        min-height: 100vh;
+      }
 
-        nav ul li {
-            margin: 0 15px;
-            transition: transform 0.3s ease;
-        }
+      header {
+        background: linear-gradient(to right, #000000, #434343);
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 0.8s ease-out;
+      }
 
-        nav ul li:hover {
-            transform: scale(1.1);
-        }
+      header h1 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: bold;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+      }
 
-        nav ul li a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 16px;
-            position: relative;
-            padding-bottom: 5px;
-        }
+      nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 10px 0 0;
+        display: flex;
+        justify-content: center;
+      }
 
-        nav ul li a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 0;
-            background-color: #fff;
-            transition: width 0.3s ease;
-        }
+      nav ul li {
+        margin: 0 15px;
+        transition: transform 0.3s ease;
+      }
 
-        nav ul li a:hover::after {
-            width: 100%;
-        }
+      nav ul li:hover {
+        transform: scale(1.1);
+      }
 
-        .profile-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 50px;
-            perspective: 1000px;
-        }
+      nav ul li a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 16px;
+        position: relative;
+        padding-bottom: 5px;
+      }
 
-        .profile-card {
-            background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 
-                0 10px 20px rgba(0,0,0,0.2),
-                0 6px 10px rgba(0,0,0,0.1);
-            width: 400px;
-            text-align: left;
-            margin-bottom: 30px;
-            transition: all 0.4s ease;
-            transform-style: preserve-3d;
-        }
+      nav ul li a::after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: 0;
+        left: 0;
+        background-color: #fff;
+        transition: width 0.3s ease;
+      }
 
-        .profile-card:hover {
-            transform: translateY(-10px) rotateX(5deg);
-            box-shadow: 
-                0 15px 30px rgba(0,0,0,0.3),
-                0 10px 20px rgba(0,0,0,0.2);
-        }
+      nav ul li a:hover::after {
+        width: 100%;
+      }
 
-        .profile-card h2, .profile-card h3 {
-            margin-bottom: 20px;
-            position: relative;
-            padding-bottom: 10px;
-        }
+      .profile-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 50px;
+        padding-bottom: 50px;
+      }
 
-        .profile-card h2::after, .profile-card h3::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 3px;
-            background: linear-gradient(to right, #fff, transparent);
-        }
+      .profile-card {
+        background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2),
+          0 6px 10px rgba(0, 0, 0, 0.1);
+        width: 400px;
+        text-align: left;
+        margin-bottom: 30px;
+        transition: all 0.3s ease;
+      }
 
-        .profile-card p {
-            font-size: 18px;
-            margin: 10px 0;
-            opacity: 0;
-            animation: fadeIn 0.6s ease-out forwards;
-            animation-delay: calc(0.1s * var(--delay));
-        }
+      /* Reduced hover effect */
+      .profile-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25),
+          0 8px 12px rgba(0, 0, 0, 0.15);
+      }
 
-        a {
-            color: #aaa;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
+      .profile-card h2,
+      .profile-card h3 {
+        margin-bottom: 20px;
+        position: relative;
+        padding-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-        a:hover {
-            color: #fff;
-            text-decoration: underline;
-            transform: scale(1.05);
-        }
+      .profile-card h2::after,
+      .profile-card h3::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background: linear-gradient(to right, #fff, transparent);
+      }
 
-        .order-item {
-            background-color: #2a2a2a;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
+      .profile-card p {
+        font-size: 18px;
+        margin: 10px 0;
+        opacity: 0;
+        animation: fadeIn 0.6s ease-out forwards;
+        animation-delay: calc(0.1s * var(--delay));
+      }
 
-        .order-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
+      .profile-card input {
+        background-color: #333;
+        border: 1px solid #555;
+        color: #fff;
+        padding: 8px;
+        border-radius: 5px;
+        font-size: 16px;
+        width: calc(100% - 100px);
+        margin-left: 10px;
+      }
 
-        .order-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.1), transparent);
-            transition: all 0.6s;
-        }
+      .profile-card input:focus {
+        outline: none;
+        border-color: #4caf50;
+      }
 
-        .order-item:hover::before {
-            left: 100%;
-        }
+      .edit-btn,
+      .save-btn,
+      .cancel-btn {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.3s ease;
+      }
 
-        .order-item h4 {
-            margin: 0 0 10px 0;
-            transition: color 0.3s ease;
-        }
+      .edit-btn:hover,
+      .save-btn:hover {
+        background-color: #45a049;
+        transform: scale(1.05);
+      }
 
-        .order-item:hover h4 {
-            color: #fff;
-        }
+      .cancel-btn {
+        background-color: #f44336;
+        margin-left: 10px;
+      }
 
-        .order-details {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-        }
+      .cancel-btn:hover {
+        background-color: #da190b;
+        transform: scale(1.05);
+      }
 
-        .no-orders {
-            font-style: italic;
-            color: #aaa;
-            animation: pulse 2s infinite;
-        }
+      .profile-field {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-        .order-date {
-            color: #aaa;
-            font-size: 14px;
-        }
+      .profile-field.editing {
+        flex-wrap: wrap;
+      }
 
-        .order-total {
-            font-weight: bold;
-            color: #fff;
-            transition: color 0.3s ease;
-        }
+      a {
+        color: #aaa;
+        text-decoration: none;
+        transition: all 0.3s ease;
+      }
 
-        .order-total:hover {
-            color: #4CAF50;
-        }
+      a:hover {
+        color: #fff;
+        text-decoration: underline;
+      }
 
-        .debug-info {
-            background-color: #333;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-            font-family: monospace;
-            font-size: 12px;
-            display: none;
-        }
+      .order-item {
+        background-color: #2a2a2a;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
 
-        .order-items ul {
-            margin: 5px 0;
-            padding-left: 20px;
-        }
+      .order-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
 
-        /* Stagger animation for profile details */
-        .profile-card p:nth-child(1) { --delay: 1; }
-        .profile-card p:nth-child(2) { --delay: 2; }
-        .profile-card p:nth-child(3) { --delay: 3; }
-        .profile-card p:nth-child(4) { --delay: 4; }
-        .profile-card p:nth-child(5) { --delay: 5; }
-        .profile-card p:nth-child(6) { --delay: 6; }
+      .order-item::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          120deg,
+          transparent,
+          rgba(255, 255, 255, 0.1),
+          transparent
+        );
+        transition: all 0.6s;
+      }
 
-        .refresh-btn {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: all 0.3s ease;
-        }
+      .order-item:hover::before {
+        left: 100%;
+      }
 
-        .refresh-btn:hover {
-            background-color: #45a049;
-            transform: scale(1.05);
-        }
+      .order-item h4 {
+        margin: 0 0 10px 0;
+        transition: color 0.3s ease;
+      }
+
+      .order-details {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+      }
+
+      .no-orders {
+        font-style: italic;
+        color: #aaa;
+        animation: pulse 2s infinite;
+      }
+
+      .order-date {
+        color: #aaa;
+        font-size: 14px;
+      }
+
+      .order-total {
+        font-weight: bold;
+        color: #fff;
+        transition: color 0.3s ease;
+      }
+
+      .order-total:hover {
+        color: #4caf50;
+      }
+
+      .order-items ul {
+        margin: 5px 0;
+        padding-left: 20px;
+      }
+
+      .profile-card p:nth-child(1) {
+        --delay: 1;
+      }
+      .profile-card p:nth-child(2) {
+        --delay: 2;
+      }
+      .profile-card p:nth-child(3) {
+        --delay: 3;
+      }
+      .profile-card p:nth-child(4) {
+        --delay: 4;
+      }
+      .profile-card p:nth-child(5) {
+        --delay: 5;
+      }
+      .profile-card p:nth-child(6) {
+        --delay: 6;
+      }
+
+      .refresh-btn {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: all 0.3s ease;
+      }
+
+      .refresh-btn:hover {
+        background-color: #45a049;
+        transform: scale(1.05);
+      }
+
+      .button-group {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+      }
+
+      .hidden {
+        display: none;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <header>
-        <h1>Frozen Goods</h1>
-        <nav>
-            <ul>
-                <li><a href="LOGIN_USER.html">Home</a></li>
-                <li><a href="checkout.html">Orders</a></li>
-                <li><a href="index.html" id="logoutBtn">Logout</a></li>
-            </ul>
-        </nav>
+      <h1>Frozen Goods</h1>
+      <nav>
+        <ul>
+          <li><a href="LOGIN_USER.html">Home</a></li>
+          <li><a href="checkout.html">Orders</a></li>
+          <li><a href="index.html" id="logoutBtn">Logout</a></li>
+        </ul>
+      </nav>
     </header>
-    
-    <section class="profile-container">
-        <div class="profile-card">
-            <h2>My Account</h2>
-            <p><strong>First Name:</strong> <span id="profileFirstName"></span></p>
-            <p><strong>Middle Name:</strong> <span id="profileMiddleName"></span></p>
-            <p><strong>Last Name:</strong> <span id="profileLastName"></span></p>
-            <p><strong>Email:</strong> <span id="profileEmail"></span></p>
-            <p><strong>Address:</strong> <span id="profileAddress"></span></p>
-            <p><strong>Contact#:</strong> <span id="profileContact"></span></p>
-        </div>
 
-        <div class="profile-card">
-            <h3>Order History</h3>
-            <div id="orderHistoryContainer">
-                <!-- Order history will be displayed here -->
-                <p class="no-orders">Loading order history...</p>
-            </div>
-            <button class="refresh-btn" id="refreshOrdersBtn">Refresh Orders</button>
+    <section class="profile-container">
+      <div class="profile-card" id="profileCard">
+        <h2>
+          My Account
+          <button class="edit-btn" id="editBtn">Edit</button>
+        </h2>
+        <div id="profileView">
+          <p>
+            <strong>First Name:</strong> <span id="profileFirstName"></span>
+          </p>
+          <p>
+            <strong>Middle Name:</strong> <span id="profileMiddleName"></span>
+          </p>
+          <p><strong>Last Name:</strong> <span id="profileLastName"></span></p>
+          <p><strong>Email:</strong> <span id="profileEmail"></span></p>
+          <p><strong>Address:</strong> <span id="profileAddress"></span></p>
+          <p><strong>Contact#:</strong> <span id="profileContact"></span></p>
         </div>
+        <div id="profileEdit" class="hidden">
+          <p>
+            <strong>First Name:</strong><br /><input
+              type="text"
+              id="editFirstName"
+            />
+          </p>
+          <p>
+            <strong>Middle Name:</strong><br /><input
+              type="text"
+              id="editMiddleName"
+            />
+          </p>
+          <p>
+            <strong>Last Name:</strong><br /><input
+              type="text"
+              id="editLastName"
+            />
+          </p>
+          <p>
+            <strong>Email:</strong><br /><input type="email" id="editEmail" />
+          </p>
+          <p>
+            <strong>Address:</strong><br /><input
+              type="text"
+              id="editAddress"
+            />
+          </p>
+          <p>
+            <strong>Contact#:</strong><br /><input
+              type="text"
+              id="editContact"
+            />
+          </p>
+          <div class="button-group">
+            <button class="save-btn" id="saveBtn">Save Changes</button>
+            <button class="cancel-btn" id="cancelBtn">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-card">
+        <h3>Order History</h3>
+        <div id="orderHistoryContainer">
+          <p class="no-orders">Loading order history...</p>
+        </div>
+        <button class="refresh-btn" id="refreshOrdersBtn">
+          Refresh Orders
+        </button>
+      </div>
     </section>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            console.log("Profile page loaded");
-            
-            // Load user profile data
-            let user = JSON.parse(localStorage.getItem("currentUser"));
-            
-            if (!user) {
-                // Try the old key for backward compatibility
-                user = JSON.parse(localStorage.getItem("user"));
-                
-                // If found, migrate to the new key for future use
-                if (user) {
-                    localStorage.setItem("currentUser", JSON.stringify(user));
-                    // Remove old format to prevent conflicts
-                    localStorage.removeItem("user");
-                } else {
-                    console.log("No user found, redirecting to login");
-                    window.location.href = "Login.html";
-                    return;
-                }
-            }
-            
-            // Ensure user has an ID
-            if (!user.id || user.id === "undefined") {
-                console.log("User has no valid ID, assigning one");
-                user.id = Date.now().toString(); // Use timestamp as unique ID
-                localStorage.setItem("currentUser", JSON.stringify(user));
-            }
-            
-            // Convert to string for consistency
-            user.id = String(user.id);
-            
-            // Debug user info
-            console.log("Current user:", JSON.stringify(user));
-            
-            // Set up logout functionality
-            document.getElementById("logoutBtn").addEventListener("click", function(e) {
-                e.preventDefault();
-                console.log("Logging out");
-                // Clear only the current user info, keep other data
-                localStorage.removeItem("currentUser");
-                // Redirect to login page
-                window.location.href = "index.html";
-            });
+      document.addEventListener("DOMContentLoaded", () => {
+        let user = JSON.parse(localStorage.getItem("user"));
+        if (!user) {
+          window.location.href = "Login.html";
+          return;
+        }
 
-            // Populate profile information
-            document.getElementById("profileFirstName").textContent = user.firstname || "N/A";
-            document.getElementById("profileMiddleName").textContent = user.middlename || "N/A";
-            document.getElementById("profileLastName").textContent = user.lastname || "N/A";
-            document.getElementById("profileEmail").textContent = user.email || "N/A";
-            document.getElementById("profileAddress").textContent = user.address || "N/A";
-            document.getElementById("profileContact").textContent = user.contact || "N/A";
-            
-            // Set up refresh button
-            document.getElementById("refreshOrdersBtn").addEventListener("click", function() {
-                displayOrderHistory();
-            });
-            
-            // Load order history
-            displayOrderHistory();
-            
-            function displayOrderHistory() {
-                const orderHistoryContainer = document.getElementById("orderHistoryContainer");
-                
-                // Clear previous content and show loading message
-                orderHistoryContainer.innerHTML = '<p class="no-orders">Loading order history...</p>';
-                
-                // Get orders from localStorage
-                let allOrders = JSON.parse(localStorage.getItem("orders")) || [];
-                
-                // Debug orders
-                console.log("All orders:", allOrders);
-                console.log("User ID to match:", user.id);
-                
-                // Enhanced order filtering with fallback methods
-                let userOrders = findUserOrders(allOrders, user);
-                
-                // Debug matched orders
-                console.log("Matched orders:", userOrders);
-                
-                // Clear loading message
-                orderHistoryContainer.innerHTML = "";
-                
-                if (!userOrders || userOrders.length === 0) {
-                    // No orders found
-                    orderHistoryContainer.innerHTML = `
-                        <div>
-                            <p class="no-orders">You haven't placed any orders yet.</p>
-                            <a href="LOGIN_USER.html">Make your first order</a>
-                        </div>
-                        <div class="debug-info">
-                            <p>Debug Info:</p>
-                            <p>User ID: ${user.id}</p>
-                            <p>User Email: ${user.email}</p>
-                            <p>Total orders in system: ${allOrders.length}</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                // Sort orders by date (newest first)
-                userOrders.sort((a, b) => {
-                    const dateA = a.date ? new Date(a.date) : new Date(0);
-                    const dateB = b.date ? new Date(b.date) : new Date(0);
-                    return dateB - dateA;
-                });
-                
-                // Display each order
-                userOrders.forEach(order => {
-                    const orderElement = document.createElement("div");
-                    orderElement.className = "order-item";
-                    
-                    let formattedDate = "N/A";
-                    if (order.date) {
-                        const orderDate = new Date(order.date);
-                        formattedDate = orderDate.toLocaleDateString() + " " + 
-                                      orderDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                    }
-                    
-                    let itemsList = "";
-                    if (order.items && Array.isArray(order.items)) {
-                        order.items.forEach(item => {
-                            if (item && item.name) {
-                                const quantity = item.quantity || 1;
-                                const price = item.price || 0;
-                                itemsList += `<li>${item.name} × ${quantity} - ₱${(price * quantity).toFixed(2)}</li>`;
-                            }
-                        });
-                    } else {
-                        itemsList = "<li>No items data available</li>";
-                    }
-                    
-                    orderElement.innerHTML = `
-                        <h4>Order #${order.id || "Unknown"}</h4>
-                        <div class="order-date">${formattedDate}</div>
-                        <div class="order-details">
-                            <span>Status:</span>
-                            <span>${order.status || "Processing"}</span>
-                        </div>
-                        <div class="order-items">
-                            <strong>Items:</strong>
-                            <ul>${itemsList}</ul>
-                        </div>
-                        <div class="order-details order-total">
-                            <span>Total:</span>
-                            <span>₱${order.total ? order.total.toFixed(2) : "0.00"}</span>
-                        </div>
-                    `;
-                    
-                    orderHistoryContainer.appendChild(orderElement);
-                });
-            }
-            
-            // Function to find user orders using multiple matching strategies
-            function findUserOrders(allOrders, user) {
-                if (!allOrders || !Array.isArray(allOrders) || allOrders.length === 0) {
-                    return [];
-                }
-                
-                // Strategy 1: Match by user ID (exact match)
-                let userOrders = allOrders.filter(order => {
-                    if (!order) return false;
-                    return String(order.userId) === String(user.id);
-                });
-                
-                // If no orders found, try matching by email
-                if (userOrders.length === 0 && user.email) {
-                    userOrders = allOrders.filter(order => {
-                        if (!order || !order.userEmail) return false;
-                        return order.userEmail.toLowerCase() === user.email.toLowerCase();
-                    });
-                }
-                
-                // If still no orders, check if user info is stored in the order
-                if (userOrders.length === 0) {
-                    userOrders = allOrders.filter(order => {
-                        if (!order || !order.user) return false;
-                        
-                        // Try to match by ID in the user object
-                        if (order.user.id && String(order.user.id) === String(user.id)) {
-                            return true;
-                        }
-                        
-                        // Try to match by email in the user object
-                        if (user.email && order.user.email && 
-                            order.user.email.toLowerCase() === user.email.toLowerCase()) {
-                            return true;
-                        }
-                        
-                        return false;
-                    });
-                }
-                
-                // Auto-fix: If orders found but userId doesn't match, update them
-                if (userOrders.length > 0) {
-                    // First, check if any orders need updating
-                    const needsUpdate = userOrders.some(order => String(order.userId) !== String(user.id));
-                    
-                    if (needsUpdate) {
-                        // Update all matching orders with the current user ID
-                        allOrders = allOrders.map(order => {
-                            // If this is one of the user's orders but has wrong ID
-                            if (userOrders.some(userOrder => userOrder.id === order.id) && 
-                                String(order.userId) !== String(user.id)) {
-                                // Update the user ID
-                                order.userId = String(user.id);
-                            }
-                            return order;
-                        });
-                        
-                        // Save the updated orders back to localStorage
-                        localStorage.setItem("orders", JSON.stringify(allOrders));
-                        console.log("Updated order user IDs to match current user");
-                    }
-                }
-                
-                return userOrders;
-            }
+        if (!user.id) {
+          user.id = Date.now().toString();
+          localStorage.setItem("currentUser", JSON.stringify(user));
+        }
+
+        // 🟢 Show profile info
+        const displayProfile = () => {
+          document.getElementById("profileFirstName").textContent =
+            user.firstname || "N/A";
+          document.getElementById("profileMiddleName").textContent =
+            user.middlename || "N/A";
+          document.getElementById("profileLastName").textContent =
+            user.lastname || "N/A";
+          document.getElementById("profileEmail").textContent =
+            user.email || "N/A";
+          document.getElementById("profileAddress").textContent =
+            user.address || "N/A";
+          document.getElementById("profileContact").textContent =
+            user.contact || "N/A";
+        };
+        displayProfile();
+
+        // 🟡 Edit profile
+        document.getElementById("editBtn").addEventListener("click", () => {
+          document.getElementById("profileView").classList.add("hidden");
+          document.getElementById("profileEdit").classList.remove("hidden");
+          document.getElementById("editBtn").classList.add("hidden");
+
+          document.getElementById("editFirstName").value = user.firstname || "";
+          document.getElementById("editMiddleName").value =
+            user.middlename || "";
+          document.getElementById("editLastName").value = user.lastname || "";
+          document.getElementById("editEmail").value = user.email || "";
+          document.getElementById("editAddress").value = user.address || "";
+          document.getElementById("editContact").value = user.contact || "";
         });
 
-        function fixOrderHistorySystem() {
-    // Get all existing data
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-    const allOrders = JSON.parse(localStorage.getItem("orders")) || [];
-    
-    if (!currentUser) {
-        console.error("No user is currently logged in!");
-        return false;
-    }
-    
-    // Ensure user has a valid ID
-    if (!currentUser.id || currentUser.id === "undefined") {
-        currentUser.id = Date.now().toString();
-        localStorage.setItem("currentUser", JSON.stringify(currentUser));
-        console.log("Fixed missing user ID:", currentUser.id);
-    }
-    
-    // Standardize user ID format to string
-    currentUser.id = String(currentUser.id);
-    localStorage.setItem("currentUser", JSON.stringify(currentUser));
-    
-    // Check your most recent order
-    const orderChecks = [];
-    
-    allOrders.forEach(order => {
-        if (!order) return;
-        
-        let belongsToUser = false;
-        let needsUpdate = false;
-        
-        // Check if this order belongs to the current user
-        if (order.userEmail && currentUser.email && 
-            order.userEmail.toLowerCase() === currentUser.email.toLowerCase()) {
-            belongsToUser = true;
-            
-            // Check if it has the correct user ID
-            if (!order.userId || String(order.userId) !== String(currentUser.id)) {
-                order.userId = String(currentUser.id);
-                needsUpdate = true;
-            }
-        }
-        
-        // Also check user object if present
-        if (!belongsToUser && order.user && order.user.email && currentUser.email &&
-            order.user.email.toLowerCase() === currentUser.email.toLowerCase()) {
-            belongsToUser = true;
-            
-            // Update both userId and user.id
-            if (!order.userId || String(order.userId) !== String(currentUser.id)) {
-                order.userId = String(currentUser.id);
-                needsUpdate = true;
-            }
-            
-            if (!order.user.id || String(order.user.id) !== String(currentUser.id)) {
-                order.user.id = String(currentUser.id);
-                needsUpdate = true;
-            }
-        }
-        
-        // One more check directly by userId
-        if (!belongsToUser && order.userId && String(order.userId) === String(currentUser.id)) {
-            belongsToUser = true;
-        }
-        
-        // If order belongs to user, ensure it has all required fields
-        if (belongsToUser) {
-            // Ensure order has an ID
-            if (!order.id) {
-                order.id = "order-" + Date.now() + "-" + Math.floor(Math.random() * 1000);
-                needsUpdate = true;
-            }
-            
-            // Ensure order has a date
-            if (!order.date) {
-                order.date = new Date().toISOString();
-                needsUpdate = true;
-            }
-            
-            // Ensure order has a status
-            if (!order.status) {
-                order.status = "Processing";
-                needsUpdate = true;
-            }
-            
-            // Ensure order has items array
-            if (!order.items || !Array.isArray(order.items)) {
-                order.items = order.items ? [order.items] : [];
-                needsUpdate = true;
-            }
-            
-            // Ensure each item has proper structure
-            if (order.items.length > 0) {
-                order.items = order.items.map(item => {
-                    if (typeof item === 'string') {
-                        return { name: item, quantity: 1, price: 0 };
-                    }
-                    return {
-                        name: item.name || "Unknown Item",
-                        quantity: item.quantity || 1,
-                        price: item.price || 0
-                    };
-                });
-                needsUpdate = true;
-            }
-            
-            // Calculate/verify total
-            if (!order.total || typeof order.total !== 'number') {
-                order.total = order.items.reduce((sum, item) => 
-                    sum + (item.price || 0) * (item.quantity || 1), 0);
-                needsUpdate = true;
-            }
-            
-            orderChecks.push({
-                orderId: order.id,
-                belongsToUser,
-                needsUpdate
-            });
-        }
-    });
-    
-    // Save updated orders if any changes were made
-    if (orderChecks.some(check => check.needsUpdate)) {
-        localStorage.setItem("orders", JSON.stringify(allOrders));
-        console.log("Fixed orders:", orderChecks);
-        return true;
-    }
-    
-    console.log("Order checks completed:", orderChecks);
-    return orderChecks.some(check => check.belongsToUser);
-}
+        document.getElementById("saveBtn").addEventListener("click", () => {
+          user.firstname = document.getElementById("editFirstName").value;
+          user.middlename = document.getElementById("editMiddleName").value;
+          user.lastname = document.getElementById("editLastName").value;
+          user.email = document.getElementById("editEmail").value;
+          user.address = document.getElementById("editAddress").value;
+          user.contact = document.getElementById("editContact").value;
 
-// Create a test order if none exists
-function createTestOrder() {
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-    if (!currentUser) {
-        console.error("No user is logged in!");
-        return;
-    }
-    
-    const newOrder = {
-        id: "order-" + Date.now(),
-        userId: String(currentUser.id),
-        userEmail: currentUser.email,
-        date: new Date().toISOString(),
-        status: "Processing",
-        items: [
-            { name: "Ice Cream - Vanilla", quantity: 2, price: 150 },
-            { name: "Frozen Pizza", quantity: 1, price: 350 }
-        ],
-        total: 650,
-        user: {
-            id: String(currentUser.id),
-            email: currentUser.email
+          localStorage.setItem("currentUser", JSON.stringify(user));
+          document.getElementById("profileEdit").classList.add("hidden");
+          document.getElementById("profileView").classList.remove("hidden");
+          document.getElementById("editBtn").classList.remove("hidden");
+          displayProfile();
+          alert("Profile updated successfully!");
+        });
+
+        document.getElementById("cancelBtn").addEventListener("click", () => {
+          document.getElementById("profileEdit").classList.add("hidden");
+          document.getElementById("profileView").classList.remove("hidden");
+          document.getElementById("editBtn").classList.remove("hidden");
+        });
+
+        document.getElementById("logoutBtn").addEventListener("click", (e) => {
+          e.preventDefault();
+          localStorage.removeItem("currentUser");
+          window.location.href = "index.html";
+        });
+
+        // 🟢 Display Orders
+        function displayOrderHistory() {
+          const container = document.getElementById("orderHistoryContainer");
+          container.innerHTML = `<p class="no-orders">Loading order history...</p>`;
+
+          const allOrders = JSON.parse(localStorage.getItem("orders")) || [];
+          const userOrders = allOrders.filter((order) => {
+            if (!order) return false;
+            const orderEmail = (
+              order.userEmail ||
+              order.user?.email ||
+              ""
+            ).toLowerCase();
+            const orderId = String(order.userId || order.user?.id || "");
+            return (
+              orderEmail === (user.email || "").toLowerCase() ||
+              orderId === String(user.id)
+            );
+          });
+
+          container.innerHTML = "";
+
+          if (userOrders.length === 0) {
+            container.innerHTML = `
+                <div>
+                    <p class="no-orders">You haven't placed any orders yet.</p>
+                    <a href="LOGIN_USER.html">Make your first order</a>
+                </div>
+            `;
+            return;
+          }
+
+          userOrders.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+          userOrders.forEach((order) => {
+            const itemsHTML = order.items
+              .map(
+                (i) =>
+                  `<li>${i.name} × ${i.quantity} - ₱${(
+                    i.price * i.quantity
+                  ).toFixed(2)}</li>`
+              )
+              .join("");
+
+            const orderHTML = `
+                <div class="order-item">
+                    <h4>Order #${order.id}</h4>
+                    <div class="order-date">${new Date(
+                      order.date
+                    ).toLocaleString()}</div>
+                    <div class="order-details">
+                        <span>Status:</span>
+                        <span>${order.status || "Order Placed"}</span>
+                    </div>
+                    <div class="order-items">
+                        <strong>Items:</strong>
+                        <ul>${itemsHTML}</ul>
+                    </div>
+                    <div class="order-details order-total">
+                        <span>Total:</span>
+                        <span>₱${order.total.toFixed(2)}</span>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML("beforeend", orderHTML);
+          });
         }
-    };
-    
-    const orders = JSON.parse(localStorage.getItem("orders")) || [];
-    orders.push(newOrder);
-    localStorage.setItem("orders", JSON.stringify(orders));
-    console.log("Test order created!");
-    
-    // Reload the page to show the new order
-    window.location.reload();
-}
 
-// Run the fix
-const hasOrders = fixOrderHistorySystem();
-console.log("Fix complete! You " + (hasOrders ? "should" : "may not") + " see your orders now.");
-if (!hasOrders) {
-    console.log("No orders found for your account. You can create a test order by running: createTestOrder()");
-}
-
-// Make createTestOrder available globally
-window.createTestOrder = createTestOrder;
+        document
+          .getElementById("refreshOrdersBtn")
+          .addEventListener("click", displayOrderHistory);
+        displayOrderHistory();
+      });
     </script>
-</body>
+  </body>
 </html>

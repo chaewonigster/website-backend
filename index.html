@@ -39,10 +39,10 @@
             line-height: 1.5;
         }
         .footer-column img {
-            width: 50px; /* Adjust the size of the icons */
-            height: auto; /* Keeps aspect ratio */
-            margin: 5px; /* Adds space around images */
-            display: inline-block; /* Prevents stacking */
+            width: 50px; 
+            height: auto; 
+            margin: 5px; 
+            display: inline-block; 
             vertical-align: middle;
         }
         .footer-column a:hover {
@@ -198,7 +198,7 @@
             text-align: center;
         }
         .product {
-            flex: 1 1 200px; /* ✅ Ensure proper spacing */
+            flex: 1 1 200px; 
             max-width: 200px;
         }
         .productContainer {
@@ -207,7 +207,7 @@
             justify-content: center;
             gap: 20px;
             width: 100%;
-            min-height: 500px; /* ✅ Ensures normal layout */
+            min-height: 500px; 
         }
         .product[style*="visibility: hidden"] {
             height: 0;
@@ -231,7 +231,7 @@
             justify-content: center;
             gap: 20px;
             padding: 20px;
-            min-height: 400px; /* ✅ Prevents footer from overlapping */
+            min-height: 400px; 
             width: 100%;
             position: relative;
         }
@@ -372,10 +372,10 @@ button:active {
             background: transparent;
             display: inline-block;
             margin: 10px;
-            visibility: hidden; /* This prevents unwanted empty spaces */
+            visibility: hidden; 
         }
         .product {
-            min-height: 250px; /* Adjust based on your layout */
+            min-height: 250px; 
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -387,7 +387,7 @@ button:active {
             overflow: hidden;
         }
         .pagination {
-            display: inline-block; /* Ensures buttons stay in one line */
+            display: inline-block; 
             padding: 10px;
         }
         
@@ -404,7 +404,7 @@ button:active {
 .pagination-wrapper {
     text-align: center;
     width: 100%;
-    margin-top: 20px; /* Space between products and paginator */
+    margin-top: 20px; 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1160,8 +1160,8 @@ button:active {
                     body: JSON.stringify({
                         product: productName,
                         price: price,
-                        quantity: 1,  // Default quantity
-                        buyer: "guest@example.com"  // Replace with actual user info if available
+                        quantity: 1,  
+                        buyer: "guest@example.com"  
                     })
                 })
                 .then(res => res.json())

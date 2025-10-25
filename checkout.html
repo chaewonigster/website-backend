@@ -1,966 +1,1160 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Checkout - Frozen Goods</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
     <script src="script.js"></script>
     <style>
-        :root {
-            --primary: #2c3e50;
-            --secondary: #3498db;
-            --accent: #e74c3c;
-            --background: #f9f9f9;
-            --card: #ffffff;
-            --text: #333333;
-            --shadow: rgba(0, 0, 0, 0.1);
+      :root {
+        --primary: #2c3e50;
+        --secondary: #3498db;
+        --accent: #e74c3c;
+        --background: #f9f9f9;
+        --card: #ffffff;
+        --text: #333333;
+        --shadow: rgba(0, 0, 0, 0.1);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--background);
+        color: var(--text);
+        padding: 20px;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      }
+
+      .container {
+        max-width: 800px;
+        width: 100%;
+        margin: auto;
+        background: var(--card);
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px var(--shadow);
+        transform: translateY(0);
+        opacity: 0;
+        animation: fadeIn 0.8s forwards;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            transition: all 0.3s ease;
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
+      }
 
-        
+      .checkout-header {
+        text-align: center;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 15px;
+        position: relative;
+      }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--background);
-            color: var(--text);
-            padding: 20px;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      .checkout-header h2 {
+        font-size: 28px;
+        color: var(--primary);
+        margin-bottom: 10px;
+      }
+
+      .checkout-header p {
+        color: #777;
+        font-size: 16px;
+      }
+
+      .progress-bar {
+        display: flex;
+        justify-content: space-between;
+        margin: 30px 0;
+        position: relative;
+      }
+
+      .progress-bar::before {
+        content: "";
+        position: absolute;
+        height: 4px;
+        width: 100%;
+        background: #eee;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1;
+      }
+
+      .progress-step {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: var(--secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        z-index: 2;
+        position: relative;
+        cursor: pointer;
+      }
+
+      .progress-step.active {
+        background: var(--accent);
+        transform: scale(1.2);
+      }
+
+      .progress-step::after {
+        content: attr(data-title);
+        position: absolute;
+        top: 40px;
+        font-size: 12px;
+        color: #777;
+        width: 80px;
+        text-align: center;
+      }
+
+      .section-title {
+        font-size: 20px;
+        margin: 20px 0 15px;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .section-title i {
+        color: var(--secondary);
+      }
+
+      .cart-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #f8f9fa;
+        margin: 10px 0;
+        padding: 15px;
+        border-radius: 8px;
+        position: relative;
+        overflow: hidden;
+        animation: slideIn 0.5s forwards;
+        animation-delay: calc(var(--item-index) * 0.1s);
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+
+      @keyframes slideIn {
+        to {
+          opacity: 1;
+          transform: translateX(0);
         }
+      }
 
+      .cart-item:hover {
+        box-shadow: 0 5px 15px var(--shadow);
+        transform: translateY(-3px);
+      }
+
+      .item-details {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+      }
+
+      .item-name {
+        font-weight: 600;
+        margin-bottom: 5px;
+      }
+
+      .item-quantity {
+        color: #666;
+        font-size: 14px;
+      }
+
+      .item-price {
+        font-weight: bold;
+        color: var(--accent);
+        font-size: 18px;
+      }
+
+      .summary {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 30px 0;
+      }
+
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin: 10px 0;
+      }
+
+      .summary-title {
+        font-weight: 600;
+      }
+
+      .total {
+        font-size: 24px;
+        font-weight: bold;
+        text-align: right;
+        margin-top: 20px;
+        padding: 15px 0;
+        border-top: 2px solid #eee;
+        color: var(--primary);
+      }
+
+      .total-amount {
+        color: var(--accent);
+      }
+
+      .btn {
+        width: 100%;
+        padding: 15px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        margin-top: 20px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .primary-btn {
+        background: linear-gradient(
+          135deg,
+          var(--secondary) 0%,
+          var(--primary) 100%
+        );
+        color: white;
+      }
+
+      .primary-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
+      }
+
+      .primary-btn:after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 5px;
+        height: 5px;
+        background: rgba(255, 255, 255, 0.5);
+        opacity: 0;
+        border-radius: 100%;
+        transform: scale(1, 1) translate(-50%);
+        transform-origin: 50% 50%;
+      }
+
+      .primary-btn:focus:not(:active)::after {
+        animation: ripple 1s ease-out;
+      }
+
+      @keyframes ripple {
+        0% {
+          transform: scale(0, 0);
+          opacity: 1;
+        }
+        20% {
+          transform: scale(25, 25);
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+          transform: scale(40, 40);
+        }
+      }
+
+      .empty-cart {
+        text-align: center;
+        padding: 40px 0;
+        color: #777;
+      }
+
+      .empty-cart i {
+        font-size: 60px;
+        color: #ddd;
+        margin-bottom: 20px;
+        display: block;
+      }
+
+      .step-section {
+        display: none;
+      }
+
+      .step-section.active {
+        display: block;
+        animation: fadeIn 0.5s forwards;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: var(--primary);
+      }
+
+      .form-control {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+      }
+
+      .form-control:focus {
+        outline: none;
+        border-color: var(--secondary);
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+      }
+
+      .payment-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 15px;
+      }
+
+      .payment-option {
+        flex: 1;
+        min-width: 120px;
+        padding: 15px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .payment-option.selected {
+        border-color: var(--secondary);
+        background-color: rgba(52, 152, 219, 0.1);
+      }
+
+      .payment-option i {
+        font-size: 24px;
+        margin-bottom: 8px;
+        display: block;
+      }
+
+      .form-row {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 15px;
+      }
+
+      .form-row .form-group {
+        flex: 1;
+        margin-bottom: 0;
+      }
+
+      .confirmation-message {
+        text-align: center;
+        padding: 30px 0;
+      }
+
+      .confirmation-message i {
+        font-size: 70px;
+        color: #2ecc71;
+        margin-bottom: 20px;
+        display: block;
+      }
+
+      .confirmation-message h3 {
+        font-size: 24px;
+        margin-bottom: 15px;
+        color: var(--primary);
+      }
+
+      .confirmation-message p {
+        color: #666;
+        margin-bottom: 10px;
+      }
+
+      .order-details {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 30px;
+      }
+
+      .order-id {
+        font-family: monospace;
+        background: #eee;
+        padding: 3px 8px;
+        border-radius: 4px;
+      }
+
+      @media (max-width: 768px) {
         .container {
-            max-width: 800px;
-            width: 100%;
-            margin: auto;
-            background: var(--card);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px var(--shadow);
-            transform: translateY(0);
-            opacity: 0;
-            animation: fadeIn 0.8s forwards;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .checkout-header {
-            text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 15px;
-            position: relative;
-        }
-
-        .checkout-header h2 {
-            font-size: 28px;
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
-
-        .checkout-header p {
-            color: #777;
-            font-size: 16px;
+          padding: 20px;
         }
 
         .progress-bar {
-            display: flex;
-            justify-content: space-between;
-            margin: 30px 0;
-            position: relative;
-        }
-
-        .progress-bar::before {
-            content: '';
-            position: absolute;
-            height: 4px;
-            width: 100%;
-            background: #eee;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 1;
-        }
-
-        .progress-step {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: var(--secondary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            z-index: 2;
-            position: relative;
-            cursor: pointer;
-        }
-
-        .progress-step.active {
-            background: var(--accent);
-            transform: scale(1.2);
+          margin: 20px 0;
         }
 
         .progress-step::after {
-            content: attr(data-title);
-            position: absolute;
-            top: 40px;
-            font-size: 12px;
-            color: #777;
-            width: 80px;
-            text-align: center;
+          font-size: 10px;
+          width: 60px;
         }
 
-        .section-title {
-            font-size: 20px;
-            margin: 20px 0 15px;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .section-title i {
-            color: var(--secondary);
-        }
-
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #f8f9fa;
-            margin: 10px 0;
-            padding: 15px;
-            border-radius: 8px;
-            position: relative;
-            overflow: hidden;
-            animation: slideIn 0.5s forwards;
-            animation-delay: calc(var(--item-index) * 0.1s);
-            opacity: 0;
-            transform: translateX(-20px);
-        }
-
-        @keyframes slideIn {
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .cart-item:hover {
-            box-shadow: 0 5px 15px var(--shadow);
-            transform: translateY(-3px);
-        }
-
-        .item-details {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-        }
-
-        .item-name {
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .item-quantity {
-            color: #666;
-            font-size: 14px;
-        }
-
-        .item-price {
-            font-weight: bold;
-            color: var(--accent);
-            font-size: 18px;
-        }
-
-        .summary {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 30px 0;
-        }
-
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            margin: 10px 0;
-        }
-
-        .summary-title {
-            font-weight: 600;
-        }
-
-        .total {
-            font-size: 24px;
-            font-weight: bold;
-            text-align: right;
-            margin-top: 20px;
-            padding: 15px 0;
-            border-top: 2px solid #eee;
-            color: var(--primary);
-        }
-
-        .total-amount {
-            color: var(--accent);
-        }
-
-        .btn {
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            margin-top: 20px;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .primary-btn {
-            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
-            color: white;
-        }
-
-        .primary-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
-        }
-
-        .primary-btn:after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 5px;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.5);
-            opacity: 0;
-            border-radius: 100%;
-            transform: scale(1, 1) translate(-50%);
-            transform-origin: 50% 50%;
-        }
-
-        .primary-btn:focus:not(:active)::after {
-            animation: ripple 1s ease-out;
-        }
-
-        @keyframes ripple {
-            0% {
-                transform: scale(0, 0);
-                opacity: 1;
-            }
-            20% {
-                transform: scale(25, 25);
-                opacity: 1;
-            }
-            100% {
-                opacity: 0;
-                transform: scale(40, 40);
-            }
-        }
-
-        .empty-cart {
-            text-align: center;
-            padding: 40px 0;
-            color: #777;
-        }
-
-        .empty-cart i {
-            font-size: 60px;
-            color: #ddd;
-            margin-bottom: 20px;
-            display: block;
-        }
-
-        /* Step Sections */
-        .step-section {
-            display: none;
-        }
-
-        .step-section.active {
-            display: block;
-            animation: fadeIn 0.5s forwards;
-        }
-
-        /* Payment section styles */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--primary);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--secondary);
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-        }
-
-        .payment-options {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .payment-option {
-            flex: 1;
-            min-width: 120px;
-            padding: 15px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .payment-option.selected {
-            border-color: var(--secondary);
-            background-color: rgba(52, 152, 219, 0.1);
-        }
-
-        .payment-option i {
-            font-size: 24px;
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        /* Address form */
         .form-row {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
+          flex-direction: column;
+          gap: 10px;
         }
+      }
 
-        .form-row .form-group {
-            flex: 1;
-            margin-bottom: 0;
-        }
+      .loading {
+        position: relative;
+      }
 
-        /* Confirmation styles */
-        .confirmation-message {
-            text-align: center;
-            padding: 30px 0;
-        }
+      .loading::after {
+        content: "";
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: #fff;
+        animation: spin 1s ease-in-out infinite;
+        position: absolute;
+        right: 15px;
+      }
 
-        .confirmation-message i {
-            font-size: 70px;
-            color: #2ecc71;
-            margin-bottom: 20px;
-            display: block;
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
         }
+      }
 
-        .confirmation-message h3 {
-            font-size: 24px;
-            margin-bottom: 15px;
-            color: var(--primary);
-        }
+      .nav-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+      }
 
-        .confirmation-message p {
-            color: #666;
-            margin-bottom: 10px;
-        }
+      .nav-btn {
+        padding: 12px 25px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 16px;
+        transition: all 0.3s;
+      }
 
-        .order-details {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 30px;
-        }
+      .back-btn {
+        background: #eee;
+        color: #555;
+      }
 
-        .order-id {
-            font-family: monospace;
-            background: #eee;
-            padding: 3px 8px;
-            border-radius: 4px;
-        }
+      .back-btn:hover {
+        background: #ddd;
+      }
 
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
-            
-            .progress-bar {
-                margin: 20px 0;
-            }
-            
-            .progress-step::after {
-                font-size: 10px;
-                width: 60px;
-            }
-            
-            .form-row {
-                flex-direction: column;
-                gap: 10px;
-            }
-        }
+      .next-btn {
+        background: var(--secondary);
+        color: white;
+      }
 
-        /* Loading animation for button */
-        .loading {
-            position: relative;
-        }
-
-        .loading::after {
-            content: "";
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-            position: absolute;
-            right: 15px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Nav buttons */
-        .nav-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
-        }
-
-        .nav-btn {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-
-        .back-btn {
-            background: #eee;
-            color: #555;
-        }
-
-        .back-btn:hover {
-            background: #ddd;
-        }
-
-        .next-btn {
-            background: var(--secondary);
-            color: white;
-        }
-
-        .next-btn:hover {
-            background: #2980b9;
-            transform: translateY(-2px);
-        }
+      .next-btn:hover {
+        background: #2980b9;
+        transform: translateY(-2px);
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="checkout-header">
-            <h2>Checkout</h2>
-            <p>Complete your purchase</p>
+      <div class="checkout-header">
+        <h2>Checkout</h2>
+        <p>Complete your purchase</p>
+      </div>
+
+      <div class="progress-bar">
+        <div class="progress-step active" data-title="Cart" data-step="1">
+          1
+        </div>
+        <div class="progress-step" data-title="Payment" data-step="2">2</div>
+        <div class="progress-step" data-title="Confirm" data-step="3">3</div>
+      </div>
+
+      <!-- Step 1: Cart -->
+      <div class="step-section active" id="step-1">
+        <div class="section-title">
+          <i class="fas fa-shopping-cart"></i> Your Cart
+        </div>
+        <div id="cart-items"></div>
+
+        <div class="summary">
+          <div class="section-title">
+            <i class="fas fa-receipt"></i> Order Summary
+          </div>
+          <div class="summary-row">
+            <span class="summary-title">Subtotal</span>
+            <span id="subtotal">₱0.00</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-title">Shipping</span>
+            <span id="shipping">₱100.00</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-title">Discount</span>
+            <span id="discount">-₱0.00</span>
+          </div>
+          <div class="total">
+            <span>Total:</span>
+            <span class="total-amount" id="total-price">₱0.00</span>
+          </div>
         </div>
 
-        <div class="progress-bar">
-            <div class="progress-step active" data-title="Cart" data-step="1">1</div>
-            <div class="progress-step" data-title="Payment" data-step="2">2</div>
-            <div class="progress-step" data-title="Confirm" data-step="3">3</div>
+        <div class="nav-buttons">
+          <button
+            class="nav-btn back-btn"
+            id="back-to-home"
+            onclick="window.location.href='LOGIN_USER.html'"
+          >
+            <i class="fas fa-arrow-left"></i> Back to Home
+          </button>
+
+          <div></div>
+          <!-- Empty div for spacing -->
+          <button class="nav-btn next-btn" id="to-step-2">
+            Continue to Payment <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2: Payment -->
+      <!-- Extra Payment Details (hidden by default) -->
+
+      <div class="step-section" id="step-2">
+        <div class="section-title">
+          <i class="fas fa-credit-card"></i> Payment Method
         </div>
 
-        <!-- Step 1: Cart -->
-        <div class="step-section active" id="step-1">
-            <div class="section-title">
-                <i class="fas fa-shopping-cart"></i> Your Cart
-            </div>
-            <div id="cart-items"></div>
-
-            <div class="summary">
-                <div class="section-title">
-                    <i class="fas fa-receipt"></i> Order Summary
-                </div>
-                <div class="summary-row">
-                    <span class="summary-title">Subtotal</span>
-                    <span id="subtotal">₱0.00</span>
-                </div>
-                <div class="summary-row">
-                    <span class="summary-title">Shipping</span>
-                    <span id="shipping">₱100.00</span>
-                </div>
-                <div class="summary-row">
-                    <span class="summary-title">Discount</span>
-                    <span id="discount">-₱0.00</span>
-                </div>
-                <div class="total">
-                    <span>Total:</span>
-                    <span class="total-amount" id="total-price">₱0.00</span>
-                </div>
-            </div>
-
-            <div class="nav-buttons">
-<button class="nav-btn back-btn" id="back-to-home" onclick="window.location.href='LOGIN_USER.html'">
-    <i class="fas fa-arrow-left"></i> Back to Home
-</button>
-
-                <div></div> <!-- Empty div for spacing -->
-                <button class="nav-btn next-btn" id="to-step-2">
-                    Continue to Payment <i class="fas fa-arrow-right"></i>
-                </button>
-            </div>
+        <div class="payment-options">
+          <div class="payment-option" data-payment="cash">
+            <i class="fas fa-money-bill-wave"></i>
+            <span>Cash on Delivery</span>
+          </div>
+          <div class="payment-option" data-payment="card">
+            <i class="fas fa-credit-card"></i>
+            <span>Credit/Debit Card</span>
+          </div>
+          <div class="payment-option" data-payment="gcash">
+            <i class="fas fa-wallet"></i>
+            <span>GCash</span>
+          </div>
         </div>
 
-        <!-- Step 2: Payment -->
-        <div class="step-section" id="step-2">
-            <div class="section-title">
-                <i class="fas fa-credit-card"></i> Payment Method
-            </div>
-            
-            <div class="payment-options">
-                <div class="payment-option" data-payment="cash">
-                    <i class="fas fa-money-bill-wave"></i>
-                    <span>Cash on Delivery</span>
-                </div>
-                <div class="payment-option" data-payment="card">
-                    <i class="fas fa-credit-card"></i>
-                    <span>Credit/Debit Card</span>
-                </div>
-                <div class="payment-option" data-payment="gcash">
-                    <i class="fas fa-wallet"></i>
-                    <span>GCash</span>
-                </div>
-            </div>
-
-            <div class="section-title" style="margin-top: 30px;">
-                <i class="fas fa-map-marker-alt"></i> Shipping Address
-            </div>
-            
+        <div id="payment-details" style="display: none; margin-top: 20px">
+          <!-- Credit/Debit Card Fields -->
+          <div id="card-details" style="display: none">
             <div class="form-row">
-                <div class="form-group">
-                    <label for="firstname">First Name</label>
-                    <input type="text" id="firstname" class="form-control" placeholder="First Name">
-                </div>
-                <div class="form-group">
-                    <label for="lastname">Last Name</label>
-                    <input type="text" id="lastname" class="form-control" placeholder="Last Name">
-                </div>
+              <div class="form-group">
+                <label for="card-number">Card Number</label>
+                <input
+                  type="text"
+                  id="card-number"
+                  class="form-control"
+                  placeholder="XXXX-XXXX-XXXX-XXXX"
+                />
+              </div>
+              <div class="form-group">
+                <label for="card-name">Name on Card</label>
+                <input
+                  type="text"
+                  id="card-name"
+                  class="form-control"
+                  placeholder="Name on Card"
+                />
+              </div>
             </div>
-            
-            <div class="form-group">
-                <label for="address">Address</label>
-                <input type="text" id="address" class="form-control" placeholder="Street Address">
-            </div>
-            
             <div class="form-row">
-                <div class="form-group">
-                    <label for="city">City</label>
-                    <input type="text" id="city" class="form-control" placeholder="City">
-                </div>
-                <div class="form-group">
-                    <label for="zip">ZIP Code</label>
-                    <input type="text" id="zip" class="form-control" placeholder="ZIP Code">
-                </div>
+              <div class="form-group">
+                <label for="expiry">Expiry Date</label>
+                <input
+                  type="text"
+                  id="expiry"
+                  class="form-control"
+                  placeholder="MM/YY"
+                />
+              </div>
+              <div class="form-group">
+                <label for="cvv">CVV</label>
+                <input
+                  type="text"
+                  id="cvv"
+                  class="form-control"
+                  placeholder="123"
+                />
+              </div>
             </div>
-            
+          </div>
+
+          <!-- GCash Fields -->
+          <div id="gcash-details" style="display: none">
             <div class="form-group">
-                <label for="phone">Phone Number</label>
-                <input type="tel" id="phone" class="form-control" placeholder="Phone Number">
+              <label for="gcash-number">GCash Number</label>
+              <input
+                type="tel"
+                id="gcash-number"
+                class="form-control"
+                placeholder="09XXXXXXXXX"
+              />
             </div>
-
-            <div class="nav-buttons">
-                <button class="nav-btn back-btn" id="back-to-step-1">
-                    <i class="fas fa-arrow-left"></i> Back to Cart
-                </button>
-                <button class="nav-btn next-btn" id="to-step-3">
-                    Review Order <i class="fas fa-arrow-right"></i>
-                </button>
+            <div class="form-group">
+              <label for="gcash-name">Account Name</label>
+              <input
+                type="text"
+                id="gcash-name"
+                class="form-control"
+                placeholder="Full Name"
+              />
             </div>
+          </div>
+        </div>
+        <div class="section-title" style="margin-top: 30px">
+          <i class="fas fa-map-marker-alt"></i> Shipping Address
         </div>
 
-        <!-- Step 3: Confirmation -->
-        <div class="step-section" id="step-3">
-            <div class="section-title">
-                <i class="fas fa-clipboard-check"></i> Order Review
-            </div>
-            
-            <div class="order-details">
-                <div class="section-title">
-                    <i class="fas fa-shopping-bag"></i> Items
-                </div>
-                <div id="confirmation-items"></div>
-                
-                <div class="summary">
-                    <div class="summary-row">
-                        <span class="summary-title">Subtotal</span>
-                        <span id="confirm-subtotal">₱0.00</span>
-                    </div>
-                    <div class="summary-row">
-                        <span class="summary-title">Shipping</span>
-                        <span id="confirm-shipping">₱100.00</span>
-                    </div>
-                    <div class="summary-row">
-                        <span class="summary-title">Discount</span>
-                        <span id="confirm-discount">-₱0.00</span>
-                    </div>
-                    <div class="total">
-                        <span>Total:</span>
-                        <span class="total-amount" id="confirm-total">₱0.00</span>
-                    </div>
-                </div>
-                
-                <div class="section-title">
-                    <i class="fas fa-map-marker-alt"></i> Shipping To
-                </div>
-                <div id="shipping-address-summary">
-                    Please complete the address information in the previous step.
-                </div>
-                
-                <div class="section-title">
-                    <i class="fas fa-credit-card"></i> Payment Method
-                </div>
-                <div id="payment-method-summary">
-                    Please select a payment method in the previous step.
-                </div>
-            </div>
-
-            <div class="nav-buttons">
-                <button class="nav-btn back-btn" id="back-to-step-2">
-                    <i class="fas fa-arrow-left"></i> Back to Payment
-                </button>
-                <button class="btn primary-btn" id="place-order-btn">
-                    <i class="fas fa-check-circle"></i> Place Order
-                </button>
-            </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstname">First Name</label>
+            <input
+              type="text"
+              id="firstname"
+              class="form-control"
+              placeholder="First Name"
+            />
+          </div>
+          <div class="form-group">
+            <label for="lastname">Last Name</label>
+            <input
+              type="text"
+              id="lastname"
+              class="form-control"
+              placeholder="Last Name"
+            />
+          </div>
         </div>
+
+        <div class="form-group">
+          <label for="address">Address</label>
+          <input
+            type="text"
+            id="address"
+            class="form-control"
+            placeholder="Street Address"
+          />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="text"
+            id="email"
+            class="form-control"
+            placeholder="Email Address"
+          />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="city">City</label>
+            <input
+              type="text"
+              id="city"
+              class="form-control"
+              placeholder="City"
+            />
+          </div>
+          <div class="form-group">
+            <label for="zip">ZIP Code</label>
+            <input
+              type="text"
+              id="zip"
+              class="form-control"
+              placeholder="ZIP Code"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input
+            type="tel"
+            id="phone"
+            class="form-control"
+            placeholder="Phone Number"
+          />
+        </div>
+
+        <div class="nav-buttons">
+          <button class="nav-btn back-btn" id="back-to-step-1">
+            <i class="fas fa-arrow-left"></i> Back to Cart
+          </button>
+          <button class="nav-btn next-btn" id="to-step-3">
+            Review Order <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 3: Confirmation -->
+      <div class="step-section" id="step-3">
+        <div class="section-title">
+          <i class="fas fa-clipboard-check"></i> Order Review
+        </div>
+
+        <div class="order-details">
+          <div class="section-title">
+            <i class="fas fa-shopping-bag"></i> Items
+          </div>
+          <div id="confirmation-items"></div>
+
+          <div class="summary">
+            <div class="summary-row">
+              <span class="summary-title">Subtotal</span>
+              <span id="confirm-subtotal">₱0.00</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-title">Shipping</span>
+              <span id="confirm-shipping">₱100.00</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-title">Discount</span>
+              <span id="confirm-discount">-₱0.00</span>
+            </div>
+            <div class="total">
+              <span>Total:</span>
+              <span class="total-amount" id="confirm-total">₱0.00</span>
+            </div>
+          </div>
+
+          <div class="section-title">
+            <i class="fas fa-map-marker-alt"></i> Shipping To
+          </div>
+          <div id="shipping-address-summary">
+            Please complete the address information in the previous step.
+          </div>
+
+          <div class="section-title">
+            <i class="fas fa-credit-card"></i> Payment Method
+          </div>
+          <div id="payment-method-summary">
+            Please select a payment method in the previous step.
+          </div>
+        </div>
+
+        <div class="nav-buttons">
+          <button class="nav-btn back-btn" id="back-to-step-2">
+            <i class="fas fa-arrow-left"></i> Back to Payment
+          </button>
+          <button class="btn primary-btn" id="place-order-btn">
+            <i class="fas fa-check-circle"></i> Place Order
+          </button>
+        </div>
+      </div>
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            let cart = JSON.parse(localStorage.getItem("cart")) || [];
-            const user = JSON.parse(localStorage.getItem("user")) || {}; 
-            
-            // DOM elements
-            const cartItemsContainer = document.getElementById("cart-items");
-            const confirmationItemsContainer = document.getElementById("confirmation-items");
-            const totalPriceElement = document.getElementById("total-price");
-            const subtotalElement = document.getElementById("subtotal");
-            const shippingElement = document.getElementById("shipping");
-            const confirmSubtotalElement = document.getElementById("confirm-subtotal");
-            const confirmShippingElement = document.getElementById("confirm-shipping");
-            const confirmTotalElement = document.getElementById("confirm-total");
-            
-            // Navigation buttons
-            const toStep2Button = document.getElementById("to-step-2");
-            const backToStep1Button = document.getElementById("back-to-step-1");
-            const toStep3Button = document.getElementById("to-step-3");
-            const backToStep2Button = document.getElementById("back-to-step-2");
-            const placeOrderButton = document.getElementById("place-order-btn");
-            
-            // Step elements
-            const stepSections = document.querySelectorAll(".step-section");
-            const progressSteps = document.querySelectorAll(".progress-step");
-            
-            let total = 0;
-            let selectedPaymentMethod = '';
-            
-            // Pre-fill user data if available
-            if (user) {
-                document.getElementById("firstname").value = user.firstname || '';
-                document.getElementById("lastname").value = user.lastname || '';
-            }
-            
-            // Load cart items
-            function loadCartItems() {
-                console.log("Loaded cart data:", cart);
-                
-                // Check if the cart is empty
-                if (cart.length === 0) {
-                    cartItemsContainer.innerHTML = `
+      document.addEventListener("DOMContentLoaded", () => {
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const user = JSON.parse(localStorage.getItem("user")) || {};
+
+        const cartItemsContainer = document.getElementById("cart-items");
+        const confirmationItemsContainer =
+          document.getElementById("confirmation-items");
+        const totalPriceElement = document.getElementById("total-price");
+        const subtotalElement = document.getElementById("subtotal");
+        const shippingElement = document.getElementById("shipping");
+        const confirmSubtotalElement =
+          document.getElementById("confirm-subtotal");
+        const confirmShippingElement =
+          document.getElementById("confirm-shipping");
+        const confirmTotalElement = document.getElementById("confirm-total");
+
+        const toStep2Button = document.getElementById("to-step-2");
+        const backToStep1Button = document.getElementById("back-to-step-1");
+        const toStep3Button = document.getElementById("to-step-3");
+        const backToStep2Button = document.getElementById("back-to-step-2");
+        const placeOrderButton = document.getElementById("place-order-btn");
+
+        const stepSections = document.querySelectorAll(".step-section");
+        const progressSteps = document.querySelectorAll(".progress-step");
+
+        let total = 0;
+        let selectedPaymentMethod = "";
+
+        if (user) {
+          document.getElementById("firstname").value = user.firstname || "";
+          document.getElementById("lastname").value = user.lastname || "";
+          document.getElementById("email").value = user.email || "";
+        }
+
+        function loadCartItems() {
+          console.log("Loaded cart data:", cart);
+
+          if (cart.length === 0) {
+            cartItemsContainer.innerHTML = `
                         <div class="empty-cart">
                             <i class="fas fa-shopping-basket"></i>
                             <p>Your cart is empty</p>
                         </div>`;
-                    subtotalElement.innerText = "₱0.00";
-                    shippingElement.innerText = "₱0.00";
-                    toStep2Button.disabled = true;
-                    return;
-                }
-                
-                total = 0;
-                cartItemsContainer.innerHTML = '';
-                confirmationItemsContainer.innerHTML = '';
-                
-                // Loop through the cart items to display them
-                cart.forEach((item, index) => {
-                    const price = Number(item.price) || 0;
-                    const quantity = Number(item.quantity) || 1;
+            subtotalElement.innerText = "₱0.00";
+            shippingElement.innerText = "₱0.00";
+            toStep2Button.disabled = true;
+            return;
+          }
 
-                    const itemTotal = price * quantity;
-                    total += itemTotal;
+          total = 0;
+          cartItemsContainer.innerHTML = "";
+          confirmationItemsContainer.innerHTML = "";
 
-                    // Create cart item element
-                    const itemDiv = document.createElement("div");
-                    itemDiv.classList.add("cart-item");
-                    itemDiv.style.setProperty('--item-index', index);
-                    itemDiv.innerHTML = `
-                        <div class="item-details">
-                            <span class="item-name">${item.name}</span>
-                            <span class="item-quantity">Quantity: ${quantity}</span>
-                        </div>
-                        <span class="item-price">₱${itemTotal.toFixed(2)}</span>
-                    `;
-                    cartItemsContainer.appendChild(itemDiv);
-                    
-                    // Create confirmation item element (same as cart item)
-                    const confirmItemDiv = itemDiv.cloneNode(true);
-                    confirmationItemsContainer.appendChild(confirmItemDiv);
-                });
+          cart.forEach((item, index) => {
+            const price = Number(item.price) || 0;
+            const quantity = Number(item.quantity) || 1;
 
-                // Display the total price
-                const shippingCost = cart.length > 0 ? 100 : 0;
-                const finalTotal = total + shippingCost;
-                
-                subtotalElement.innerText = `₱${total.toFixed(2)}`;
-                shippingElement.innerText = `₱${shippingCost.toFixed(2)}`;
-                totalPriceElement.innerText = `₱${finalTotal.toFixed(2)}`;
-                
-                confirmSubtotalElement.innerText = `₱${total.toFixed(2)}`;
-                confirmShippingElement.innerText = `₱${shippingCost.toFixed(2)}`;
-                confirmTotalElement.innerText = `₱${finalTotal.toFixed(2)}`;
+            const itemTotal = price * quantity;
+            total += itemTotal;
+
+            const itemDiv = document.createElement("div");
+            itemDiv.classList.add("cart-item");
+            itemDiv.style.setProperty("--item-index", index);
+            itemDiv.innerHTML = `
+    <div class="item-details">
+        <span class="item-name">${item.name}</span>
+        <span class="item-quantity">Quantity: ${quantity}</span>
+    </div>
+    <span class="item-price">₱${itemTotal.toFixed(2)}</span>
+    <button class="delete-btn" data-index="${index}">
+        <i class="fas fa-trash"></i>
+    </button>
+`;
+            cartItemsContainer.appendChild(itemDiv);
+
+            const confirmItemDiv = itemDiv.cloneNode(true);
+            confirmationItemsContainer.appendChild(confirmItemDiv);
+          });
+
+          // Enable delete buttons after items are created
+          document.querySelectorAll(".delete-btn").forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+              const index = e.target
+                .closest(".delete-btn")
+                .getAttribute("data-index");
+              cart.splice(index, 1);
+              localStorage.setItem("cart", JSON.stringify(cart));
+              loadCartItems(); // reload the cart display
+            });
+          });
+
+          const shippingCost = cart.length > 0 ? 100 : 0;
+          const finalTotal = total + shippingCost;
+
+          subtotalElement.innerText = `₱${total.toFixed(2)}`;
+          shippingElement.innerText = `₱${shippingCost.toFixed(2)}`;
+          totalPriceElement.innerText = `₱${finalTotal.toFixed(2)}`;
+
+          confirmSubtotalElement.innerText = `₱${total.toFixed(2)}`;
+          confirmShippingElement.innerText = `₱${shippingCost.toFixed(2)}`;
+          confirmTotalElement.innerText = `₱${finalTotal.toFixed(2)}`;
+        }
+
+        function showStep(stepNumber) {
+          stepSections.forEach((section) => {
+            section.classList.remove("active");
+          });
+
+          progressSteps.forEach((step) => {
+            step.classList.remove("active");
+            if (parseInt(step.getAttribute("data-step")) <= stepNumber) {
+              step.classList.add("active");
             }
-            
-            // Navigation functions
-            function showStep(stepNumber) {
-                // Hide all steps
-                stepSections.forEach(section => {
-                    section.classList.remove('active');
-                });
-                
-                // Update progress indicators
-                progressSteps.forEach(step => {
-                    step.classList.remove('active');
-                    if (parseInt(step.getAttribute('data-step')) <= stepNumber) {
-                        step.classList.add('active');
-                    }
-                });
-                
-                // Show the target step
-                document.getElementById(`step-${stepNumber}`).classList.add('active');
+          });
+
+          document.getElementById(`step-${stepNumber}`).classList.add("active");
+        }
+
+        const paymentOptions = document.querySelectorAll(".payment-option");
+        paymentOptions.forEach((option) => {
+          option.addEventListener("click", function () {
+            paymentOptions.forEach((o) => o.classList.remove("selected"));
+            this.classList.add("selected");
+            selectedPaymentMethod = this.getAttribute("data-payment");
+            document.getElementById("payment-method-summary").innerText =
+              this.querySelector("span").innerText;
+          });
+        });
+
+        toStep2Button.addEventListener("click", () => {
+          if (cart.length === 0) {
+            alert("Your cart is empty!");
+            return;
+          }
+          showStep(2);
+        });
+
+        backToStep1Button.addEventListener("click", () => {
+          showStep(1);
+        });
+
+        const paymentDetails = document.getElementById("payment-details");
+        const cardDetails = document.getElementById("card-details");
+        const gcashDetails = document.getElementById("gcash-details");
+
+        paymentOptions.forEach((option) => {
+          option.addEventListener("click", function () {
+            paymentOptions.forEach((o) => o.classList.remove("selected"));
+            this.classList.add("selected");
+            selectedPaymentMethod = this.getAttribute("data-payment");
+            document.getElementById("payment-method-summary").innerText =
+              this.querySelector("span").innerText;
+
+            // Show/Hide extra fields
+            paymentDetails.style.display = "block";
+            cardDetails.style.display = "none";
+            gcashDetails.style.display = "none";
+
+            if (selectedPaymentMethod === "card") {
+              cardDetails.style.display = "block";
+            } else if (selectedPaymentMethod === "gcash") {
+              gcashDetails.style.display = "block";
+            } else {
+              paymentDetails.style.display = "none";
             }
-            
-            // Payment option selection
-            const paymentOptions = document.querySelectorAll('.payment-option');
-            paymentOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    paymentOptions.forEach(o => o.classList.remove('selected'));
-                    this.classList.add('selected');
-                    selectedPaymentMethod = this.getAttribute('data-payment');
-                    document.getElementById('payment-method-summary').innerText = 
-                        this.querySelector('span').innerText;
-                });
-            });
-            
-            // Navigation event listeners
-            toStep2Button.addEventListener('click', () => {
-                if (cart.length === 0) {
-                    alert("Your cart is empty!");
-                    return;
-                }
-                showStep(2);
-            });
-            
-            backToStep1Button.addEventListener('click', () => {
-                showStep(1);
-            });
-            
-            toStep3Button.addEventListener('click', () => {
-                // Validate form
-                const firstname = document.getElementById('firstname').value;
-                const lastname = document.getElementById('lastname').value;
-                const address = document.getElementById('address').value;
-                const city = document.getElementById('city').value;
-                const zip = document.getElementById('zip').value;
-                const phone = document.getElementById('phone').value;
-                
-                if (!firstname || !lastname || !address || !city || !zip || !phone) {
-                    alert("Please fill in all address fields");
-                    return;
-                }
-                
-                if (!selectedPaymentMethod) {
-                    alert("Please select a payment method");
-                    return;
-                }
-                
-                // Update shipping address summary
-                document.getElementById('shipping-address-summary').innerHTML = `
+          });
+        });
+
+        toStep3Button.addEventListener("click", () => {
+          const firstname = document.getElementById("firstname").value;
+          const lastname = document.getElementById("lastname").value;
+          const address = document.getElementById("address").value;
+          const email = document.getElementById("email").value;
+          const city = document.getElementById("city").value;
+          const zip = document.getElementById("zip").value;
+          const phone = document.getElementById("phone").value;
+
+          if (!firstname || !lastname || !address || !city || !zip || !phone) {
+            alert("Please fill in all address fields");
+            return;
+          }
+
+          if (!selectedPaymentMethod) {
+            alert("Please select a payment method");
+            return;
+          }
+
+          document.getElementById("shipping-address-summary").innerHTML = `
                     <p>${firstname} ${lastname}</p>
                     <p>${address}</p>
                     <p>${city}, ${zip}</p>
                     <p>Phone: ${phone}</p>
                 `;
-                
-                showStep(3);
-            });
-            
-            backToStep2Button.addEventListener('click', () => {
-                showStep(2);
-            });
-            
-            // Progress steps click event
-            progressSteps.forEach(step => {
-                step.addEventListener('click', function() {
-                    const stepNum = parseInt(this.getAttribute('data-step'));
-                    
-                    // Only allow navigation to completed steps
-                    const currentStep = getCurrentStep();
-                    if (stepNum <= currentStep) {
-                        showStep(stepNum);
-                    }
-                });
-            });
-            
-            // Get current step
-            function getCurrentStep() {
-                for (let i = 0; i < stepSections.length; i++) {
-                    if (stepSections[i].classList.contains('active')) {
-                        return i + 1;
-                    }
-                }
-                return 1;
-            }
-            
-            // Place order
-// Place order with improved error handling and user tracking
-placeOrderButton.addEventListener("click", async (e) => {
-    const btn = e.target.closest('.btn');
-    
-    // First, check if the cart is empty
-    if (cart.length === 0) {
-        alert("Your cart is empty!");
-        return;
-    }
 
-    // Show loading state
-    btn.classList.add('loading');
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-
-    // Get user data
-    const orderFirstname = document.getElementById('firstname').value;
-    const orderLastname = document.getElementById('lastname').value;
-    const buyerName = `${orderFirstname} ${orderLastname}`.trim() || "guest";
-    
-    // Get user ID from localStorage (crucial for order history)
-    const userData = JSON.parse(localStorage.getItem("user")) || {};
-    const userId = userData.id || userData._id || userData.userId;
-    
-    console.log("Current user data:", userData);
-    console.log("User ID for order:", userId);
-
-    try {
-        // Create an array to store all order promises
-        const orderPromises = [];
-        
-        // Loop through each cart item and prepare the order
-                for (let item of cart) {
-                    console.log("Preparing order data:", item);
-                    
-                    const orderData = {
-                        product: item.name,
-                        price: item.price,
-                        quantity: item.quantity,
-                        buyer: buyerName,
-                        userId: userId, // This connects the order to the user account
-                        paymentMethod: selectedPaymentMethod,
-                        orderDate: new Date().toISOString()
-                    };
-                    
-                    console.log("Sending order data:", orderData);
-                    
-                    // Create the promise for this order
-                    const orderPromise = fetch("http://localhost:3000/order", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        credentials: "include",
-                        body: JSON.stringify(orderData)
-                    })
-                    .then(response => {
-                        console.log(`Order response status for ${item.name}:`, response.status);
-                        if (!response.ok) {
-                            throw new Error(`Server returned ${response.status} for ${item.name}`);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log(`Order success for ${item.name}:`, data);
-                        return data;
-                    });
-                    
-                    orderPromises.push(orderPromise);
-                }
-        
-                // Wait for all orders to complete
-                await Promise.all(orderPromises);
-        
-                // Optionally, clear the cart and show a confirmation message
-                localStorage.removeItem("cart");
-                alert("Order placed successfully!");
-        
-                // Redirect or update UI as needed
-                window.location.reload();
-        
-            } catch (error) {
-                console.error("Order placement failed:", error);
-                alert("There was an error placing your order. Please try again.");
-            } finally {
-                // Remove loading state
-                btn.classList.remove('loading');
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-check-circle"></i> Place Order';
-            }
+          showStep(3);
         });
-        
+
+        backToStep2Button.addEventListener("click", () => {
+          showStep(2);
+        });
+
+        progressSteps.forEach((step) => {
+          step.addEventListener("click", function () {
+            const stepNum = parseInt(this.getAttribute("data-step"));
+
+            const currentStep = getCurrentStep();
+            if (stepNum <= currentStep) {
+              showStep(stepNum);
+            }
+          });
+        });
+
+        function getCurrentStep() {
+          for (let i = 0; i < stepSections.length; i++) {
+            if (stepSections[i].classList.contains("active")) {
+              return i + 1;
+            }
+          }
+          return 1;
+        }
+
+        function placeOrder(cart) {
+          const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+          if (!currentUser) {
+            alert("Please log in first.");
+            window.location.href = "Login.html";
+            return;
+          }
+
+          const orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+          const newOrder = {
+            id: "ORD-" + Date.now(),
+            date: new Date().toISOString(),
+            status: "Order Placed",
+            items: cart.map((item) => ({
+              name: item.name,
+              quantity: item.quantity,
+              price: item.price,
+            })),
+            total: cart.reduce(
+              (sum, item) => sum + item.price * item.quantity,
+              0
+            ),
+
+            // 🔑 this part is what profile.html looks for
+            userId: String(currentUser.id || ""),
+            userEmail: (currentUser.email || "").toLowerCase(),
+            user: {
+              id: String(currentUser.id || ""),
+              email: (currentUser.email || "").toLowerCase(),
+            },
+          };
+
+          orders.push(newOrder);
+          localStorage.setItem("orders", JSON.stringify(orders));
+          localStorage.removeItem("cart");
+
+          alert("Order placed successfully!");
+          window.location.href = "profile.html";
+        }
+
+        placeOrderButton.addEventListener("click", async () => {
+          if (cart.length === 0) {
+            alert("Your cart is empty!");
+            return;
+          }
+
+          if (cart.length === 0) {
+            alert("Your cart is empty!");
+            return;
+          }
+
+          // 🔄 Refresh cart to make sure we have the latest version after any deletions
+          const updatedCart = JSON.parse(localStorage.getItem("cart")) || [];
+          cart.splice(0, cart.length, ...updatedCart); // replace cart contents with the latest
+          console.log("🧾 Updated cart before placing order:", cart);
+
+          placeOrderButton.classList.add("loading");
+          placeOrderButton.disabled = true;
+          placeOrderButton.innerHTML =
+            '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+          setTimeout(() => {
+            placeOrder(cart);
+          }, 1500);
+
+          const orderFirstname = document.getElementById("firstname").value;
+          const orderLastname = document.getElementById("lastname").value;
+          const email = document.getElementById("email").value;
+          const buyerName =
+            `${orderFirstname} ${orderLastname}`.trim() || "guest";
+
+          const userData = JSON.parse(localStorage.getItem("user")) || {};
+          const userId = userData.id || userData._id || userData.userId;
+
+          console.log("Current user data:", userData);
+          console.log("User ID for order:", userId);
+
+          try {
+            const orderPromises = [];
+
+            for (let item of cart) {
+              console.log("Preparing order data:", item);
+
+              const orderData = {
+                product: item.name,
+                price: item.price,
+                quantity: item.quantity,
+                buyer: buyerName,
+                buyerEmail: email,
+                userId: userId,
+                paymentMethod: selectedPaymentMethod,
+                orderDate: new Date().toISOString(),
+              };
+
+              console.log("Sending order data:", orderData);
+
+              const orderPromise = fetch("http://localhost:3000/order", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify(orderData),
+              });
+
+              orderPromises.push(orderPromise);
+            }
+
+            await Promise.all(orderPromises);
+
+            alert("✅ Order placed successfully!");
+            localStorage.removeItem("cart");
+            window.location.href = "profile.html";
+
+            window.location.reload();
+          } catch (error) {
+            console.error("Order placement failed:", error);
+            alert("There was an error placing your order. Please try again.");
+          } finally {
+            // Remove loading state
+            placeOrderButton.classList.remove("loading");
+            placeOrderButton.disabled = false;
+            placeOrderButton.innerHTML =
+              '<i class="fas fa-check-circle"></i> Place Order';
+          }
+        });
+
         // Load cart items on page load
         loadCartItems();
         // End of DOMContentLoaded event listener
-    });
+      });
+      const userData =
+        JSON.parse(localStorage.getItem("currentUser")) ||
+        JSON.parse(localStorage.getItem("user")) ||
+        {};
+
+      const newOrder = {
+        id: "order-" + Date.now(),
+        userId: userData.id || userData._id || null,
+        userEmail: userData.email || null,
+        date: new Date().toISOString(),
+        status: "Order Placed",
+        items: JSON.parse(localStorage.getItem("cart")) || [],
+        total: (JSON.parse(localStorage.getItem("cart")) || []).reduce(
+          (sum, i) => sum + i.price * i.quantity,
+          0
+        ),
+      };
     </script>
-</body>
+  </body>
 </html>

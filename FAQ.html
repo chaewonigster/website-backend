@@ -422,12 +422,11 @@
         const faqItem = element.parentElement;
         const isActive = faqItem.classList.contains('active');
         
-        // Close all FAQ items
+
         document.querySelectorAll('.faq-item').forEach(item => {
             item.classList.remove('active');
         });
         
-        // If the clicked item wasn't active before, open it
         if (!isActive) {
             faqItem.classList.add('active');
         }
@@ -446,11 +445,11 @@
                 item.style.display = "";
             } else {
                 item.style.display = "none";
+                
             }
         });
     }
     
-    // Add animation delay to FAQ items
     document.addEventListener('DOMContentLoaded', function() {
         const faqItems = document.querySelectorAll('.faq-item');
         faqItems.forEach((item, index) => {
