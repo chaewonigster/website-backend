@@ -1105,7 +1105,7 @@
 
               console.log("Sending order data:", orderData);
 
-              const orderPromise = fetch("http://localhost:3000/order", {
+              const orderPromise = fetch(`${BASE_API_URL}/api/order`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",

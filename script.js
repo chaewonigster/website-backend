@@ -1,18 +1,26 @@
 const BASE_API_URL = "https://website-backend-1-w1qd.onrender.com";
 
 document.addEventListener("DOMContentLoaded", () => {
-  fetch(`${BASE_API_URL}/status`, {
-    credentials: "include",
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      console.log("Session user info:", data);
-      if (data.loggedIn) {
-        console.log("Welcome back, " + data.user.firstname);
-      } else {
-        console.log("User is a guest.");
-      }
-    });
+  // ✅ Load user from localStorage instead of server session
+  const storedUser = JSON.parse(localStorage.getItem("user"));
+
+  if (storedUser) {
+    const f = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = val || "N/A";
+    };
+
+    f("firstname", storedUser.firstname);
+    f("middlename", storedUser.middlename);
+    f("lastname", storedUser.lastname);
+    f("email", storedUser.email);
+    f("address", storedUser.address);
+    f("contact", storedUser.contact);
+  } else {
+    console.log("⚠️ No user data found in localStorage.");
+    // Optional redirect:
+    // window.location.href = "login.html";
+  }
 
   document.querySelectorAll(".add-to-cart").forEach((button) => {
     button.addEventListener("click", () => {
@@ -109,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
         timestamp: new Date().toISOString(),
       };
 
-      fetch(`${BASE_API_URL}/orders`, {
+      fetch(`${BASE_API_URL}/api/order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -182,7 +190,7 @@ async function buyNow(button) {
   }
 
   try {
-    const response = await fetch("http://localhost:3000/orders", {
+    const response = await fetch(`${BASE_API_URL}/api/order`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -202,12 +210,13 @@ async function buyNow(button) {
 }
 
 async function handleLogin(event) {
+  console.log("✅ handleLogin triggered");
   event.preventDefault();
   const email = document.getElementById("loginEmail").value;
   const password = document.getElementById("loginPassword").value;
 
   try {
-    const response = await fetch(`${BASE_API_URL}/login`, {
+    const response = await fetch(`${BASE_API_URL}/api/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -218,11 +227,13 @@ async function handleLogin(event) {
     console.log("Login Response:", data);
 
     if (data.success) {
+      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("currentUser", JSON.stringify(data.user));
       localStorage.setItem("currentrole", data.role);
 
       // ✅ Check user role (make sure backend sends something like data.user.role === "admin")
       if (data.role === "admin") {
-        window.location.href = "../admin.html"; // ✅ Admin goes to dashboard
+        window.location.href = "../Public/admin.html"; // ✅ Admin goes to dashboard
       } else {
         window.location.href = "LOGIN_USER.html"; // ✅ Normal user goes to website
       }
@@ -283,8 +294,13 @@ function goToOrders() {
   window.location.href = "orders.html";
 }
 
-document.getElementById("search-bar").addEventListener("input", searchProducts);
-fetchProducts();
+document
+  .getElementById("search-bar")
+  ?.addEventListener("input", searchProducts);
+
+function fetchProducts() {
+  console.log("fetchProducts() called – no implementation yet.");
+}
 
 function searchProducts(event) {
   const searchTerm = event.target.value.toLowerCase();

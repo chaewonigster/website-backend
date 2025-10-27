@@ -994,6 +994,7 @@
             );
 
             const data = await response.json();
+            console.log("✅ FULL LOGIN RESPONSE:", data);
             console.log("ROLE FROM SERVER:", data.role);
 
             loginBtn.classList.remove("loading");
@@ -1002,11 +1003,24 @@
               loginSuccessMessage.textContent =
                 "Login successful! Redirecting...";
               loginSuccessMessage.style.display = "block";
-              localStorage.setItem("user", JSON.stringify(data.user));
+
+              // 🟢 Always store complete user data from backend
+              // ✅ Always save the full user object from the backend
+              if (data.user) {
+                localStorage.setItem("user", JSON.stringify(data.user));
+              } else {
+                // ✅ Admin fallback — only if backend truly sends no user object
+                localStorage.setItem(
+                  "user",
+                  JSON.stringify({ role: data.role })
+                );
+              }
+
+              localStorage.setItem("currentrole", data.role);
 
               setTimeout(() => {
                 if (data.role === "admin") {
-                  window.location.href = "../admin.html"; // ✅ redirect to admin
+                  window.location.href = "../Public/admin.html"; // ✅ redirect to admin
                 } else {
                   window.location.href = "LOGIN_USER.html"; // ✅ normal user page
                 }

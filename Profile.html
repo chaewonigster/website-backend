@@ -415,16 +415,48 @@
     </section>
 
     <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const user = JSON.parse(localStorage.getItem("user"));
+
+        if (user) {
+          document.getElementById("profileFirstName").textContent =
+            user.firstname || "N/A";
+          document.getElementById("profileMiddleName").textContent =
+            user.middlename || "N/A";
+          document.getElementById("profileLastName").textContent =
+            user.lastname || "N/A";
+          document.getElementById("profileEmail").textContent =
+            user.email || "N/A";
+          document.getElementById("profileAddress").textContent =
+            user.address || "N/A";
+          document.getElementById("profileContact").textContent =
+            user.contact || "N/A";
+        } else {
+          console.log("No user found in localStorage");
+        }
+      });
+      console.log("✅ Profile.js loaded"); // Add this line at the very top
       document.addEventListener("DOMContentLoaded", () => {
-        let user = JSON.parse(localStorage.getItem("user"));
-        if (!user) {
-          window.location.href = "Login.html";
+        console.log("✅ DOM fully loaded");
+        let user = null;
+        try {
+          const stored = localStorage.getItem("user");
+          if (stored) {
+            user = JSON.parse(stored);
+          } else {
+            console.warn("No user found in localStorage, redirecting...");
+            window.location.href = "login.html";
+            return;
+          }
+        } catch (err) {
+          console.error("Invalid user data in localStorage:", err);
+          window.location.href = "login.html";
           return;
         }
 
         if (!user.id) {
           user.id = Date.now().toString();
-          localStorage.setItem("currentUser", JSON.stringify(user));
+          localStorage.setItem("user", JSON.stringify(user));
         }
 
         // 🟢 Show profile info
@@ -443,6 +475,8 @@
             user.contact || "N/A";
         };
         displayProfile();
+        // ✅ Ensure user details are complete in localStorage
+        localStorage.setItem("user", JSON.stringify(user));
 
         // 🟡 Edit profile
         document.getElementById("editBtn").addEventListener("click", () => {
@@ -467,7 +501,7 @@
           user.address = document.getElementById("editAddress").value;
           user.contact = document.getElementById("editContact").value;
 
-          localStorage.setItem("currentUser", JSON.stringify(user));
+          localStorage.setItem("user", JSON.stringify(user));
           document.getElementById("profileEdit").classList.add("hidden");
           document.getElementById("profileView").classList.remove("hidden");
           document.getElementById("editBtn").classList.remove("hidden");
@@ -483,7 +517,7 @@
 
         document.getElementById("logoutBtn").addEventListener("click", (e) => {
           e.preventDefault();
-          localStorage.removeItem("currentUser");
+          localStorage.removeItem("user");
           window.location.href = "index.html";
         });
 

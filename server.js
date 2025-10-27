@@ -8,6 +8,13 @@ const express = require("express");
 const app = express();
 const path = require("path");
 
+app.use(express.static(path.join(__dirname, "Public")));
+app.use(express.static(path.join(__dirname)));
+
+app.get("/admin.html", (req, res) => {
+  res.sendFile(path.join(__dirname, "Public", "admin.html"));
+});
+
 app.use(express.json());
 
 const allowedOrigins = [
@@ -17,6 +24,20 @@ const allowedOrigins = [
 ];
 
 app.use(express.static("public"));
+
+app.set("trust proxy", 1);
+app.use(
+  session({
+    secret: "supersecretkey", // change this to something private
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      sameSite: "none", // important for cross-origin cookies
+      secure: process.env.NODE_ENV === "production", // true on Render
+    },
+  })
+);
+
 app.use(
   cors({
     origin: function (origin, callback) {
@@ -28,15 +49,6 @@ app.use(
       }
     },
     credentials: true,
-  })
-);
-
-app.use(
-  session({
-    secret: "your_secret_key",
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false },
   })
 );
 
@@ -73,7 +85,7 @@ const orderSchema = new mongoose.Schema({
 
 const Order = mongoose.model("Order", orderSchema);
 
-app.post("/order", async (req, res) => {
+app.post("/api/order", async (req, res) => {
   try {
     console.log("Received order data:", req.body);
     const { product, price, quantity, buyerEmail } = req.body; // 📧 include buyerEmail
@@ -101,7 +113,7 @@ app.post("/order", async (req, res) => {
 });
 
 // 📜 Fetch order history of the logged-in user
-app.get("/order-history", async (req, res) => {
+app.get("/api/order-history", async (req, res) => {
   try {
     if (!req.session.user) {
       return res.status(401).json({ success: false, message: "Not logged in" });
@@ -192,18 +204,18 @@ app.post("/api/login", async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    let user = await User.findOne({ email });
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(400).json({ message: "Invalid email or password." });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
-
     if (!isPasswordValid) {
       return res.status(400).json({ message: "Invalid email or password." });
     }
 
+    // ✅ Save full user info to session
     req.session.user = {
       firstname: user.firstname,
       middlename: user.middlename,
@@ -211,28 +223,30 @@ app.post("/api/login", async (req, res) => {
       email: user.email,
       address: user.address,
       contact: user.contact,
+      role: user.role,
     };
 
-    req.session.user = {
-      firstname: user.firstname,
-      middlename: user.middlename,
-      lastname: user.lastname,
-      email: user.email,
-      address: user.address,
-      contact: user.contact,
-      role: user.role, // ✅ store role in session
-    };
-
+    // ✅ Send full user details to frontend
     res.json({
       success: true,
-      role: user.role, // ✅ send role to frontend
       message: "Login successful!",
+      user: {
+        id: user._id,
+        firstname: user.firstname,
+        middlename: user.middlename,
+        lastname: user.lastname,
+        email: user.email,
+        address: user.address,
+        contact: user.contact,
+        role: user.role,
+      },
+      role: user.role, // 👈 added this so your frontend’s `data.role` still works
     });
   } catch (error) {
     console.error("Login error:", error);
-    return res.status(400).json({
+    res.status(500).json({
       success: false,
-      message: "Invalid email or password.",
+      message: "Server error during login.",
     });
   }
 });

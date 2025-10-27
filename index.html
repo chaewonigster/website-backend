@@ -197,34 +197,9 @@
             padding: 20px;
             text-align: center;
         }
-        .product {
-            flex: 1 1 200px; 
-            max-width: 200px;
-        }
-        .productContainer {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            width: 100%;
-            min-height: 500px; 
-        }
-        .product[style*="visibility: hidden"] {
-            height: 0;
-            opacity: 0;
-        }
-        .product img {
-            width: 100%;
-            height: auto;
-            border-radius: 10px;
-            transition: transform 0.5s;
-        }
-        .product img:hover {
-            transform: scale(1.1) rotate(5deg);
-        }
-        .product h3, .product p {
-            color: white;
-        }
+
+
+
         .search-results {
             display: none;
             flex-wrap: wrap;
@@ -354,26 +329,33 @@ button:active {
         }
         .product {
             background: rgba(128, 128, 128, 0.75);
+            display: flex;
             padding: 20px;
             border-radius: 10px;
             text-align: center;
         }
-        .product img {
-            width: 100%;
-            height: 50%;
-            border-radius: 50px;
-        }
+.product img {
+    width: 180px;
+    height: 180px;
+    object-fit: contain; /* or 'cover' if you prefer */
+    border-radius: 20px;
+    background-color: white; /* optional: for contrast */
+    display: block;
+    margin: 0 auto 10px;
+}
         .product h3, .product p {
             color: white;
         }
-        .product-placeholder {
-            width: 200px;
-            height: 350px;
-            background: transparent;
-            display: inline-block;
-            margin: 10px;
-            visibility: hidden; 
-        }
+        .product h3 {
+    font-size: 16px;
+    margin: 5px 0;
+    min-height: 40px;  /* Adjust this height so all titles occupy the same space */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
         .product {
             min-height: 250px; 
             display: flex;
@@ -433,6 +415,7 @@ button:active {
     align-items: center;
     margin-top: 10px;
 }
+
 .cart-popup {
     display: none;
     position: fixed;
@@ -470,38 +453,22 @@ button:active {
 }
 .view-cart {
     position: relative;
-    padding: 10px 15px;
+    padding: 2px 2px;
     border: none;
     cursor: pointer;
     font-weight: bold;
-    border-radius: 5px;
-    font-size: 14px;
+    border-radius: 3px;
+    font-size: 13px;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 140px;
+    width: 80px;
     height: 40px;
     background: white;
     color: red;
     border: 2px solid red;
 }
-.view-cart {
-    position: relative;
-    padding: 10px 15px;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    border-radius: 5px;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 140px;
-    height: 40px;
-    background: white;
-    color: red;
-    border: 2px solid red;
-}
+
 .view-cart span {
     background: red;
     color: white;
@@ -513,40 +480,27 @@ button:active {
     top: 5px;
     right: 5px;
 }
-.view-cart .cart-count {
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    background: red;
-    color: white;
-    font-size: 12px;
-    font-weight: bold;
-    padding: 3px 7px;
-    border-radius: 50%;
-    min-width: 22px;
-    min-height: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
 .cart-count {
-    position: absolute;
-    top: 10px; 
-    right: 10px;
+    position: relative;  
+    top: auto;
+    right: auto;
+    margin-top: 5px;  
     font-size: 14px;
     color: white;
     background: red;
     padding: 4px 8px;
     border-radius: 50%;
     font-weight: bold;
-    z-index: 1000; 
+    display: inline-block;
 }
+
 .view-cart {
     background: white;
     color: red;
     border: 1px solid red;
 }
+
 .checkout {
     padding: 10px 15px;
     border: none;
@@ -557,12 +511,13 @@ button:active {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 130px;
+    width: 80px;
     height: 40px;
     background: red;
     color: white;
     border: 2px solid red;
 }
+
 .close {
     position: absolute;
     top: 5px;
@@ -573,13 +528,22 @@ button:active {
 .search-container {
     display: flex;
     align-items: center;
-    background: white;
-    border-radius: 30px;
-    padding: 5px 10px;
+    background: #fff;
+    border-radius: 40px;
+    padding: 6px 15px;
+    margin-top: 10px; /* adjust this number as needed */
+    margin-top: 10px;
+    width: 320px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
     border: 1px solid #ccc;
-    width: 250px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-    position: relative;
+}
+
+.search-container:hover,
+.search-container:focus-within {
+    box-shadow: 0 0 12px rgba(0, 123, 255, 0.6);
+    border-color: #007bff;
+    transform: scale(1.03);
 }
 
 .search-input {
@@ -589,39 +553,37 @@ button:active {
     outline: none;
 }
 
-.search-button {
-    background: rgb(167, 167, 167);
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    cursor: pointer;
-}
-
 .search-btn {
-    background: white;
+    background: #007bff;
+    color: #fff;
     border: none;
-    cursor: pointer;
     border-radius: 50%;
-    width: 20px;
-    height: 20px;
+    width: 34px;
+    height: 34px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
-    position: absolute;
-    right: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
+
+
+
 .search-btn img {
     width: 20px;
     height: 20px;
 }
-.search-bar {
+#search-bar {
     flex: 1;
     border: none;
     outline: none;
-    padding: 5px 10px;
-    font-size: 14px;
-    border-radius: 30px;
+    padding: 10px 12px;
+    font-size: 15px;
+    border-radius: 40px;
+    background: transparent;
+    color: #333;
 }
 
 .search-results {
@@ -642,6 +604,37 @@ button:active {
 
 .search-results div:hover {
     background: #f8f8f8;
+}
+
+.shop-text {
+  display: inline-block;
+  font-size: 24px;
+  color: #fff;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-decoration: none;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.shop-text::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  width: 0;
+  height: 3px;
+  background: #ffcc00;
+  transition: width 0.3s ease;
+}
+
+.shop-text:hover {
+  color: #ffcc00;
+}
+
+.shop-text:hover::after {
+  width: 100%;
 }
 
     </style>
@@ -665,7 +658,7 @@ button:active {
         <div class="nav-icons">
             <i class="fas fa-user"></i> 
             <i class="fas fa-lock"></i> 
-            <a href="Login.html" button class="btn">LOGIN</button></a>  
+            <a href="Login.html" class="btn">LOGIN</button></a>  
         </div>
     </nav>
 
@@ -674,7 +667,8 @@ button:active {
         <div class="hero-content">
             <h1>Discover Premium Frozen Meats</h1>
             <p>Experience the convenience of our high-quality frozen meats. <br> Perfect for home cooking or business needs, our products ensure easy and hassle-free meal preparation.</p>
-            <a href="#" class="btn">Shop Now</a>
+            <br>
+            <a href="#productContainer" class="shop-text">Shop Now</a>
         </div>
     </div>
 
@@ -686,180 +680,181 @@ button:active {
         <div class="container" id="productContainer">
         <section class="container" id="productContainer">
 
-            <div class="product" data-name="TJ Classic">
-            <img src="1.png" alt="TJ Classic">
-            <h3>TJ Classic</h3>
-            <p>₱195.00</p>
-            <button class="btn" button onclick="addToCart('TJ Classic, 195')">Add to Cart</button>
-            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
-        </div>
-    
-        <div class="product" data-name="Kikiam 1/2">
-            <img src="2.png" alt="Kikiam 1/2">
-            <h3>Kikiam 1/2</h3>
-            <p>₱45.00</p>
-            <button class="btn" button onclick="addToCart('Kikiam 1/2', 45)">Add to Cart</button>
-            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
-        </div>
-    
-        <div class="product" data-name="Chicken Ball 1/4">
-            <img src="3.png" alt="Chicken Ball 1/4">
-            <h3>Chicken Ball 1/4</h3>
-            <p>₱27.00</p>
-            <button class="btn" button onclick="addToCart('Chicken Ball 1/4', 27)">Add to Cart</button>
-            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
-        </div>
-    
-        <div class="product" data-name="Squid Ball 1/4">
-            <img src="4.png" alt="Squid Ball 1/4">
-            <h3>Squid Ball 1/4</h3>
-            <p>₱27.00</p>
-            <button class="btn" button onclick="addToCart('Squid Ball 1/4', 27)">Add to Cart</button>
-            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
-        </div>
-    
-        <div class="product" data-name="Fish Ball 1kg">
-            <img src="5.png" alt="Fish Ball 1kg">
-            <h3>Fish Ball 1kg</h3>
-            <p>₱55.00</p>
-            <button class="btn" button onclick="addToCart('Fish Ball 1Kg', 55)">Add to Cart</button>
-            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
-        </div>
-    
-        <div class="product" data-name="TJ Jumbo">
-            <img src="6.png" alt="TJ Jumbo">
-            <h3>TJ Jumbo</h3>
-            <p>₱195.00</p>
-            <button class="btn" button onclick="addToCart('TJ Jumbo', 195)">Add to Cart</button>
-            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
-        </div>
-    
-        <div class="product" data-name="TJ Cheesedog">
-            <img src="7.png" alt="TJ Cheesedog">
-            <h3>TJ Cheesedog</h3>
-            <p>₱210.00</p>
-            <button class="btn" button onclick="addToCart('TJ Cheesedog', 210)">Add to Cart</button>
-            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
-        </div>
-    
-        <div class="product" data-name="TJ Cocktail">
-            <img src="8.png" alt="TJ Cocktail">
-            <h3>TJ Cocktail</h3>
-            <p>₱210.00</p>
-            <button class="btn" button onclick="addToCart('TJ Cocktail', 210)">Add to Cart</button>
-            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
-        </div>
-    
-        <div class="product" data-name="TJ Chicken and Cheese">
-            <img src="9.png" alt="TJ Chicken and Cheese">
-            <h3>TJ Chicken and Cheese</h3>
-            <p>₱210.00</p>
-            <button class="btn" button onclick="addToCart('TJ Chicken and Chees', 210)">Add to Cart</button>
-            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
-        </div>
-    
-        <div class="product" data-name="Pinoy Hotdog">
-            <img src="10.png" alt="Pinoy Hotdog">
-            <h3>Pinoy Hotdog</h3>
-            <p>₱155.00</p>
-            <button class="btn" button onclick="addToCart('Pinoy Hotdog', 155)">Add to Cart</button>
-            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
-        </div>
-       
-        <div class="product" data-name="Pinoy Cheesedog">
-            <img src="11.png" alt="Pinoy Cheesedog">
-            <h3>Pinoy Cheesedog</h3>
-            <p>₱160.00</p> 
-            <button class="btn" button onclick="addToCart('Pinoy Cheesedog', 160)">Add to Cart</button>
-            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
-        </div>
-        
-        <div class="product" data-name="Bossing Cheesedog">
-            <img src="12.png" alt="Bossing Cheesedog">
-            <h3>Bossing Cheesedog</h3>
-            <p>₱160.00</p>
-            <button class="btn" button onclick="addToCart('Bossing Cheesedog', 160)">Add to Cart</button>
-            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
-        </div>
-        
-        <div class="product" data-name="Bossing Cheesedog King Size">
-            <img src="13.png" alt="Bossing Cheesedog King Size">
-            <h3>Bossing Cheesedog King Size</h3>
-            <p>₱165.00</p>
-            <button class="btn" button onclick="addToCart('FBossing Cheesedog King SIze', 165)">Add to Cart</button>
-            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
-        </div>
-        
-        <div class="product" data-name="Bossing Chicken Franks">
-            <img src="14.png" alt="Bossing Chicken Franks">
-            <h3>Bossing Chicken Franks</h3>
-            <p>₱175.00</p>
-            <button class="btn" button onclick="addToCart('BOssing Chicken Franks', 175)">Add to Cart</button>
-            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
-        </div>
-        
-        <div class="product" data-name="Bossing Hotdog Regular 8pcs">
-            <img src="15.png" alt="Bossing Hotdog Regular 8pcs">
-            <h3>Bossing Hotdog Regular 8pcs</h3>
-            <p>₱40.00</p>
-            <button class="btn" button onclick="addToCart('Bosssing Hotdog Regular 8pcs', 40)">Add to Cart</button>
-            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
-        </div>
-        
-        <div class="product" data-name="Bigtime King Size">
-            <img src="16.png" alt="Bigtime King Size">
-            <h3>Bigtime King Size</h3>
-            <p>₱160.00</p>
-            <button class="btn" button onclick="addToCart('Bigtime King Size', 160)">Add to Cart</button>
-            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
-        </div>
-        
-        <div class="product" data-name="Idol Jumbo Cheesedog">
-            <img src="17.png" alt="Idol Jumbo Cheesedog">
-            <h3>Idol Jumbo Cheesedog</h3>
-            <p>₱185.00</p>
-            <button class="btn" button onclick="addToCart('Idol Jumbo Cheesedog', 185)">Add to Cart</button>
-            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
-        </div>
-        
-        <div class="product" data-name="Idol Regular Cheesedog 10pcs">
-            <img src="18.png" alt="Idol Regular Cheesedog 10pcs">
-            <h3>Idol Regular Cheesedog 10pcs</h3>
-            <p>₱50.00</p>
-            <button class="btn" button onclick="addToCart('Idol Regular Cheesedog 10pcs', 50)">Add to Cart</button>
-            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
-        </div>
-        
-        <div class="product" data-name="Pampanga's Best Tocino 1/4">
-            <img src="19.png" alt="Pampanga's Best Tocino 1/4">
-            <h3>Pampanga's Best Tocino 1/4</h3>
-            <p>₱65.00</p>
-            <button class="btn" button onclick="addToCart('Pampangas Best Tocino 1/4', 65)">Add to Cart</button>
-            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
-        </div>
-        
-        <div class="product" data-name="CDO Young Pork Tocino">
-            <img src="20.png" alt="CDO Young Pork Tocino">
-            <h3>CDO Young Pork Tocino</h3>
-            <p>₱65.00</p>
-            <button class="btn" button onclick="addToCart('CDO Young Pork Tocino', 65)">Add to Cart</button>
-            <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
-        
-
+            <div class="product" data-name="Hotdog ni aljusr">
+                <img src="1.png" alt="TJ Classic">
+                <h3>TJ Classic</h3>
+                <p>₱195.00</p>
+                <p class="stock">Stock: <span id="stock-tj-classic">500</span></p>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
             </div>
+            
+            <div class="product" data-name="Kikiam 1/2">
+                <img src="2.png" alt="Kikiam 1/2">
+                <h3>Kikiam 1/2</h3>
+                <p>₱45.00</p>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Chicken Ball 1/4">
+                <img src="3.png" alt="Chicken Ball 1/4">
+                <h3>Chicken Ball 1/4</h3>
+                <p>₱27.00</p>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Squid Ball 1/4">
+                <img src="4.png" alt="Squid Ball 1/4">
+                <h3>Squid Ball 1/4</h3>
+                <p>₱27.00</p>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Fish Ball 1kg">
+                <img src="5.png" alt="Fish Ball 1kg">
+                <h3>Fish Ball 1kg</h3>
+                <p>₱55.00</p>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="TJ Jumbo">
+                <img src="6.png" alt="TJ Jumbo">
+                <h3>TJ Jumbo</h3>
+                <p>₱195.00</p>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="TJ Cheesedog">
+                <img src="7.png" alt="TJ Cheesedog">
+                <h3>TJ Cheesedog</h3>
+                <p>₱210.00</p>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
+                <button class="btn buy" onclick="buysow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="TJ Cocktail">
+                <img src="8.png" alt="TJ Cocktail">
+                <h3>TJ Cocktail</h3>
+                <p>₱210.00</p>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="TJ Chicken and Cheese">
+                <img src="9.png" alt="TJ Chicken and Cheese">
+                <h3>TJ Chicken and Cheese</h3>
+                <p>₱210.00</p>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Pinoy Hotdog">
+                <img src="10.png" alt="Pinoy Hotdog">
+                <h3>Pinoy Hotdog</h3>
+                <p>₱155.00</p>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Pinoy Cheesedog">
+                <img src="11.png" alt="Pinoy Cheesedog">
+                <h3>Pinoy Cheesedog</h3>
+                <p>₱160.00</p> 
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Bossing Cheesedog">
+                <img src="12.png" alt="Bossing Cheesedog">
+                <h3>Bossing Cheesedog</h3>
+                <p>₱160.00</p>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Bossing Cheesedog King Size">
+                <img src="13.png" alt="Bossing Cheesedog King Size">
+                <h3>Bossing Cheesedog King Size</h3>
+                <p>₱165.00</p>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Bossing Chicken Franks">
+                <img src="14.png" alt="Bossing Chicken Franks">
+                <h3>Bossing Chicken Franks</h3>
+                <p>₱175.00</p>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Bossing Hotdog Regular 8pcs">
+                <img src="15.png" alt="Bossing Hotdog Regular 8pcs">
+                <h3>Bossing Hotdog Regular 8pcs</h3>
+                <p>₱40.00</p>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Bigtime King Size">
+                <img src="16.png" alt="Bigtime King Size">
+                <h3>Bigtime King Size</h3>
+                <p>₱160.00</p>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Idol Jumbo Cheesedog">
+                <img src="17.png" alt="Idol Jumbo Cheesedog">
+                <h3>Idol Jumbo Cheesedog</h3>
+                <p>₱185.00</p>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Idol Regular Cheesedog 10pcs">
+                <img src="18.png" alt="Idol Regular Cheesedog 10pcs">
+                <h3>Idol Regular Cheesedog 10pcs</h3>
+                <p>₱50.00</p>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="Pampanga's Best Tocino 1/4">
+                <img src="19.png" alt="Pampanga's Best Tocino 1/4">
+                <h3>Pampanga's Best Tocino 1/4</h3>
+                <p>₱65.00</p>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
+            <div class="product" data-name="CDO Young Pork Tocino">
+                <img src="20.png" alt="CDO Young Pork Tocino">
+                <h3>CDO Young Pork Tocino</h3>
+                <p>₱65.00</p>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
+                <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
+            </div>
+            
             <div class="product" data-name="Purefoods Chicken Breast Nuggets 1/4">
                 <img src="21.png" alt="Purefoods Chicken Breast Nuggets 1/4">
                 <h3>Purefoods Chicken Breast Nuggets 1/4</h3>
                 <p>₱60.00</p>
-                <button class="btn" button onclick="addToCart('Purefoods Chicken Breast Nuggets 1/4', 60)">Add to Cart</button>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
                 <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
             </div>
+        
             
             <div class="product" data-name="Purefoods Crazy Cuts Nuggets 1/4">
                 <img src="22.png" alt="Purefoods Crazy Cuts Nuggets 1/4">
                 <h3>Purefoods Crazy Cuts Nuggets 1/4</h3>
-                <p>₱Purefoods Crazy Cuts Nuggets 1/4.00</p>
-                <button class="btn" button onclick="addToCart('Purefoods Crazy Cuts Nuggets 1/4', 60)">Add to Cart</button>
+                <p>₱60.00</p>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
                 <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
             </div>
             
@@ -867,7 +862,7 @@ button:active {
                 <img src="23.png" alt="Star Nuggets">
                 <h3>Star Nuggets</h3>
                 <p>₱50.00</p>
-                <button class="btn" button onclick="addToCart('Star Nuggets', 50)">Add to Cart</button>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
                 <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
             </div>
             
@@ -875,7 +870,7 @@ button:active {
                 <img src="24.png" alt="Star Nuggets w/ Cheese">
                 <h3>Star Nuggets w/ Cheese</h3>
                 <p>₱50.00</p>
-                <button class="btn" button onclick="addToCart('Star Nuggets w/ Cheese', 50)">Add to Cart</button>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
                 <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
             </div>
             
@@ -883,7 +878,7 @@ button:active {
                 <img src="25.png" alt="CDO Crispy Burger">
                 <h3>CDO Crispy Burger</h3>
                 <p>₱60.00</p>
-                <button class="btn" button onclick="addToCart('CDO Crispy Burger', 60)">Add to Cart</button>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
                 <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
             </div>
             
@@ -891,7 +886,7 @@ button:active {
                 <img src="26.png" alt="CDO Ulam Burger">
                 <h3>CDO Ulam Burger</h3>
                 <p>₱60.00</p>
-                <button class="btn" button onclick="addToCart('CDO Ulam Burger', 60)">Add to Cart</button>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
                 <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
             </div>
             
@@ -899,7 +894,7 @@ button:active {
                 <img src="27.png" alt="Almar Slice Ham">
                 <h3>Almar Slice Ham</h3>
                 <p>₱45.00</p>
-                <button class="btn" button onclick="addToCart('Almar Slice Ham', 45)">Add to Cart</button>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
                 <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
             </div>
             
@@ -907,7 +902,7 @@ button:active {
                 <img src="28.png" alt="Almar Sweet Ham">
                 <h3>Almar Sweet Ham</h3>
                 <p>₱45.00</p>
-                <button class="btn" button onclick="addToCart('Almar Sweet Ham', 45)">Add to Cart</button>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
                 <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
             </div>
             
@@ -915,7 +910,7 @@ button:active {
                 <img src="29.png" alt="CDO Sweet Ham">
                 <h3>CDO Sweet Ham</h3>
                 <p>₱85.00</p>
-                <button class="btn" button onclick="addToCart('CDO', 45)">Add to Cart</button>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
                 <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
             </div>
             
@@ -923,7 +918,7 @@ button:active {
                 <img src="30.png" alt="Pampanga's Best Sweet Ham">
                 <h3>Pampanga's Best Sweet Ham</h3>
                 <p>₱65.00</p>
-                <button class="btn" button onclick="addToCart('Pampangas Best Sweet Ham', 65)">Add to Cart</button>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
                 <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
             </div>
             
@@ -931,7 +926,7 @@ button:active {
                 <img src="31.png" alt="Noypi Patty">
                 <h3>Noypi Patty</h3>
                 <p>₱40.00</p>
-                <button class="btn" button onclick="addToCart('Noypi Patty', 40)">Add to Cart</button>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
                 <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
             </div>
             
@@ -939,15 +934,16 @@ button:active {
                 <img src="32.png" alt="Almar Patty">
                 <h3>Almar Patty</h3>
                 <p>₱40.00</p>
-                <button class="btn" button onclick="addToCart('Almar Patty', 40)">Add to Cart</button>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
                 <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
             </div>
+            
             
             <div class="product" data-name="Hamonado Skinless">
                 <img src="33.png" alt="Hamonado Skinless">
                 <h3>Hamonado Skinless</h3>
                 <p>₱45.00</p>
-                <button class="btn" button onclick="addToCart('Hamonado Skinless', 45)">Add to Cart</button>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
                 <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
             </div>
             
@@ -955,7 +951,7 @@ button:active {
                 <img src="34.png" alt="Pampanga's Best Skinless Longganisa">
                 <h3>Pampanga's Best Skinless Longganisa</h3>
                 <p>₱65.00</p>
-                <button class="btn" button onclick="addToCart('Pampangas Best Skinless Longganisa', 65)">Add to Cart</button>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
                 <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
             </div>
             
@@ -963,7 +959,7 @@ button:active {
                 <img src="35.png" alt="Pampanga's Best Native Longganisa">
                 <h3>Pampanga's Best Native Longganisa</h3>
                 <p>₱65.00</p>
-                <button class="btn" button onclick="addToCart('Pampangas Best Native Longganisa', 65)">Add to Cart</button>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
                 <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
             </div>
             
@@ -971,7 +967,7 @@ button:active {
                 <img src="36.png" alt="TJ Chicken and Cheese">
                 <h3>TJ Chicken and Cheese</h3>
                 <p>₱240.00</p>
-                <button class="btn" button onclick="addToCart('TJ Chicken and Cheese', 240)">Add to Cart</button>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
                 <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
             </div>
             
@@ -979,7 +975,7 @@ button:active {
                 <img src="37.png" alt="Star Hotdog 1/4">
                 <h3>Star Hotdog 1/4</h3>
                 <p>₱50.00</p>
-                <button class="btn" button onclick="addToCart('Star Hotdog 1/4', 50)">Add to Cart</button>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
                 <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
             </div>
             
@@ -987,7 +983,7 @@ button:active {
                 <img src="38.png" alt="Star Cheesedog 1/4">
                 <h3>Star Cheesedog 1/4</h3>
                 <p>₱50.00</p>
-                <button class="btn" button onclick="addToCart('Star Cheesedog 1/4', 50)">Add to Cart</button>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
                 <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
             </div>
             
@@ -995,7 +991,7 @@ button:active {
                 <img src="39.png" alt="Bossing Cheesedog 8pcs">
                 <h3>Bossing Cheesedog 8pcs</h3>
                 <p>₱45.00</p>
-                <button class="btn" button onclick="addToCart('Bossing Cheesedog 8pcs', 45)">Add to Cart</button>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
                 <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
             </div>
             
@@ -1003,15 +999,15 @@ button:active {
                 <img src="40.png" alt="Bossing Cheesedog 10pcs">
                 <h3>Bossing Cheesedog 10pcs</h3>
                 <p>₱50.00</p>
-                <button class="btn" button onclick="addToCart('Bossing Cheesedog 10pcs', 50)">Add to Cart</button>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
                 <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
             </div>
-
+            
             <div class="product" data-name="Bingo Hotdog 1/4">
                 <img src="41.png" alt="Bingo Hotdog 1/4">
                 <h3>Bingo Hotdog 1/4</h3>
                 <p>₱40.00</p>
-                <button class="btn" button onclick="addToCart('Bingo Hotdog 1/4', 40)">Add to Cart</button>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
                 <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
             </div>
             
@@ -1019,7 +1015,7 @@ button:active {
                 <img src="42.png" alt="Holiday Cheesedog 1/4">
                 <h3>Holiday Cheesedog 1/4</h3>
                 <p>₱55.00</p>
-                <button class="btn" button onclick="addToCart('Holiday Cheesedog 1/4', 40)">Add to Cart</button>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
                 <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
             </div>
             
@@ -1027,7 +1023,7 @@ button:active {
                 <img src="43.png" alt="IDOL Cheesedog 1/4">
                 <h3>IDOL Cheesedog 1/4</h3>
                 <p>₱55.00</p>
-                <button class="btn" button onclick="addToCart('IDOL Cheesedog 1/4', 55)">Add to Cart</button>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
                 <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
             </div>
             
@@ -1035,7 +1031,7 @@ button:active {
                 <img src="44.png" alt="Vida Bacon">
                 <h3>Vida Bacon</h3>
                 <p>₱95.00</p>
-                <button class="btn" button onclick="addToCart('Vida Bacon', 95)">Add to Cart</button>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
                 <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
             </div>
             
@@ -1043,7 +1039,7 @@ button:active {
                 <img src="45.png" alt="Bossing Bacon">
                 <h3>Bossing Bacon</h3>
                 <p>₱100.00</p>
-                <button class="btn" button onclick="addToCart('Bossing Bacon', 100)">Add to Cart</button>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
                 <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
             </div>
             
@@ -1051,7 +1047,7 @@ button:active {
                 <img src="46.png" alt="Holiday Footlong">
                 <h3>Holiday Footlong</h3>
                 <p>₱175.00</p>
-                <button class="btn" button onclick="addToCart('Holiday Footlong', 175)">Add to Cart</button>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
                 <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
             </div>
             
@@ -1059,7 +1055,7 @@ button:active {
                 <img src="47.png" alt="Greenpeas 1kg">
                 <h3>Greenpeas 1kg</h3>
                 <p>₱160.00</p>
-                <button class="btn" button onclick="addToCart('Greenpeas 1kg', 160)">Add to Cart</button>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
                 <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
             </div>
             
@@ -1067,7 +1063,7 @@ button:active {
                 <img src="48.png" alt="Mix Vegetables 1kg">
                 <h3>Mix Vegetables 1kg</h3>
                 <p>₱160.00</p>
-                <button class="btn" button onclick="addToCart('Mix Vegetables 1kg', 160)">Add to Cart</button>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
                 <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
             </div>
             
@@ -1075,7 +1071,7 @@ button:active {
                 <img src="49.png" alt="Promeat Ham 1kg">
                 <h3>Promeat Ham 1kg</h3>
                 <p>₱260.00</p>
-                <button class="btn" button onclick="addToCart('Promeat Ham 1kg', 260)">Add to Cart</button>
+                <button class="btn" onclick="addToCart(this)">Add to Cart</button>
                 <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
          
             </div>

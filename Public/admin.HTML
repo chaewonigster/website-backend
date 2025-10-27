@@ -498,7 +498,7 @@
                 ><select class="form-control">
                   <option>USD ($)</option>
                   <option>EUR (€)</option>
-                  <option>GBP (£)</option>
+                  <option>PHP (₱)</option>
                 </select>
               </div>
               <button type="submit" class="btn btn-success">
@@ -578,15 +578,12 @@
 
     <script>
 
-      fetch("https://website-backend-1-w1qd.onrender.com/status", {
-  credentials: "include",
-})
-  .then((res) => res.json())
-  .then((data) => {
-    if (!data.loggedIn || data.user.role !== "admin") {
-      window.location.href = "login.html"; // kick them out
-    }
-  });
+// ✅ Check admin from localStorage instead of backend session
+const user = JSON.parse(localStorage.getItem("user"));
+if (!user || user.role !== "admin") {
+  window.location.href = "../login.html"; // not an admin → back to login
+}
+
 
       let products = [
         {
