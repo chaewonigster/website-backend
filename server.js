@@ -12,8 +12,7 @@ app.get("/", (req, res) => {
   res.send("🎉 Backend is live!");
 });
 
-app.use(express.static(path.join(__dirname, "Public")));
-app.use(express.static(path.join(__dirname)));
+app.use("/app", express.static(path.join(__dirname, "Public")));
 
 app.get("/admin.html", (req, res) => {
   res.sendFile(path.join(__dirname, "Public", "admin.html"));
