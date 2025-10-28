@@ -206,6 +206,39 @@ app.get("/admin/orders", isAdmin, async (req, res) => {
   res.json(orders);
 });
 
+// ✅ Admin fetch all orders (simple version, no auth block while testing)
+app.get("/api/orders", async (req, res) => {
+  try {
+    const orders = await Order.find().sort({ timestamp: -1 });
+    res.json({ success: true, data: orders });
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch orders" });
+  }
+});
+
+// ✅ Admin delete order (already exists, but make sure matches route)
+app.delete("/api/orders/:id", async (req, res) => {
+  try {
+    await Order.findByIdAndDelete(req.params.id);
+    res.json({ success: true, message: "Order deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting order:", error);
+    res.status(500).json({ success: false, message: "Error deleting order" });
+  }
+});
+
+// ✅ Admin fetch all users
+app.get("/api/users", async (req, res) => {
+  try {
+    const users = await User.find();
+    res.json({ success: true, data: users });
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch users" });
+  }
+});
+
 app.post("/api/register", async (req, res) => {
   try {
     const {
