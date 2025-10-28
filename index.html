@@ -1148,183 +1148,152 @@ button:active {
 
 
     <div id="pagination"></div>
-    <script>
-            function buyNow(productName, price) {
-                fetch("http://localhost:3000/order", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        product: productName,
-                        price: price,
-                        quantity: 1,  
-                        buyer: "guest@example.com"  
-                    })
-                })
-                .then(res => res.json())
-                .then(data => {
-                    showBuyNowPopup(productName, price);
-                })
-                .catch(err => console.error("Order failed:", err));
-            }
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const itemsPerPage = 10; 
+    let currentPage = 1;
+    let allProducts = Array.from(document.querySelectorAll(".product"));
+    let filteredProducts = [...allProducts]; 
+    const paginationContainer = document.getElementById("pagination");
 
-            document.addEventListener("DOMContentLoaded", function () {
-                const itemsPerPage = 10; 
-                let currentPage = 1;
-                let allProducts = Array.from(document.querySelectorAll(".product"));
-                let filteredProducts = [...allProducts]; 
-            
-                const paginationContainer = document.getElementById("pagination");
-            
-        
-                function showPage(page) {
-                    let start = (page - 1) * itemsPerPage;
-                    let end = start + itemsPerPage;
-            
-                    allProducts.forEach(product => product.style.display = "none");
-                    filteredProducts.slice(start, end).forEach(product => product.style.display = "block");
-            
-                    updatePagination();
-                }
-            
-        
-                function updatePagination() {
-                    paginationContainer.innerHTML = "";
-                    let totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-            
-                    if (totalPages <= 1) {
-                        paginationContainer.style.display = "none"; 
-                        return;
-                    } else {
-                        paginationContainer.style.display = "flex";
-                    }
-            
-                    for (let i = 1; i <= totalPages; i++) {
-                        let btn = document.createElement("button");
-                        btn.innerText = i;
-                        btn.className = currentPage === i ? "active" : "";
-                        btn.onclick = function () {
-                            currentPage = i;
-                            showPage(i);
-                        };
-                        paginationContainer.appendChild(btn);
-                    }
-                }
-            
-                function searchProducts() {
-                    let input = document.getElementById("search-bar").value.toLowerCase();
-            
-                    if (input === "") {
-                        filteredProducts = [...allProducts]; 
-                    } else {
-                        filteredProducts = allProducts.filter(product =>
-                            product.getAttribute("data-name").toLowerCase().includes(input)
-                        );
-                    }
-            
-                    currentPage = 1;
-                    showPage(currentPage);
-                }
-                document.getElementById("search-bar").addEventListener("input", searchProducts);
-                showPage(currentPage);
+    function showPage(page) {
+        let start = (page - 1) * itemsPerPage;
+        let end = start + itemsPerPage;
+
+        allProducts.forEach(p => p.style.display = "none");
+        filteredProducts.slice(start, end).forEach(p => p.style.display = "block");
+
+        updatePagination();
+    }
+
+    function updatePagination() {
+        paginationContainer.innerHTML = "";
+        let totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+        paginationContainer.style.display = totalPages <= 1 ? "none" : "flex";
+
+        for (let i = 1; i <= totalPages; i++) {
+            let btn = document.createElement("button");
+            btn.innerText = i;
+            btn.className = currentPage === i ? "active" : "";
+            btn.onclick = function () {
+                currentPage = i;
+                showPage(i);
+            };
+            paginationContainer.appendChild(btn);
+        }
+    }
+
+    function searchProducts() {
+        let input = document.getElementById("search-bar").value.toLowerCase();
+        filteredProducts = input
+            ? allProducts.filter(p => p.getAttribute("data-name").toLowerCase().includes(input))
+            : [...allProducts];
+        currentPage = 1;
+        showPage(currentPage);
+    }
+
+    document.getElementById("search-bar").addEventListener("input", searchProducts);
+    showPage(currentPage);
+});
+
+/* ----------------- CHECK LOGIN STATUS ----------------- */
+function isUserLoggedIn() {
+    // Example: check from localStorage, cookie, or session
+    // Adjust depending on your authentication method
+    return localStorage.getItem("loggedInUser") !== null;
+}
+
+/* ----------------- CART FUNCTIONS ----------------- */
+function addToCart(button) {
+    if (!isUserLoggedIn()) {
+        alert("Please log in first to add items to your cart.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    let product = button.closest(".product");
+    let name = product.querySelector("h3").innerText;
+    let priceText = product.querySelector("p").innerText;
+    let price = parseFloat(priceText.replace("₱", ""));
+    let imageSrc = product.querySelector("img").src;
+
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart.push({ name, price, quantity: 1, imageSrc });
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    // Update UI
+    document.getElementById("cartCount").innerText = cart.length;
+    document.getElementById("cartSubtotal").innerText = `₱${cart.reduce((s, i) => s + i.price, 0).toFixed(2)}`;
+
+    showCartPopup(name, price, imageSrc);
+}
+
+function showCartPopup(productName, price, imageSrc) {
+    let popup = document.getElementById("cartPopup");
+    document.getElementById("cartPopupName").innerText = productName;
+    document.getElementById("cartPopupPrice").innerText = `₱${price.toFixed(2)}`;
+    document.getElementById("cartPopupImage").src = imageSrc;
+    popup.style.display = "block";
+    setTimeout(() => popup.style.display = "none", 4000);
+}
+
+function closeCartPopup() {
+    document.getElementById("cartPopup").style.display = "none";
+}
+
+/* ----------------- BUY NOW FUNCTION ----------------- */
+async function buyNow(productName, price) {
+    if (!isUserLoggedIn()) {
+        alert("Please log in first to buy items.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    try {
+        let response = await fetch("http://localhost:3000/order", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({
+                product: productName,
+                price: price,
+                quantity: 1,
+                buyer: localStorage.getItem("loggedInUser") || "guest@example.com"
             })
-            
-            function addToCart(button) {
-                let product = button.closest(".product");
-                let name = product.querySelector("h3").innerText;
-                let priceText = product.querySelector("p").innerText;
-                let price = parseFloat(priceText.replace("₱", ""));
-                let imageSrc = product.querySelector("img").src;
-            
-                let cart = JSON.parse(localStorage.getItem("cart")) || [];
-                cart.push({ name, price, quantity: 1, imageSrc });
-                localStorage.setItem("cart", JSON.stringify(cart));
-            
-                document.getElementById("cartCount").innerText = cart.length;
-                document.getElementById("cartSubtotal").innerText = `₱${cart.reduce((sum, item) => sum + item.price, 0).toFixed(2)}`;
-            
-                document.getElementById("cartPopupName").innerText = name;
-                document.getElementById("cartPopupPrice").innerText = `₱${price.toFixed(2)}`;
-                document.getElementById("cartPopupImage").src = imageSrc;
-                document.getElementById("cartPopupImage").style.display = "block";
-            
-                let popup = document.getElementById("cartPopup");
-                popup.style.display = "block";
-            
-                setTimeout(() => {
-                    popup.style.display = "none";
-                }, 5000);
-            }
-            
-            
-            function closeCartPopup() {
-                document.getElementById("cartPopup").style.display = "none";
-            }
-            
-            window.addToCart = addToCart;
-            window.closeCartPopup = closeCartPopup;
-            
-            
-                function showCartPopup(productName, price, imageSrc) {
-                    let popup = document.getElementById("cartPopup");
-                    if (!popup) return;
-            
-                    document.getElementById("cartPopupName").innerText = productName;
-                    document.getElementById("cartPopupPrice").innerText = `₱${price.toFixed(2)}`;
-                    document.getElementById("cartPopupImage").src = imageSrc;
-                    document.getElementById("cartPopupImage").style.display = "block";
-                    popup.style.display = "block";
-            
-                    setTimeout(() => {
-                        popup.style.display = "none";
-                    }, 5000);
-                }
-            
-                function closeCartPopup() {
-                    document.getElementById("cartPopup").style.display = "none";
-                }
-            
-                async function buyNow(productName, price) {
-                    try {
-                        let response = await fetch("http://localhost:3000/order", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            credentials: "include",
+        });
 
-                            body: JSON.stringify({
-                                product: productName,
-                                price: price,
-                                quantity: 1,
-                                buyer: "guest@example.com",
-                            }),
-                        });
-            
-                        let data = await response.json();
-                        showBuyNowPopup(productName, price);
-                    } catch (error) {
-                        console.error("Order failed:", error);
-                    }
-                }
-            
-                function showBuyNowPopup(productName, price) {
-                    document.getElementById("buyNowPopupName").textContent = productName;
-                    document.getElementById("buyNowPopupPrice").textContent = "₱" + price;
-                    document.getElementById("buyNowPopup").style.display = "block";
-                }
-            
-                function closeBuyNowPopup() {
-                    document.getElementById("buyNowPopup").style.display = "none";
-                }
-            
-                function goToOrders() {
-                    window.location.href = "orders.html";
-                }
-            
-                document.getElementById("search-bar").addEventListener("input", searchProducts);
-                fetchProducts();
-           
+        if (!response.ok) throw new Error("Order failed");
+        let data = await response.json();
+        showBuyNowPopup(productName, price);
+    } catch (error) {
+        console.error("Order failed:", error);
+        alert("Something went wrong while placing your order.");
+    }
+}
 
-    </script>
-    <script src="script.js"></script>
+function showBuyNowPopup(productName, price) {
+    document.getElementById("buyNowPopupName").textContent = productName;
+    document.getElementById("buyNowPopupPrice").textContent = "₱" + price;
+    document.getElementById("buyNowPopup").style.display = "block";
+}
+
+function closeBuyNowPopup() {
+    document.getElementById("buyNowPopup").style.display = "none";
+}
+
+function goToOrders() {
+    window.location.href = "orders.html";
+}
+
+// Expose globally
+window.addToCart = addToCart;
+window.buyNow = buyNow;
+window.closeCartPopup = closeCartPopup;
+window.closeBuyNowPopup = closeBuyNowPopup;
+window.goToOrders = goToOrders;
+</script>
+
+
    
     
 </body>

@@ -787,9 +787,9 @@
     </div>
 
     <script>
-      // ✅ Make loadCartItems global again
+      // ✅ Updated loadCartItems with merging logic
       function loadCartItems() {
-        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
         const cartItemsContainer = document.getElementById("cart-items");
         const confirmationItemsContainer =
           document.getElementById("confirmation-items");
@@ -815,11 +815,28 @@
           return;
         }
 
+        // ✅ Merge duplicate products
+        const mergedCart = [];
+        cart.forEach((item) => {
+          const existing = mergedCart.find((i) => i.name === item.name);
+          if (existing) {
+            existing.quantity += Number(item.quantity) || 1;
+          } else {
+            mergedCart.push({
+              ...item,
+              quantity: Number(item.quantity) || 1,
+            });
+          }
+        });
+
+        // ✅ Optionally clean cart in localStorage
+        localStorage.setItem("cart", JSON.stringify(mergedCart));
+
         let total = 0;
         cartItemsContainer.innerHTML = "";
         confirmationItemsContainer.innerHTML = "";
 
-        cart.forEach((item, index) => {
+        mergedCart.forEach((item, index) => {
           const price = Number(item.price) || 0;
           const quantity = Number(item.quantity) || 1;
           const itemTotal = price * quantity;
@@ -847,18 +864,20 @@
           confirmationItemsContainer.appendChild(confirmDiv);
         });
 
+        // ✅ Delete button handler
         document.querySelectorAll(".delete-btn").forEach((btn) => {
           btn.addEventListener("click", (e) => {
             const index = e.target
               .closest(".delete-btn")
               .getAttribute("data-index");
-            cart.splice(index, 1);
-            localStorage.setItem("cart", JSON.stringify(cart));
+            mergedCart.splice(index, 1);
+            localStorage.setItem("cart", JSON.stringify(mergedCart));
             loadCartItems();
           });
         });
 
-        const shippingCost = cart.length > 0 ? 100 : 0;
+        // ✅ Totals calculation
+        const shippingCost = mergedCart.length > 0 ? 100 : 0;
         const finalTotal = total + shippingCost;
 
         subtotalElement.innerText = `₱${total.toFixed(2)}`;
@@ -941,7 +960,6 @@
           const cart = JSON.parse(localStorage.getItem("cart")) || [];
           if (cart.length === 0) return alert("Your cart is empty!");
 
-          // 🟢 Recalculate totals here
           const subtotal = cart.reduce(
             (sum, item) => sum + Number(item.price) * Number(item.quantity),
             0
@@ -953,8 +971,8 @@
           const newOrder = {
             id: "ORD-" + Date.now(),
             product: cart.map((item) => item.name).join(", "),
-            price: total, // ✅ correct total
-            quantity, // ✅ correct quantity
+            price: total,
+            quantity,
             buyer: `${user.firstname} ${user.lastname}`.trim(),
             buyerEmail: user.email,
             date: new Date().toISOString(),

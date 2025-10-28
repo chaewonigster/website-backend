@@ -1,402 +1,425 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mahusay Frozen Goods - Others</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
     <style>
-        :root {
-            --primary-color: #000000;
-            --secondary-color: #333333;
-            --accent-color: #666666;
-            --background-color: #f4f4f4;
-            --text-color: #000000;
-            --white-color: #ffffff;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            line-height: 1.6;
-        }
-
-        .back-button {
-            display: inline-block;
-            position: absolute;
-            top: 35px;
-            left: 20px;
-            text-decoration: none;
-            color: var(--white-color);
-            background-color: var(--primary-color);
-            padding: 0.5rem 1rem;
-            border-radius: 30px;
-            font-size: 1rem;
-            transition: transform 0.3s ease, background-color 0.3s ease;
-            z-index: 10;
-            border: 2px solid var(--white-color);
-        }
-
-        .back-button:hover {
-            transform: translateX(-5px);
-            background-color: var(--secondary-color);
-        }
-
-        .back-button i {
-            margin-right: 0.5rem;
-        }
-
-        header {
-            background-color: var(--primary-color);
-            color: var(--white-color);
-            text-align: center;
-            padding: 2rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: repeating-linear-gradient(
-                45deg,
-                rgba(255,255,255,0.05) 0,
-                rgba(255,255,255,0.05) 10px,
-                transparent 10px,
-                transparent 20px
-            );
-            transform: rotate(-45deg);
-            z-index: 1;
-        }
-
-        header .header-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        header h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 0.5rem;
-        }
-
-        header p {
-            font-size: 1rem;
-            max-width: 600px;
-            margin: 0 auto;
-            opacity: 0.8;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
+      /* same styling as before (unchanged) */
+      :root {
+        --primary-color: #000000;
+        --secondary-color: #333333;
+        --accent-color: #666666;
+        --background-color: #f4f4f4;
+        --text-color: #000000;
+        --white-color: #ffffff;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        line-height: 1.6;
+      }
+      .back-button {
+        display: inline-block;
+        position: absolute;
+        top: 35px;
+        left: 20px;
+        text-decoration: none;
+        color: var(--white-color);
+        background-color: var(--primary-color);
+        padding: 0.5rem 1rem;
+        border-radius: 30px;
+        font-size: 1rem;
+        transition: transform 0.3s ease, background-color 0.3s ease;
+        z-index: 10;
+        border: 2px solid var(--white-color);
+      }
+      .back-button:hover {
+        transform: translateX(-5px);
+        background-color: var(--secondary-color);
+      }
+      .back-button i {
+        margin-right: 0.5rem;
+      }
+      header {
+        background-color: var(--primary-color);
+        color: var(--white-color);
+        text-align: center;
+        padding: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+      }
+      header::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: repeating-linear-gradient(
+          45deg,
+          rgba(255, 255, 255, 0.05) 0,
+          rgba(255, 255, 255, 0.05) 10px,
+          transparent10px,
+          transparent20px
+        );
+        transform: rotate(-45deg);
+        z-index: 1;
+      }
+      header .header-content {
+        position: relative;
+        z-index: 2;
+      }
+      header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 0.5rem;
+      }
+      header p {
+        font-size: 1rem;
+        max-width: 600px;
+        margin: 0 auto;
+        opacity: 0.8;
+      }
+      .container {
+        width: 90%;
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+      }
+      .products {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+      }
+      .product {
+        background: var(--white-color);
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 1.5rem;
+        position: relative;
+      }
+      .product:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+      }
+      .product img {
+        width: 80%;
+        height: 250px;
+        object-fit: contain;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+        transition: transform 0.3s ease;
+      }
+      .product:hover img {
+        transform: scale(1.05);
+      }
+      .product h3 {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        color: var(--text-color);
+      }
+      .product p {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: var(--secondary-color);
+        margin-bottom: 1rem;
+      }
+      .product-description {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        color: var(--white-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        padding: 1rem;
+        text-align: center;
+        z-index: 5;
+        pointer-events: none;
+      }
+      .product:hover .product-description {
+        opacity: 1;
+      }
+      .btn {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        margin: 0.5rem;
+        border: 2px solid var(--primary-color);
+        background-color: var(--white-color);
+        color: var(--primary-color);
+        border-radius: 30px;
+        cursor: pointer;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 3;
+      }
+      .btn-cart {
+        border-color: var(--secondary-color);
+        color: var(--secondary-color);
+      }
+      .btn-buy {
+        border-color: var(--accent-color);
+        color: var(--accent-color);
+      }
+      .btn:hover {
+        background-color: var(--primary-color);
+        color: var(--white-color);
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+      footer {
+        background-color: var(--primary-color);
+        color: var(--white-color);
+        text-align: center;
+        padding: 2rem;
+        margin-top: 2rem;
+        position: relative;
+        overflow: hidden;
+      }
+      footer::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: repeating-linear-gradient(
+          45deg,
+          rgba(255, 255, 255, 0.05) 0,
+          rgba(255, 255, 255, 0.05) 10px,
+          transparent10px,
+          transparent20px
+        );
+        transform: rotate(-45deg);
+        z-index: 1;
+      }
+      footer .footer-content {
+        position: relative;
+        z-index: 2;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .footer-links {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+      .footer-links a {
+        color: var(--white-color);
+        text-decoration: none;
+        opacity: 0.7;
+        transition: opacity 0.3s ease;
+      }
+      @media (max-width: 768px) {
         .products {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
+          grid-template-columns: 1fr;
         }
-
-        .product {
-            background: var(--white-color);
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            padding: 1.5rem;
-            position: relative;
-        }
-
-        .product:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-        }
-
-        .product img {
-            width: 80%;
-            height: 250px;
-            object-fit: contain;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-            transition: transform 0.3s ease;
-        }
-
-        .product:hover img {
-            transform: scale(1.05);
-        }
-
-        .product h3 {
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
-            color: var(--text-color);
-        }
-
-        .product p {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: var(--secondary-color);
-            margin-bottom: 1rem;
-        }
-
-        .product-description {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.8);
-            color: var(--white-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            padding: 1rem;
-            text-align: center;
-            z-index: 5;
-            pointer-events: none;
-        }
-
-        .product:hover .product-description {
-            opacity: 1;
-        }
-
-        .product-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            margin: 0.5rem;
-            border: 2px solid var(--primary-color);
-            background-color: var(--white-color);
-            color: var(--primary-color);
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            position: relative;
-            z-index: 3;
-        }
-
-        .btn-cart {
-            border-color: var(--secondary-color);
-            color: var(--secondary-color);
-        }
-
-        .btn-buy {
-            border-color: var(--accent-color);
-            color: var(--accent-color);
-        }
-
-        .btn:hover {
-            background-color: var(--primary-color);
-            color: var(--white-color);
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        footer {
-            background-color: var(--primary-color);
-            color: var(--white-color);
-            text-align: center;
-            padding: 2rem;
-            margin-top: 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        footer::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: repeating-linear-gradient(
-                45deg,
-                rgba(255,255,255,0.05) 0,
-                rgba(255,255,255,0.05) 10px,
-                transparent 10px,
-                transparent 20px
-            );
-            transform: rotate(-45deg);
-            z-index: 1;
-        }
-
-                footer p {
-            margin-bottom: 1rem;
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .footer-links a {
-            color: var(--white-color);
-            text-decoration: none;
-            opacity: 0.7;
-            transition: opacity 0.3s ease;
-        }
-
-
-        footer .footer-content {
-            position: relative;
-            z-index: 2;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        @media (max-width: 768px) {
-            .products {
-                grid-template-columns: 1fr;
-            }
-        }
+      }
     </style>
-</head>
-<body>
-    <a href="LOGIN_USER.html" class="back-button">
-        <i class="fas fa-arrow-left"></i>
-    </a>
+  </head>
+  <body>
+    <a href="LOGIN_USER.html" class="back-button"
+      ><i class="fas fa-arrow-left"></i
+    ></a>
 
     <header>
-        <div class="header-content">
-            <h1>Others</h1>
-            <p>A variety of delicious frozen food items beyond our main categories. Convenient, tasty, and ready to enjoy.</p>
-        </div>
+      <div class="header-content">
+        <h1>Others</h1>
+        <p>
+          A variety of delicious frozen food items beyond our main categories.
+          Convenient, tasty, and ready to enjoy.
+        </p>
+      </div>
     </header>
 
     <div class="container">
-        <div class="products">
-            ${generateProductsHTML(others)}
-        </div>
+      <div class="products"></div>
     </div>
 
     <footer>
-        <div class="footer-content">
-            <p>© 2025 Mahusay Frozen Goods. Bringing quality frozen foods to your table with taste and convenience.</p>
-                        <div class="footer-links">
-                <a href="Privacy.html" title="Privacy Policy"><i class="fas fa-shield-alt"></i> Privacy</a>
-                <a href="Shipping.html" title="Terms of Service"><i class="fas fa-file-contract"></i> Terms</a>
-                <a href="#" title="Contact Us"><i class="fas fa-envelope"></i> Contact</a>
-            </div>
+      <div class="footer-content">
+        <p>
+          © 2025 Mahusay Frozen Goods. Bringing quality frozen foods to your
+          table with taste and convenience.
+        </p>
+        <div class="footer-links">
+          <a href="Privacy.html"><i class="fas fa-shield-alt"></i> Privacy</a>
+          <a href="Shipping.html"><i class="fas fa-file-contract"></i> Terms</a>
+          <a href="#"><i class="fas fa-envelope"></i> Contact</a>
         </div>
+      </div>
     </footer>
 
     <script>
-        const others = [
-            {
-                name: "Kikiam 1/2",
-                price: "₱45.00",
-                image: "2.png",
-                description: "Traditional Filipino kikiam, made with ground meat and vegetables. A delightful snack or side dish with authentic flavors."
-            },
-            {
-                name: "Chicken Ball 1/4",
-                price: "₱27.00",
-                image: "3.png",
-                description: "Crispy and flavorful chicken balls, perfect for appetizers or as a quick snack. Made with high-quality chicken meat."
-            },
-            {
-                name: "Squid Ball 1/4",
-                price: "₱27.00",
-                image: "4.png",
-                description: "Delicious squid balls with a smooth texture and rich seafood flavor. Great for dipping or enjoying on their own."
-            },
-            {
-                name: "Fish Ball 1kg",
-                price: "₱55.00",
-                image: "5.png",
-                description: "Classic fish balls in a convenient 1kg pack. Versatile and tasty, perfect for various cooking methods."
-            },
-            {
-                name: "CDO Crispy Burger",
-                price: "₱60.00",
-                image: "25.png",
-                description: "Crispy burger patties with a golden-brown exterior. Quick to prepare and satisfying for burger lovers."
-            },
-            {
-                name: "CDO Ulam Burger",
-                price: "₱60.00",
-                image: "26.png",
-                description: "Ready-to-cook burger patties perfect for a quick meal. Packed with flavor and easy to prepare."
-            },
-            {
-                name: "Noypi Patty",
-                price: "₱40.00",
-                image: "31.png",
-                description: "Local-style burger patty with a distinct Filipino flavor. Great for quick meals and sandwiches."
-            },
-            {
-                name: "Almar Patty",
-                price: "₱40.00",
-                image: "32.png",
-                description: "Delicious burger patties made with quality meat. Perfect for burgers, sandwiches, or as a main dish."
-            }
-        ];
+      // ✅ Your product list
+      const others = [
+        {
+          name: "Kikiam 1/2",
+          price: "₱45.00",
+          image: "2.png",
+          description:
+            "Traditional Filipino kikiam, made with ground meat and vegetables. A delightful snack or side dish with authentic flavors.",
+        },
+        {
+          name: "Chicken Ball 1/4",
+          price: "₱27.00",
+          image: "3.png",
+          description:
+            "Crispy and flavorful chicken balls, perfect for appetizers or as a quick snack. Made with high-quality chicken meat.",
+        },
+        {
+          name: "Squid Ball 1/4",
+          price: "₱27.00",
+          image: "4.png",
+          description:
+            "Delicious squid balls with a smooth texture and rich seafood flavor. Great for dipping or enjoying on their own.",
+        },
+        {
+          name: "Fish Ball 1kg",
+          price: "₱55.00",
+          image: "5.png",
+          description:
+            "Classic fish balls in a convenient 1kg pack. Versatile and tasty, perfect for various cooking methods.",
+        },
+        {
+          name: "CDO Crispy Burger",
+          price: "₱60.00",
+          image: "25.png",
+          description:
+            "Crispy burger patties with a golden-brown exterior. Quick to prepare and satisfying for burger lovers.",
+        },
+        {
+          name: "CDO Ulam Burger",
+          price: "₱60.00",
+          image: "26.png",
+          description:
+            "Ready-to-cook burger patties perfect for a quick meal. Packed with flavor and easy to prepare.",
+        },
+        {
+          name: "Noypi Patty",
+          price: "₱40.00",
+          image: "31.png",
+          description:
+            "Local-style burger patty with a distinct Filipino flavor. Great for quick meals and sandwiches.",
+        },
+        {
+          name: "Almar Patty",
+          price: "₱40.00",
+          image: "32.png",
+          description:
+            "Delicious burger patties made with quality meat. Perfect for burgers, sandwiches, or as a main dish.",
+        },
+      ];
 
-        function generateProductsHTML(products) {
-            return products.map(product => `
-                <div class="product" data-name="${product.name}">
-                    <div class="product-description">
-                        ${product.description}
-                    </div>
+      function generateProductsHTML(products) {
+        return products
+          .map(
+            (p) => `
+                <div class="product" data-name="${p.name}">
+                    <div class="product-description">${p.description}</div>
                     <div class="product-content">
-                        <img src="${product.image}" alt="${product.name}">
-                        <h3>${product.name}</h3>
-                        <p>${product.price}</p>
+                        <img src="${p.image}" alt="${p.name}">
+                        <h3>${p.name}</h3>
+                        <p>${p.price}</p>
                         <div>
-                            <button class="btn btn-cart" onclick="addToCart(this)">
-                                <i class="fas fa-shopping-cart"></i> Add to Cart
-                            </button>
-                            <button class="btn btn-buy" onclick="buyNow(this)">
-                                <i class="fas fa-bolt"></i> Buy Now
-                            </button>
+                            <button class="btn btn-cart" onclick="addToCart(this)"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+                            <button class="btn btn-buy" onclick="buyNow(this)"><i class="fas fa-bolt"></i> Buy Now</button>
                         </div>
                     </div>
-                </div>
-            `).join('');
-        }
+                </div>`
+          )
+          .join("");
+      }
 
-        function addToCart(element) {
-            const productName = element.closest('.product').getAttribute('data-name');
-            alert(`Added ${productName} to cart!`);
-        }
+      document.querySelector(".products").innerHTML =
+        generateProductsHTML(others);
 
-        function buyNow(element) {
-            const productName = element.closest('.product').getAttribute('data-name');
-            alert(`Proceeding to buy ${productName}`);
-        }
+      // ✅ Helper to check login
+      function isUserLoggedIn() {
+        return localStorage.getItem("user") !== null;
+      }
 
-        document.querySelector('.products').innerHTML = generateProductsHTML(others);
+      // ✅ Add to Cart (login required)
+      function addToCart(element) {
+        if (!isUserLoggedIn()) {
+          alert("⚠️ You must log in to add items to cart.");
+          window.location.href = "login.html";
+          return;
+        }
+        const product = element.closest(".product");
+        const name = product.querySelector("h3").innerText;
+        const price = product.querySelector("p").innerText;
+        const imageSrc = product.querySelector("img").src;
+
+        // store in localStorage (same as LOGIN_USER.html logic)
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        cart.push({
+          name,
+          price: parseFloat(price.replace("₱", "")),
+          quantity: 1,
+          imageSrc,
+        });
+        localStorage.setItem("cart", JSON.stringify(cart));
+
+        alert(`✅ Added ${name} to cart!`);
+      }
+
+      // ✅ Buy Now (login required)
+      async function buyNow(element) {
+        if (!isUserLoggedIn()) {
+          alert("⚠️ You must log in before buying.");
+          window.location.href = "login.html";
+          return;
+        }
+        const product = element.closest(".product");
+        const name = product.querySelector("h3").innerText;
+        const price = parseFloat(
+          product.querySelector("p").innerText.replace("₱", "")
+        );
+
+        try {
+          const response = await fetch("http://localhost:3000/order", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({ product: name, price: price, quantity: 1 }),
+          });
+          const data = await response.json();
+          alert(`🛒 Order placed for ${name}!`);
+        } catch (err) {
+          console.error(err);
+          alert("❌ Failed to place order.");
+        }
+      }
     </script>
-</body>
+  </body>
 </html>
