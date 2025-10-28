@@ -34,7 +34,7 @@ async function ensureAdmin() {
     const data = await res.json();
     if (!data.user || data.user.role !== "admin") {
       showAlert("Access denied. Admins only.");
-      window.location.href = "../login.html";
+      window.location.href = "../Login.html";
       return false;
     }
     return true;

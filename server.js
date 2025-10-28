@@ -10,8 +10,9 @@ const app = express();
 
 // ✅ CORS FIRST (must be before any routes or session)
 const allowedOrigins = [
-  "https://chaewonigster.github.io",
-  "http://127.0.0.1:5500",
+  "https://website-backend-1-w1qd.onrender.com", // ✅ allow your deployed site
+  "https://chaewonigster.github.io", // ✅ allow GitHub Pages (if used)
+  "http://127.0.0.1:5500", // ✅ allow local testing
   "http://localhost:5500",
 ];
 
