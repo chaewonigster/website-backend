@@ -489,7 +489,7 @@
           window.location.href = "index.html";
         });
 
-        // 🟢 Fetch & Display Order History
+        // 🟢 Fetch & Display Order History (Group by checkout timestamp and merge duplicates)
         async function displayOrderHistory() {
           const container = document.getElementById("orderHistoryContainer");
           container.innerHTML = `<p class="no-orders">Loading order history...</p>`;
@@ -507,18 +507,12 @@
 
             if (response.ok) {
               const data = await response.json();
-              if (data.success) {
-                orders = data.orders.filter(
-                  (order) =>
-                    (
-                      order.userEmail ||
-                      order.buyerEmail ||
-                      ""
-                    ).toLowerCase() === (userEmail || "").toLowerCase()
-                );
-              } else {
-                throw new Error("Server returned unsuccessful response");
-              }
+              orders = data.orders || data;
+              orders = orders.filter(
+                (order) =>
+                  (order.buyerEmail || order.userEmail || "").toLowerCase() ===
+                  (userEmail || "").toLowerCase()
+              );
             } else {
               throw new Error("Failed response " + response.status);
             }
@@ -541,41 +535,67 @@
           <div>
             <p class="no-orders">You haven't placed any orders yet.</p>
             <a href="LOGIN_USER.html">Make your first order</a>
-          </div>
-        `;
+          </div>`;
             return;
           }
 
-          orders.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+          // 🧩 Group by timestamp (same checkout time)
+          const grouped = {};
+          orders.forEach((o) => {
+            const key = new Date(o.timestamp || o.date)
+              .toISOString()
+              .slice(0, 16); // group by minute
+            if (!grouped[key]) {
+              grouped[key] = {
+                timestamp: o.timestamp || o.date,
+                orders: [],
+              };
+            }
+            grouped[key].orders.push(o);
+          });
 
-          orders.forEach((order) => {
-            const itemsHTML =
-              order.items
-                ?.map(
-                  (item) =>
-                    `<li>${item.name} × ${item.quantity} - ₱${(
-                      item.price * item.quantity
-                    ).toFixed(2)}</li>`
-                )
-                .join("") || "";
+          const mergedOrders = Object.values(grouped).sort(
+            (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+          );
 
-            const total =
-              order.total ||
-              order.items?.reduce(
-                (sum, item) => sum + item.price * item.quantity,
-                0
-              ) ||
-              0;
+          // 🧮 Display each group as one order box
+          mergedOrders.forEach((group) => {
+            // ✅ Merge identical products (sum quantities)
+            const combined = {};
+            group.orders.forEach((o) => {
+              const key = o.product.trim().toLowerCase();
+              if (!combined[key]) {
+                combined[key] = {
+                  name: o.product,
+                  price: o.price,
+                  quantity: 0,
+                };
+              }
+              combined[key].quantity += o.quantity;
+            });
+
+            const itemsHTML = Object.values(combined)
+              .map(
+                (item) =>
+                  `<li>${item.name} × ${item.quantity} — ₱${(
+                    item.price * item.quantity
+                  ).toFixed(2)}</li>`
+              )
+              .join("");
+
+            const total = Object.values(combined).reduce(
+              (sum, item) => sum + item.price * item.quantity,
+              0
+            );
 
             const orderHTML = `
           <div class="order-item">
-            <h4>Order #${order._id || order.id || "(local order)"}</h4>
-            <div class="order-date">${new Date(
-              order.timestamp || order.date
-            ).toLocaleString()}</div>
+            <h4>Order placed on ${new Date(
+              group.timestamp
+            ).toLocaleString()}</h4>
             <div class="order-details">
               <span>Status:</span>
-              <span>${order.status || "Order Placed"}</span>
+              <span>${group.orders[0].status || "Order Placed"}</span>
             </div>
             <div class="order-items">
               <strong>Items:</strong>
@@ -585,8 +605,7 @@
               <span>Total:</span>
               <span>₱${total.toFixed(2)}</span>
             </div>
-          </div>
-        `;
+          </div>`;
             container.insertAdjacentHTML("beforeend", orderHTML);
           });
         }

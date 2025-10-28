@@ -282,32 +282,33 @@
         border-color: #3498db;
       }
 
-      .modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 1000;
-        align-items: center;
-        justify-content: center;
-      }
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background: rgba(0, 0, 0, 0.5);
+}
 
       .modal.active {
         display: flex;
       }
 
-      .modal-content {
-        background: white;
-        padding: 30px;
-        border-radius: 12px;
-        max-width: 500px;
-        width: 90%;
-        max-height: 90vh;
-        overflow-y: auto;
-      }
+.modal-content {
+  background-color: #fff;
+  margin: 10% auto;
+  padding: 20px;
+  border-radius: 12px;
+  width: 420px;
+  max-width: 90%;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+  animation: fadeIn 0.25s ease-in-out;
+}
 
       .modal-header {
         display: flex;
@@ -316,11 +317,55 @@
         margin-bottom: 20px;
       }
 
-      .close-btn {
-        font-size: 24px;
-        cursor: pointer;
-        color: #7f8c8d;
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
       }
+
+      .modal-box {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        width: 400px;
+        max-width: 90%;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .modal-box ul {
+        padding-left: 20px;
+      }
+
+      .modal-box h3 {
+        margin-top: 0;
+      }
+
+.close-btn {
+  position: absolute;
+  right: 12px;
+  top: 8px;
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: red;
+}
+
+/* 🔹 Simple fade-in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
       .search-box {
         position: relative;
@@ -341,6 +386,23 @@
         border-radius: 5px;
         cursor: pointer;
         font-size: 12px;
+      }
+      #inventoryEditModal .modal-content {
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        width: 350px;
+        margin: 80px auto;
+        text-align: left;
+      }
+      #inventoryEditModal input {
+        width: 100%;
+        margin: 6px 0 12px;
+        padding: 8px;
+      }
+      #inventoryEditModal .modal-actions {
+        display: flex;
+        justify-content: space-between;
       }
 
       /* 🩵 Fix: make order rows visible */
@@ -471,23 +533,24 @@
             <div class="card-header">
               <h2 class="card-title">Orders Management</h2>
             </div>
-            <table id="ordersTable">
-              <thead>
-                <tr>
-                  <th>Order ID</th>
-                  <th>Customer</th>
-                  <th>Date</th>
-                  <th>Items</th>
-                  <th>Total</th>
-                  <th>Status</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
+<table id="ordersTable">
+  <thead>
+    <tr>
+      <th>Order ID</th>
+      <th>Customer</th>
+      <th>Email</th>
+      <th>Date</th>
+      <th>Items</th>
+      <th>Total</th>
+      <th>Actions</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
           </div>
+          <!-- ✅ this closing div was missing -->
         </section>
-
         <!-- INVENTORY SECTION -->
         <section id="inventory" class="content-section">
           <div class="card">
@@ -498,7 +561,7 @@
               <thead>
                 <tr>
                   <th>Product</th>
-                  <th>SKU</th>
+                  <th>ID</th>
                   <th>Stock Quantity</th>
                   <th>Reorder Level</th>
                   <th>Status</th>
@@ -511,6 +574,7 @@
         </section>
 
         <!-- USERS SECTION -->
+
         <section id="users" class="content-section">
           <div class="card">
             <div class="card-header">
@@ -541,7 +605,7 @@
                 <input
                   type="text"
                   class="form-control"
-                  value="Frozen Goods Store"
+                  value="Mahusay Goods Store"
                 />
               </div>
 
@@ -550,7 +614,7 @@
                 <input
                   type="email"
                   class="form-control"
-                  value="admin@frozengoods.com"
+                  value="MabuhayFrozen@Gmail.com"
                 />
               </div>
 
@@ -626,18 +690,23 @@
       </div>
     </div>
 
-    <!-- ORDER MODAL -->
-    <div id="orderModal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2>Order Details</h2>
-          <span class="close-btn" onclick="closeModal('orderModal')"
-            >&times;</span
+ <!-- Order Details Modal -->
+<div id="orderModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Order Details</h2>
+      <span class="close-btn">&times;</span>
+    </div>
+    <div id="orderDetails"></div>
+  </div>
+</div>
+
           >
         </div>
         <div id="orderDetails"></div>
       </div>
     </div>
+
 
     <script src="admin.js"></script>
   </body>
