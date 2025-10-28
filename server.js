@@ -327,12 +327,15 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-app.get("/products", async (req, res) => {
+app.get("/api/products", async (req, res) => {
   try {
     const products = await Product.find();
-    res.json(products);
+    res.json({ success: true, data: products });
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch products" });
+    console.error("Error fetching products:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to fetch products" });
   }
 });
 
