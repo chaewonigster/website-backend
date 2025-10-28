@@ -111,7 +111,43 @@ app.post("/api/order", async (req, res) => {
     res.status(500).json({ error: "Failed to place order" });
   }
 });
+// ✅ Delete an order by ID
+app.delete("/api/orders/:id", async (req, res) => {
+  try {
+    const id = new mongoose.Types.ObjectId(req.params.id);
+    const result = await mongoose.connection.db
+      .collection("orders")
+      .deleteOne({ _id: id });
 
+    if (result.deletedCount === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Order not found." });
+    }
+
+    res.json({ success: true, message: "Order deleted successfully." });
+  } catch (error) {
+    console.error("Error deleting order:", error);
+    res.status(500).json({ success: false, message: "Error deleting order." });
+  }
+});
+
+// ✅ Get all users
+app.get("/api/users", async (req, res) => {
+  try {
+    const users = await mongoose.connection.db
+      .collection("users")
+      .find({})
+      .toArray();
+
+    res.json({ success: true, data: users });
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Server error fetching users." });
+  }
+});
 // 📜 Fetch order history of the logged-in user
 app.get("/api/order-history", async (req, res) => {
   try {

@@ -1,192 +1,122 @@
-// Public/admin.js
-// Unified admin dashboard script — includes product CRUD + order management
 const BASE_API_URL = "https://website-backend-1-w1qd.onrender.com";
 
-/* =========================
-   Helper / Utility
-   ========================= */
-function qs(selector, parent = document) {
-  return parent.querySelector(selector);
-}
-function qsa(selector, parent = document) {
-  return Array.from(parent.querySelectorAll(selector));
-}
-function showAlert(msg) {
-  alert(msg);
-}
-function escapeHtml(str = "") {
-  return String(str)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
+document.addEventListener("DOMContentLoaded", () => {
+  checkAdminSession();
+  loadProducts();
+  loadOrders();
 
-/* =========================
-   AUTH CHECK (server-side session)
-   ========================= */
-async function ensureAdmin() {
+  // handle add/edit product form
+  document
+    .getElementById("productForm")
+    .addEventListener("submit", handleProductSubmit);
+});
+
+// ✅ Check if admin is logged in
+async function checkAdminSession() {
   try {
     const res = await fetch(`${BASE_API_URL}/status`, {
       credentials: "include",
     });
     const data = await res.json();
-    if (!data.user || data.user.role !== "admin") {
-      showAlert("Access denied. Admins only.");
-      window.location.href = "../Login.html";
-      return false;
+    if (!data.loggedIn || data.user.role !== "admin") {
+      alert("You must be logged in as admin to access this page.");
+      window.location.href = "../login.html";
     }
-    return true;
   } catch (err) {
-    console.error("Auth check failed:", err);
-    return false;
+    console.error("Error checking session:", err);
   }
 }
 
-/* =========================
-   PRODUCT CRUD
-   ========================= */
+// ✅ Load all products
 async function loadProducts() {
+  const tableBody = document.querySelector("#productsTable tbody");
+  tableBody.innerHTML = `<tr><td colspan="7">Loading...</td></tr>`;
+
   try {
     const res = await fetch(`${BASE_API_URL}/products`, {
       credentials: "include",
     });
     const products = await res.json();
-    const tbody = qs("#productsTable tbody");
-    if (!tbody) return;
-    tbody.innerHTML = "";
 
-    if (!products.length) {
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">No products found.</td></tr>`;
-      return;
-    }
-
+    tableBody.innerHTML = "";
     products.forEach((p) => {
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td style="width:64px">${
-          p.image ? `<img src="${p.image}" alt="${p.name}" width="50">` : ""
-        }</td>
-        <td>${escapeHtml(p.name)}</td>
-        <td>${escapeHtml(p.category || "")}</td>
-        <td>₱${Number(p.price).toFixed(2)}</td>
-        <td>
-          <span class="status-badge ${
-            p.stock > 0 ? "status-active" : "status-inactive"
-          }">
-            ${p.stock > 0 ? "Available" : "Out of Stock"}
-          </span>
+        <td>${p._id}</td>
+        <td>${p.name}</td>
+        <td>${p.category || "N/A"}</td>
+        <td>₱${p.price}</td>
+        <td>${p.stock || 0}</td>
+        <td><span class="status-badge ${
+          p.stock > 0 ? "status-active" : "status-inactive"
+        }">
+          ${p.stock > 0 ? "Active" : "Out of Stock"}</span>
         </td>
         <td>
-          <button class="action-btn btn-primary" data-action="edit" data-id="${
+          <button class="action-btn btn-primary" onclick="openEditProduct('${
             p._id
-          }">Edit</button>
-          <button class="action-btn btn-danger" data-action="delete" data-id="${
+          }','${p.name}','${p.category}','${p.price}','${
+        p.stock
+      }')">✏️ Edit</button>
+          <button class="action-btn btn-danger" onclick="deleteProduct('${
             p._id
-          }">Delete</button>
-        </td>`;
-      tbody.appendChild(tr);
+          }')">🗑️ Delete</button>
+        </td>
+      `;
+      tableBody.appendChild(tr);
     });
-
-    qsa("[data-action='edit']").forEach((btn) =>
-      btn.addEventListener("click", () => openEditProductModal(btn.dataset.id))
-    );
-    qsa("[data-action='delete']").forEach((btn) =>
-      btn.addEventListener("click", () => handleDeleteProduct(btn.dataset.id))
-    );
   } catch (err) {
-    console.error("loadProducts error:", err);
+    console.error("Error loading products:", err);
+    tableBody.innerHTML = `<tr><td colspan="7">Error loading products.</td></tr>`;
   }
 }
 
-function openAddProductModal() {
-  qs("#productModal").classList.add("active");
-  qs("#productModalTitle").textContent = "Add New Product";
-  qs("#productSubmitBtn").textContent = "Add Product";
-  const f = qs("#productForm");
-  if (f) f.reset();
-  qs("#editProductId").value = "";
-}
-
-async function openEditProductModal(productId) {
-  try {
-    const res = await fetch(`${BASE_API_URL}/products`, {
-      credentials: "include",
-    });
-    const products = await res.json();
-    const p = products.find((x) => x._id === productId);
-    if (!p) return showAlert("Product not found.");
-
-    qs("#editProductId").value = p._id;
-    qs("#productName").value = p.name || "";
-    qs("#productCategory").value = p.category || "";
-    qs("#productPrice").value = p.price ?? "";
-    if (qs("#productImage")) qs("#productImage").value = p.image || "";
-    if (qs("#productDescription"))
-      qs("#productDescription").value = p.description || "";
-    if (qs("#productStock")) qs("#productStock").value = p.stock || "";
-
-    qs("#productModalTitle").textContent = "Edit Product";
-    qs("#productSubmitBtn").textContent = "Update Product";
-    qs("#productModal").classList.add("active");
-  } catch (err) {
-    console.error("openEditProductModal error:", err);
-  }
-}
-
-async function handleProductFormSubmit(e) {
+// ✅ Add or Edit product
+async function handleProductSubmit(e) {
   e.preventDefault();
-  const id = qs("#editProductId").value;
-  const name = qs("#productName").value.trim();
-  const category = qs("#productCategory").value.trim();
-  const price = parseFloat(qs("#productPrice").value) || 0;
-  const image = qs("#productImage") ? qs("#productImage").value.trim() : "";
-  const description = qs("#productDescription")
-    ? qs("#productDescription").value.trim()
-    : "";
-  const stock = qs("#productStock")
-    ? parseInt(qs("#productStock").value) || 0
-    : 0;
 
-  const payload = { name, category, price, image, description, stock };
+  const id = document.getElementById("editProductId").value;
+  const name = document.getElementById("productName").value;
+  const category = document.getElementById("productCategory").value;
+  const price = parseFloat(document.getElementById("productPrice").value);
+  const stock = parseInt(document.getElementById("productStock").value);
+
+  const payload = { name, category, price, stock };
 
   try {
-    if (id) {
-      const res = await fetch(`${BASE_API_URL}/admin/products/${id}`, {
-        method: "PUT",
+    const res = await fetch(
+      id
+        ? `${BASE_API_URL}/admin/products/${id}`
+        : `${BASE_API_URL}/admin/products`,
+      {
+        method: id ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify(payload),
-      });
-      const data = await res.json();
-      if (data.success) {
-        showAlert("Product updated successfully.");
-        qs("#productModal").classList.remove("active");
-        await loadProducts();
-      } else showAlert("Failed to update product.");
+      }
+    );
+
+    const data = await res.json();
+    if (data.success) {
+      alert(id ? "✅ Product updated!" : "✅ Product added!");
+      closeModal("productModal");
+      loadProducts();
+      e.target.reset();
+      document.getElementById("editProductId").value = "";
+      document.getElementById("productSubmitBtn").textContent = "Add Product";
+      document.getElementById("productModalTitle").textContent =
+        "Add New Product";
     } else {
-      const res = await fetch(`${BASE_API_URL}/admin/products`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(payload),
-      });
-      const data = await res.json();
-      if (data.success) {
-        showAlert("Product created.");
-        qs("#productForm").reset();
-        qs("#productModal").classList.remove("active");
-        await loadProducts();
-      } else showAlert("Failed to create product.");
+      alert("❌ Operation failed.");
     }
   } catch (err) {
-    console.error("handleProductFormSubmit error:", err);
+    console.error("Error submitting product:", err);
   }
 }
 
-async function handleDeleteProduct(id) {
-  if (!confirm("Delete this product?")) return;
+// ✅ Delete a product
+async function deleteProduct(id) {
+  if (!confirm("Are you sure you want to delete this product?")) return;
   try {
     const res = await fetch(`${BASE_API_URL}/admin/products/${id}`, {
       method: "DELETE",
@@ -194,132 +124,112 @@ async function handleDeleteProduct(id) {
     });
     const data = await res.json();
     if (data.success) {
-      showAlert("Product deleted.");
-      await loadProducts();
-    } else showAlert("Failed to delete product.");
+      alert("🗑️ Product deleted!");
+      loadProducts();
+    } else {
+      alert("❌ Failed to delete product.");
+    }
   } catch (err) {
-    console.error("handleDeleteProduct error:", err);
+    console.error("Error deleting product:", err);
   }
 }
 
-/* =========================
-   ORDERS (Admin View)
-   ========================= */
+// ✅ Load orders
 async function loadOrders() {
+  const tableBody = document.querySelector("#ordersTable tbody");
+  tableBody.innerHTML = `<tr><td colspan="7">Loading...</td></tr>`;
+
   try {
-    const res = await fetch(`${BASE_API_URL}/admin/orders`, {
+    const res = await fetch(`${BASE_API_URL}/api/order`, {
       credentials: "include",
     });
-    const result = await res.json();
-    const orders = result.orders || [];
-    const tbody = qs("#ordersTable tbody");
-    if (!tbody) return;
-    tbody.innerHTML = "";
+    const data = await res.json();
+    const orders = data.orders || [];
 
-    if (!orders.length) {
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">No orders found.</td></tr>`;
-      return;
-    }
-
+    tableBody.innerHTML = "";
     orders.forEach((order) => {
-      const date = new Date(order.createdAt).toLocaleDateString();
-      const items = order.items
-        .map((i) => `${i.name} (${i.quantity})`)
-        .join(", ");
-      const row = document.createElement("tr");
-      row.innerHTML = `
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
         <td>${order._id}</td>
-        <td>${order.user?.firstname || "Unknown"} ${
-        order.user?.lastname || ""
-      }</td>
-        <td>${date}</td>
-        <td>${items}</td>
-        <td>₱${order.totalPrice.toFixed(2)}</td>
-        <td>
-          <span class="status-badge ${
-            order.status === "Completed" ? "status-active" : "status-pending"
-          }">
-            ${order.status}
-          </span>
-        </td>
-        <td><button class="action-btn btn-success" onclick="viewOrder('${
+        <td>${order.buyer || "Unknown"}</td>
+        <td>${new Date(order.date || Date.now()).toLocaleString()}</td>
+        <td>${order.product || "N/A"}</td>
+        <td>₱${order.total || 0}</td>
+        <td><span class="status-badge status-${order.status || "pending"}">${
+        order.status || "pending"
+      }</span></td>
+        <td><button class="action-btn btn-primary" onclick="viewOrder('${
           order._id
-        }')">View</button></td>`;
-      tbody.appendChild(row);
+        }')">🔍 View</button></td>
+      `;
+      tableBody.appendChild(tr);
     });
   } catch (err) {
-    console.error("loadOrders error:", err);
+    console.error("Error loading orders:", err);
+    tableBody.innerHTML = `<tr><td colspan="7">Error loading orders.</td></tr>`;
   }
 }
 
-function viewOrder(orderId) {
-  fetch(`${BASE_API_URL}/admin/orders`, { credentials: "include" })
-    .then((res) => res.json())
-    .then((result) => {
-      const order = result.orders.find((o) => o._id === orderId);
-      if (!order) return;
-      const detailsDiv = qs("#orderDetails");
-      detailsDiv.innerHTML = `
-        <p><strong>Order ID:</strong> ${order._id}</p>
-        <p><strong>Customer:</strong> ${order.user?.firstname || "Unknown"} ${
-        order.user?.lastname || ""
-      }</p>
-        <p><strong>Email:</strong> ${order.user?.email || "N/A"}</p>
-        <p><strong>Total Price:</strong> ₱${order.totalPrice.toFixed(2)}</p>
-        <p><strong>Status:</strong> ${order.status}</p>
-        <p><strong>Items:</strong></p>
-        <ul>${order.items
-          .map((i) => `<li>${i.name} (${i.quantity})</li>`)
-          .join("")}</ul>`;
-      openModal("orderModal");
-    })
-    .catch((err) => console.error("Error loading order details:", err));
+// ✅ Modal controls
+function openProductModal() {
+  document.getElementById("productModal").classList.add("active");
 }
 
-/* =========================
-   UI Helpers
-   ========================= */
-function openModal(id) {
-  qs(`#${id}`).classList.add("active");
-}
 function closeModal(id) {
-  qs(`#${id}`).classList.remove("active");
-}
-function showSection(id) {
-  qsa(".content-section").forEach((sec) => sec.classList.remove("active"));
-  qs(`#${id}`).classList.add("active");
-  qsa(".nav-item").forEach((nav) => nav.classList.remove("active"));
-  const activeNav = Array.from(qsa(".nav-item")).find((n) =>
-    n.textContent.toLowerCase().includes(id)
-  );
-  if (activeNav) activeNav.classList.add("active");
-  if (id === "products") loadProducts();
-  if (id === "orders") loadOrders();
+  document.getElementById(id).classList.remove("active");
 }
 
-/* =========================
-   INIT
-   ========================= */
-async function initAdminDashboard() {
-  const ok = await ensureAdmin();
-  if (!ok) return;
-
-  const addBtn = qs("button[onclick='openProductModal()']");
-  if (addBtn) addBtn.addEventListener("click", openAddProductModal);
-
-  const productForm = qs("#productForm");
-  if (productForm)
-    productForm.addEventListener("submit", handleProductFormSubmit);
-
-  qsa(".close-btn").forEach((btn) =>
-    btn.addEventListener("click", (e) => {
-      const modal = e.currentTarget.closest(".modal");
-      if (modal) modal.classList.remove("active");
-    })
-  );
-
-  await loadProducts();
-  await loadOrders();
+// ✅ Open Edit Product Modal
+function openEditProduct(id, name, category, price, stock) {
+  document.getElementById("editProductId").value = id;
+  document.getElementById("productName").value = name;
+  document.getElementById("productCategory").value = category;
+  document.getElementById("productPrice").value = price;
+  document.getElementById("productStock").value = stock;
+  document.getElementById("productSubmitBtn").textContent = "Update Product";
+  document.getElementById("productModalTitle").textContent = "Edit Product";
+  openProductModal();
 }
 
-document.addEventListener("DOMContentLoaded", initAdminDashboard);
+// ✅ View order details
+async function viewOrder(id) {
+  try {
+    const res = await fetch(`${BASE_API_URL}/api/order`, {
+      credentials: "include",
+    });
+    const data = await res.json();
+    const order = (data.orders || []).find((o) => o._id === id);
+
+    if (!order) return alert("Order not found.");
+
+    const details = document.getElementById("orderDetails");
+    details.innerHTML = `
+      <p><strong>Order ID:</strong> ${order._id}</p>
+      <p><strong>Customer:</strong> ${order.buyer}</p>
+      <p><strong>Email:</strong> ${order.buyerEmail}</p>
+      <p><strong>Product:</strong> ${order.product}</p>
+      <p><strong>Quantity:</strong> ${order.quantity}</p>
+      <p><strong>Total:</strong> ₱${order.total}</p>
+      <p><strong>Status:</strong> ${order.status || "pending"}</p>
+    `;
+
+    document.getElementById("orderModal").classList.add("active");
+  } catch (err) {
+    console.error("Error viewing order:", err);
+  }
+}
+
+// ✅ Navigation control
+function showSection(sectionId) {
+  document
+    .querySelectorAll(".content-section")
+    .forEach((s) => s.classList.remove("active"));
+  document.getElementById(sectionId).classList.add("active");
+
+  document
+    .querySelectorAll(".nav-item")
+    .forEach((n) => n.classList.remove("active"));
+  document
+    .querySelector(`.nav-item[onclick="showSection('${sectionId}')"]`)
+    ?.classList.add("active");
+}
