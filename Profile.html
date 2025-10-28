@@ -415,51 +415,20 @@
     </section>
 
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const user = JSON.parse(localStorage.getItem("user"));
+      document.addEventListener("DOMContentLoaded", async () => {
+        console.log("✅ Profile script loaded");
 
-        if (user) {
-          document.getElementById("profileFirstName").textContent =
-            user.firstname || "N/A";
-          document.getElementById("profileMiddleName").textContent =
-            user.middlename || "N/A";
-          document.getElementById("profileLastName").textContent =
-            user.lastname || "N/A";
-          document.getElementById("profileEmail").textContent =
-            user.email || "N/A";
-          document.getElementById("profileAddress").textContent =
-            user.address || "N/A";
-          document.getElementById("profileContact").textContent =
-            user.contact || "N/A";
-        } else {
-          console.log("No user found in localStorage");
-        }
-      });
-      console.log("✅ Profile.js loaded"); // Add this line at the very top
-      document.addEventListener("DOMContentLoaded", () => {
-        console.log("✅ DOM fully loaded");
-        let user = null;
-        try {
-          const stored = localStorage.getItem("user");
-          if (stored) {
-            user = JSON.parse(stored);
-          } else {
-            console.warn("No user found in localStorage, redirecting...");
-            window.location.href = "login.html";
-            return;
-          }
-        } catch (err) {
-          console.error("Invalid user data in localStorage:", err);
+        const BASE_API_URL = "https://website-backend-1-w1qd.onrender.com";
+
+        // 🟢 Load user data
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (!user) {
+          console.warn("No user found in localStorage, redirecting...");
           window.location.href = "login.html";
           return;
         }
 
-        if (!user.id) {
-          user.id = Date.now().toString();
-          localStorage.setItem("user", JSON.stringify(user));
-        }
-
-        // 🟢 Show profile info
+        // 🟢 Display profile information
         const displayProfile = () => {
           document.getElementById("profileFirstName").textContent =
             user.firstname || "N/A";
@@ -475,8 +444,6 @@
             user.contact || "N/A";
         };
         displayProfile();
-        // ✅ Ensure user details are complete in localStorage
-        localStorage.setItem("user", JSON.stringify(user));
 
         // 🟡 Edit profile
         document.getElementById("editBtn").addEventListener("click", () => {
@@ -502,10 +469,10 @@
           user.contact = document.getElementById("editContact").value;
 
           localStorage.setItem("user", JSON.stringify(user));
+          displayProfile();
           document.getElementById("profileEdit").classList.add("hidden");
           document.getElementById("profileView").classList.remove("hidden");
           document.getElementById("editBtn").classList.remove("hidden");
-          displayProfile();
           alert("Profile updated successfully!");
         });
 
@@ -515,76 +482,111 @@
           document.getElementById("editBtn").classList.remove("hidden");
         });
 
+        // 🟣 Logout
         document.getElementById("logoutBtn").addEventListener("click", (e) => {
           e.preventDefault();
           localStorage.removeItem("user");
           window.location.href = "index.html";
         });
 
-        // 🟢 Display Orders
-        function displayOrderHistory() {
+        // 🟢 Fetch & Display Order History
+        async function displayOrderHistory() {
           const container = document.getElementById("orderHistoryContainer");
           container.innerHTML = `<p class="no-orders">Loading order history...</p>`;
 
-          const allOrders = JSON.parse(localStorage.getItem("orders")) || [];
-          const userOrders = allOrders.filter((order) => {
-            if (!order) return false;
-            const orderEmail = (
-              order.userEmail ||
-              order.user?.email ||
-              ""
-            ).toLowerCase();
-            const orderId = String(order.userId || order.user?.id || "");
-            return (
-              orderEmail === (user.email || "").toLowerCase() ||
-              orderId === String(user.id)
+          let user = JSON.parse(localStorage.getItem("user"));
+          let userEmail = user?.email;
+          let orders = [];
+
+          try {
+            const response = await fetch(
+              `${BASE_API_URL}/api/order-history?email=${encodeURIComponent(
+                userEmail
+              )}`
             );
-          });
+
+            if (response.ok) {
+              const data = await response.json();
+              if (data.success) {
+                orders = data.orders.filter(
+                  (order) =>
+                    (
+                      order.userEmail ||
+                      order.buyerEmail ||
+                      ""
+                    ).toLowerCase() === (userEmail || "").toLowerCase()
+                );
+              } else {
+                throw new Error("Server returned unsuccessful response");
+              }
+            } else {
+              throw new Error("Failed response " + response.status);
+            }
+          } catch (err) {
+            console.warn(
+              "⚠️ Failed to fetch orders from database, using localStorage..."
+            );
+            orders =
+              JSON.parse(localStorage.getItem("orders"))?.filter(
+                (o) =>
+                  (o.userEmail || o.buyerEmail || "").toLowerCase() ===
+                  (userEmail || "").toLowerCase()
+              ) || [];
+          }
 
           container.innerHTML = "";
 
-          if (userOrders.length === 0) {
+          if (orders.length === 0) {
             container.innerHTML = `
-                <div>
-                    <p class="no-orders">You haven't placed any orders yet.</p>
-                    <a href="LOGIN_USER.html">Make your first order</a>
-                </div>
-            `;
+          <div>
+            <p class="no-orders">You haven't placed any orders yet.</p>
+            <a href="LOGIN_USER.html">Make your first order</a>
+          </div>
+        `;
             return;
           }
 
-          userOrders.sort((a, b) => new Date(b.date) - new Date(a.date));
+          orders.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-          userOrders.forEach((order) => {
-            const itemsHTML = order.items
-              .map(
-                (i) =>
-                  `<li>${i.name} × ${i.quantity} - ₱${(
-                    i.price * i.quantity
-                  ).toFixed(2)}</li>`
-              )
-              .join("");
+          orders.forEach((order) => {
+            const itemsHTML =
+              order.items
+                ?.map(
+                  (item) =>
+                    `<li>${item.name} × ${item.quantity} - ₱${(
+                      item.price * item.quantity
+                    ).toFixed(2)}</li>`
+                )
+                .join("") || "";
+
+            const total =
+              order.total ||
+              order.items?.reduce(
+                (sum, item) => sum + item.price * item.quantity,
+                0
+              ) ||
+              0;
 
             const orderHTML = `
-                <div class="order-item">
-                    <h4>Order #${order.id}</h4>
-                    <div class="order-date">${new Date(
-                      order.date
-                    ).toLocaleString()}</div>
-                    <div class="order-details">
-                        <span>Status:</span>
-                        <span>${order.status || "Order Placed"}</span>
-                    </div>
-                    <div class="order-items">
-                        <strong>Items:</strong>
-                        <ul>${itemsHTML}</ul>
-                    </div>
-                    <div class="order-details order-total">
-                        <span>Total:</span>
-                        <span>₱${order.total.toFixed(2)}</span>
-                    </div>
-                </div>
-            `;
+          <div class="order-item">
+            <h4>Order #${order._id || order.id || "(local order)"}</h4>
+            <div class="order-date">${new Date(
+              order.timestamp || order.date
+            ).toLocaleString()}</div>
+            <div class="order-details">
+              <span>Status:</span>
+              <span>${order.status || "Order Placed"}</span>
+            </div>
+            <div class="order-items">
+              <strong>Items:</strong>
+              <ul>${itemsHTML}</ul>
+            </div>
+            <div class="order-details order-total">
+              <span>Total:</span>
+              <span>₱${total.toFixed(2)}</span>
+            </div>
+          </div>
+        `;
             container.insertAdjacentHTML("beforeend", orderHTML);
           });
         }

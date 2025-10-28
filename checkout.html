@@ -787,30 +787,105 @@
     </div>
 
     <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        let cart = JSON.parse(localStorage.getItem("cart")) || [];
-        const user = JSON.parse(localStorage.getItem("user")) || {};
-
+      // ✅ Make loadCartItems global again
+      function loadCartItems() {
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
         const cartItemsContainer = document.getElementById("cart-items");
         const confirmationItemsContainer =
           document.getElementById("confirmation-items");
-        const totalPriceElement = document.getElementById("total-price");
         const subtotalElement = document.getElementById("subtotal");
+        const totalPriceElement = document.getElementById("total-price");
         const shippingElement = document.getElementById("shipping");
         const confirmSubtotalElement =
           document.getElementById("confirm-subtotal");
         const confirmShippingElement =
           document.getElementById("confirm-shipping");
         const confirmTotalElement = document.getElementById("confirm-total");
+        const toStep2Button = document.getElementById("to-step-2");
+
+        if (cart.length === 0) {
+          cartItemsContainer.innerHTML = `
+        <div class="empty-cart">
+          <i class="fas fa-shopping-basket"></i>
+          <p>Your cart is empty</p>
+        </div>`;
+          subtotalElement.innerText = "₱0.00";
+          shippingElement.innerText = "₱0.00";
+          toStep2Button.disabled = true;
+          return;
+        }
+
+        let total = 0;
+        cartItemsContainer.innerHTML = "";
+        confirmationItemsContainer.innerHTML = "";
+
+        cart.forEach((item, index) => {
+          const price = Number(item.price) || 0;
+          const quantity = Number(item.quantity) || 1;
+          const itemTotal = price * quantity;
+          total += itemTotal;
+
+          const itemHTML = `
+        <div class="item-details">
+          <span class="item-name">${item.name}</span>
+          <span class="item-quantity">Qty: ${quantity}</span>
+        </div>
+        <span class="item-price">₱${itemTotal.toFixed(2)}</span>
+        <button class="delete-btn" data-index="${index}">
+          <i class="fas fa-trash"></i>
+        </button>
+      `;
+
+          const itemDiv = document.createElement("div");
+          itemDiv.classList.add("cart-item");
+          itemDiv.innerHTML = itemHTML;
+          cartItemsContainer.appendChild(itemDiv);
+
+          const confirmDiv = document.createElement("div");
+          confirmDiv.classList.add("cart-item");
+          confirmDiv.innerHTML = itemHTML;
+          confirmationItemsContainer.appendChild(confirmDiv);
+        });
+
+        document.querySelectorAll(".delete-btn").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            const index = e.target
+              .closest(".delete-btn")
+              .getAttribute("data-index");
+            cart.splice(index, 1);
+            localStorage.setItem("cart", JSON.stringify(cart));
+            loadCartItems();
+          });
+        });
+
+        const shippingCost = cart.length > 0 ? 100 : 0;
+        const finalTotal = total + shippingCost;
+
+        subtotalElement.innerText = `₱${total.toFixed(2)}`;
+        shippingElement.innerText = `₱${shippingCost.toFixed(2)}`;
+        totalPriceElement.innerText = `₱${finalTotal.toFixed(2)}`;
+        confirmSubtotalElement.innerText = `₱${total.toFixed(2)}`;
+        confirmShippingElement.innerText = `₱${shippingCost.toFixed(2)}`;
+        confirmTotalElement.innerText = `₱${finalTotal.toFixed(2)}`;
+      }
+
+      // ✅ Main DOM logic
+      document.addEventListener("DOMContentLoaded", () => {
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const user = JSON.parse(localStorage.getItem("user")) || {};
+
+        const stepSections = document.querySelectorAll(".step-section");
+        const progressSteps = document.querySelectorAll(".progress-step");
+        const paymentOptions = document.querySelectorAll(".payment-option");
+        const paymentDetails = document.getElementById("payment-details");
+        const cardDetails = document.getElementById("card-details");
+        const gcashDetails = document.getElementById("gcash-details");
 
         const toStep2Button = document.getElementById("to-step-2");
         const backToStep1Button = document.getElementById("back-to-step-1");
         const toStep3Button = document.getElementById("to-step-3");
         const backToStep2Button = document.getElementById("back-to-step-2");
         const placeOrderButton = document.getElementById("place-order-btn");
-
-        const stepSections = document.querySelectorAll(".step-section");
-        const progressSteps = document.querySelectorAll(".progress-step");
 
         let total = 0;
         let selectedPaymentMethod = "";
@@ -821,340 +896,127 @@
           document.getElementById("email").value = user.email || "";
         }
 
-        function loadCartItems() {
-          console.log("Loaded cart data:", cart);
-
-          if (cart.length === 0) {
-            cartItemsContainer.innerHTML = `
-                        <div class="empty-cart">
-                            <i class="fas fa-shopping-basket"></i>
-                            <p>Your cart is empty</p>
-                        </div>`;
-            subtotalElement.innerText = "₱0.00";
-            shippingElement.innerText = "₱0.00";
-            toStep2Button.disabled = true;
-            return;
-          }
-
-          total = 0;
-          cartItemsContainer.innerHTML = "";
-          confirmationItemsContainer.innerHTML = "";
-
-          cart.forEach((item, index) => {
-            const price = Number(item.price) || 0;
-            const quantity = Number(item.quantity) || 1;
-
-            const itemTotal = price * quantity;
-            total += itemTotal;
-
-            const itemDiv = document.createElement("div");
-            itemDiv.classList.add("cart-item");
-            itemDiv.style.setProperty("--item-index", index);
-            itemDiv.innerHTML = `
-    <div class="item-details">
-        <span class="item-name">${item.name}</span>
-        <span class="item-quantity">Quantity: ${quantity}</span>
-    </div>
-    <span class="item-price">₱${itemTotal.toFixed(2)}</span>
-    <button class="delete-btn" data-index="${index}">
-        <i class="fas fa-trash"></i>
-    </button>
-`;
-            cartItemsContainer.appendChild(itemDiv);
-
-            const confirmItemDiv = itemDiv.cloneNode(true);
-            confirmationItemsContainer.appendChild(confirmItemDiv);
-          });
-
-          // Enable delete buttons after items are created
-          document.querySelectorAll(".delete-btn").forEach((btn) => {
-            btn.addEventListener("click", (e) => {
-              const index = e.target
-                .closest(".delete-btn")
-                .getAttribute("data-index");
-              cart.splice(index, 1);
-              localStorage.setItem("cart", JSON.stringify(cart));
-              loadCartItems(); // reload the cart display
-            });
-          });
-
-          const shippingCost = cart.length > 0 ? 100 : 0;
-          const finalTotal = total + shippingCost;
-
-          subtotalElement.innerText = `₱${total.toFixed(2)}`;
-          shippingElement.innerText = `₱${shippingCost.toFixed(2)}`;
-          totalPriceElement.innerText = `₱${finalTotal.toFixed(2)}`;
-
-          confirmSubtotalElement.innerText = `₱${total.toFixed(2)}`;
-          confirmShippingElement.innerText = `₱${shippingCost.toFixed(2)}`;
-          confirmTotalElement.innerText = `₱${finalTotal.toFixed(2)}`;
+        function showStep(step) {
+          stepSections.forEach((s) => s.classList.remove("active"));
+          progressSteps.forEach((s) => s.classList.remove("active"));
+          for (let i = 0; i < step; i++)
+            progressSteps[i].classList.add("active");
+          document.getElementById(`step-${step}`).classList.add("active");
         }
 
-        function showStep(stepNumber) {
-          stepSections.forEach((section) => {
-            section.classList.remove("active");
-          });
-
-          progressSteps.forEach((step) => {
-            step.classList.remove("active");
-            if (parseInt(step.getAttribute("data-step")) <= stepNumber) {
-              step.classList.add("active");
-            }
-          });
-
-          document.getElementById(`step-${stepNumber}`).classList.add("active");
-        }
-
-        const paymentOptions = document.querySelectorAll(".payment-option");
-        paymentOptions.forEach((option) => {
-          option.addEventListener("click", function () {
-            paymentOptions.forEach((o) => o.classList.remove("selected"));
-            this.classList.add("selected");
-            selectedPaymentMethod = this.getAttribute("data-payment");
-            document.getElementById("payment-method-summary").innerText =
-              this.querySelector("span").innerText;
+        progressSteps.forEach((step) => {
+          step.addEventListener("click", function () {
+            const stepNum = parseInt(this.getAttribute("data-step"));
+            showStep(stepNum);
           });
         });
 
-        toStep2Button.addEventListener("click", () => {
-          if (cart.length === 0) {
-            alert("Your cart is empty!");
-            return;
-          }
-          showStep(2);
-        });
-
-        backToStep1Button.addEventListener("click", () => {
-          showStep(1);
-        });
-
-        const paymentDetails = document.getElementById("payment-details");
-        const cardDetails = document.getElementById("card-details");
-        const gcashDetails = document.getElementById("gcash-details");
-
-        paymentOptions.forEach((option) => {
-          option.addEventListener("click", function () {
-            paymentOptions.forEach((o) => o.classList.remove("selected"));
-            this.classList.add("selected");
-            selectedPaymentMethod = this.getAttribute("data-payment");
-            document.getElementById("payment-method-summary").innerText =
-              this.querySelector("span").innerText;
-
-            // Show/Hide extra fields
-            paymentDetails.style.display = "block";
-            cardDetails.style.display = "none";
-            gcashDetails.style.display = "none";
-
-            if (selectedPaymentMethod === "card") {
-              cardDetails.style.display = "block";
-            } else if (selectedPaymentMethod === "gcash") {
-              gcashDetails.style.display = "block";
-            } else {
-              paymentDetails.style.display = "none";
-            }
-          });
-        });
+        toStep2Button.addEventListener("click", () => showStep(2));
+        backToStep1Button.addEventListener("click", () => showStep(1));
+        backToStep2Button.addEventListener("click", () => showStep(2));
 
         toStep3Button.addEventListener("click", () => {
           const firstname = document.getElementById("firstname").value;
           const lastname = document.getElementById("lastname").value;
           const address = document.getElementById("address").value;
-          const email = document.getElementById("email").value;
           const city = document.getElementById("city").value;
           const zip = document.getElementById("zip").value;
           const phone = document.getElementById("phone").value;
 
           if (!firstname || !lastname || !address || !city || !zip || !phone) {
-            alert("Please fill in all address fields");
-            return;
-          }
-
-          if (!selectedPaymentMethod) {
-            alert("Please select a payment method");
+            alert("Please fill in all required fields.");
             return;
           }
 
           document.getElementById("shipping-address-summary").innerHTML = `
-                    <p>${firstname} ${lastname}</p>
-                    <p>${address}</p>
-                    <p>${city}, ${zip}</p>
-                    <p>Phone: ${phone}</p>
-                `;
-
+        <p>${firstname} ${lastname}</p>
+        <p>${address}</p>
+        <p>${city}, ${zip}</p>
+        <p>Phone: ${phone}</p>
+      `;
           showStep(3);
         });
 
-        backToStep2Button.addEventListener("click", () => {
-          showStep(2);
-        });
+        placeOrderButton.addEventListener("click", async () => {
+          const cart = JSON.parse(localStorage.getItem("cart")) || [];
+          if (cart.length === 0) return alert("Your cart is empty!");
 
-        progressSteps.forEach((step) => {
-          step.addEventListener("click", function () {
-            const stepNum = parseInt(this.getAttribute("data-step"));
-
-            const currentStep = getCurrentStep();
-            if (stepNum <= currentStep) {
-              showStep(stepNum);
-            }
-          });
-        });
-
-        function getCurrentStep() {
-          for (let i = 0; i < stepSections.length; i++) {
-            if (stepSections[i].classList.contains("active")) {
-              return i + 1;
-            }
-          }
-          return 1;
-        }
-
-        function placeOrder(cart) {
-          const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-          if (!currentUser) {
-            alert("Please log in first.");
-            window.location.href = "Login.html";
-            return;
-          }
-
-          const orders = JSON.parse(localStorage.getItem("orders")) || [];
+          // 🟢 Recalculate totals here
+          const subtotal = cart.reduce(
+            (sum, item) => sum + Number(item.price) * Number(item.quantity),
+            0
+          );
+          const shipping = cart.length > 0 ? 100 : 0;
+          const total = subtotal + shipping;
+          const quantity = cart.reduce((sum, item) => sum + item.quantity, 0);
 
           const newOrder = {
             id: "ORD-" + Date.now(),
+            product: cart.map((item) => item.name).join(", "),
+            price: total, // ✅ correct total
+            quantity, // ✅ correct quantity
+            buyer: `${user.firstname} ${user.lastname}`.trim(),
+            buyerEmail: user.email,
             date: new Date().toISOString(),
             status: "Order Placed",
-            items: cart.map((item) => ({
-              name: item.name,
-              quantity: item.quantity,
-              price: item.price,
-            })),
-            total: cart.reduce(
-              (sum, item) => sum + item.price * item.quantity,
-              0
-            ),
-
-            // 🔑 this part is what profile.html looks for
-            userId: String(currentUser.id || ""),
-            userEmail: (currentUser.email || "").toLowerCase(),
-            user: {
-              id: String(currentUser.id || ""),
-              email: (currentUser.email || "").toLowerCase(),
-            },
+            items: cart,
+            total,
           };
 
+          const orders = JSON.parse(localStorage.getItem("orders")) || [];
           orders.push(newOrder);
           localStorage.setItem("orders", JSON.stringify(orders));
           localStorage.removeItem("cart");
 
-          alert("Order placed successfully!");
-          window.location.href = "profile.html";
-        }
-
-        placeOrderButton.addEventListener("click", async () => {
-          if (cart.length === 0) {
-            alert("Your cart is empty!");
-            return;
-          }
-
-          if (cart.length === 0) {
-            alert("Your cart is empty!");
-            return;
-          }
-
-          // 🔄 Refresh cart to make sure we have the latest version after any deletions
-          const updatedCart = JSON.parse(localStorage.getItem("cart")) || [];
-          cart.splice(0, cart.length, ...updatedCart); // replace cart contents with the latest
-          console.log("🧾 Updated cart before placing order:", cart);
-
-          placeOrderButton.classList.add("loading");
-          placeOrderButton.disabled = true;
-          placeOrderButton.innerHTML =
-            '<i class="fas fa-spinner fa-spin"></i> Processing...';
-
-          setTimeout(() => {
-            placeOrder(cart);
-          }, 1500);
-
-          const orderFirstname = document.getElementById("firstname").value;
-          const orderLastname = document.getElementById("lastname").value;
-          const email = document.getElementById("email").value;
-          const buyerName =
-            `${orderFirstname} ${orderLastname}`.trim() || "guest";
-
-          const userData = JSON.parse(localStorage.getItem("user")) || {};
-          const userId = userData.id || userData._id || userData.userId;
-
-          console.log("Current user data:", userData);
-          console.log("User ID for order:", userId);
-
           try {
-            const orderPromises = [];
+            for (const item of cart) {
+              const response = await fetch(
+                "https://website-backend-1-w1qd.onrender.com/api/order",
+                {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    product: item.name,
+                    price: item.price,
+                    quantity: item.quantity,
+                    buyer: `${user.firstname} ${user.lastname}`.trim(),
+                    buyerEmail: user.email,
+                  }),
+                }
+              );
 
-            for (let item of cart) {
-              console.log("Preparing order data:", item);
-
-              const orderData = {
-                product: item.name,
-                price: item.price,
-                quantity: item.quantity,
-                buyer: buyerName,
-                buyerEmail: email,
-                userId: userId,
-                paymentMethod: selectedPaymentMethod,
-                orderDate: new Date().toISOString(),
-              };
-
-              console.log("Sending order data:", orderData);
-
-              const orderPromise = fetch(`${BASE_API_URL}/api/order`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
-                body: JSON.stringify(orderData),
-              });
-
-              orderPromises.push(orderPromise);
+              const result = await response.json();
+              console.log("DB result:", result);
             }
-
-            await Promise.all(orderPromises);
-
-            alert("✅ Order placed successfully!");
-            localStorage.removeItem("cart");
-            window.location.href = "profile.html";
-
-            window.location.reload();
-          } catch (error) {
-            console.error("Order placement failed:", error);
-            alert("There was an error placing your order. Please try again.");
-          } finally {
-            // Remove loading state
-            placeOrderButton.classList.remove("loading");
-            placeOrderButton.disabled = false;
-            placeOrderButton.innerHTML =
-              '<i class="fas fa-check-circle"></i> Place Order';
+          } catch (err) {
+            console.error("Error sending to DB:", err);
           }
+
+          alert("✅ Order placed successfully!");
+          window.location.href = "profile.html";
         });
 
-        // Load cart items on page load
-        loadCartItems();
-        // End of DOMContentLoaded event listener
-      });
-      const userData =
-        JSON.parse(localStorage.getItem("currentUser")) ||
-        JSON.parse(localStorage.getItem("user")) ||
-        {};
+        // ✅ Payment method selection
+        paymentOptions.forEach((option) => {
+          option.addEventListener("click", () => {
+            paymentOptions.forEach((opt) => opt.classList.remove("selected"));
+            option.classList.add("selected");
+            selectedPaymentMethod = option.getAttribute("data-payment");
 
-      const newOrder = {
-        id: "order-" + Date.now(),
-        userId: userData.id || userData._id || null,
-        userEmail: userData.email || null,
-        date: new Date().toISOString(),
-        status: "Order Placed",
-        items: JSON.parse(localStorage.getItem("cart")) || [],
-        total: (JSON.parse(localStorage.getItem("cart")) || []).reduce(
-          (sum, i) => sum + i.price * i.quantity,
-          0
-        ),
-      };
+            paymentDetails.style.display = "block";
+            cardDetails.style.display =
+              selectedPaymentMethod === "card" ? "block" : "none";
+            gcashDetails.style.display =
+              selectedPaymentMethod === "gcash" ? "block" : "none";
+
+            document.getElementById("payment-method-summary").innerText =
+              option.innerText;
+          });
+        });
+
+        // ✅ Load cart after everything is ready
+        loadCartItems();
+      });
     </script>
   </body>
 </html>

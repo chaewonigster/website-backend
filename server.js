@@ -5,50 +5,48 @@ const cors = require("cors");
 const session = require("express-session");
 const bcrypt = require("bcryptjs");
 const express = require("express");
-const app = express();
 const path = require("path");
+const app = express();
 
-app.use(express.static(path.join(__dirname, "Public")));
-app.use(express.static(path.join(__dirname)));
-
-app.get("/admin.html", (req, res) => {
-  res.sendFile(path.join(__dirname, "Public", "admin.html"));
-});
-
-app.use(express.json());
-
+// ✅ CORS FIRST (must be before any routes or session)
 const allowedOrigins = [
   "https://chaewonigster.github.io",
-  "http://127.0.0.1:5500", // This should be allowed
-  "http://localhost:5500", // You can also try adding this, just in case.
+  "http://127.0.0.1:5500",
+  "http://localhost:5500",
 ];
-
-app.use(express.static("public"));
-
-app.set("trust proxy", 1);
-app.use(
-  session({
-    secret: "supersecretkey", // change this to something private
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      sameSite: "none", // important for cross-origin cookies
-      secure: process.env.NODE_ENV === "production", // true on Render
-    },
-  })
-);
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      console.log("Origin:", origin);
-      if (!origin || allowedOrigins.includes(origin) || origin === "null") {
+      console.log("CORS origin:", origin);
+      if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
       }
     },
-    credentials: true,
+    credentials: true, // ✅ important for cookies/sessions
+  })
+);
+
+// ✅ JSON body parser
+app.use(express.json());
+
+// ✅ Static files
+app.use(express.static(path.join(__dirname, "Public")));
+app.use(express.static(__dirname));
+
+// ✅ Sessions (after CORS)
+app.set("trust proxy", 1);
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "supersecretkey",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      sameSite: "none",
+      secure: process.env.NODE_ENV === "production",
+    },
   })
 );
 
@@ -88,7 +86,7 @@ const Order = mongoose.model("Order", orderSchema);
 app.post("/api/order", async (req, res) => {
   try {
     console.log("Received order data:", req.body);
-    const { product, price, quantity, buyerEmail } = req.body; // 📧 include buyerEmail
+    const { product, price, quantity, buyerEmail } = req.body; // Include buyerEmail
 
     if (!product || price === undefined || !quantity) {
       return res.status(400).json({ error: "Missing required fields" });
@@ -102,12 +100,13 @@ app.post("/api/order", async (req, res) => {
       buyer = req.body.buyer;
     }
 
-    const newOrder = new Order({ product, price, quantity, buyer, buyerEmail }); // 📧 add email
+    const newOrder = new Order({ product, price, quantity, buyer, buyerEmail });
     await newOrder.save();
-    console.log("New Order Saved:", newOrder);
-    res.json({ message: "Order placed successfully!" });
+
+    console.log("✅ New Order Saved:", newOrder);
+    res.json({ success: true, message: "Order placed successfully!" });
   } catch (error) {
-    console.error("Error placing order:", error);
+    console.error("❌ Error placing order:", error);
     res.status(500).json({ error: "Failed to place order" });
   }
 });
@@ -115,21 +114,28 @@ app.post("/api/order", async (req, res) => {
 // 📜 Fetch order history of the logged-in user
 app.get("/api/order-history", async (req, res) => {
   try {
-    if (!req.session.user) {
-      return res.status(401).json({ success: false, message: "Not logged in" });
+    const email =
+      req.session?.user?.email ||
+      req.query.email ||
+      req.headers["x-user-email"];
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing user email or not logged in",
+      });
     }
 
-    const email = req.session.user.email; // identify by logged-in email
     const orders = await Order.find({ buyerEmail: email }).sort({
       timestamp: -1,
     });
-
     res.json({ success: true, orders });
   } catch (err) {
     console.error("Error fetching order history:", err);
-    res
-      .status(500)
-      .json({ success: false, message: "Failed to fetch order history" });
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch order history",
+    });
   }
 });
 
@@ -358,15 +364,15 @@ app.get("/create-admin", async (req, res) => {
 });
 
 app.get("/admin/login", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "admin.html"));
+  res.sendFile(path.join(__dirname, "Public", "admin.html"));
 });
 
 app.get("/admin/products", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "admin.html"));
+  res.sendFile(path.join(__dirname, "Public", "admin.html"));
 });
 
 app.get("/admin/orders", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "admin.html"));
+  res.sendFile(path.join(__dirname, "Public", "admin.html"));
 });
 
 app.get("/", (req, res) => {

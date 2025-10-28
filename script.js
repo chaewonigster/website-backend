@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  function loadCart() {
+  function loadCartItems() {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
     const cartItemsContainer = document.getElementById("cart-items");
     if (!cartItemsContainer) return;
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (document.getElementById("cart-items")) {
-    loadCart();
+    loadCartItems();
   }
 
   document.getElementById("loginForm")?.addEventListener("submit", handleLogin);
