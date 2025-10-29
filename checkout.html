@@ -870,7 +870,13 @@
             const index = e.target
               .closest(".delete-btn")
               .getAttribute("data-index");
-            mergedCart.splice(index, 1);
+            if (mergedCart[index].quantity > 1) {
+              // Decrease quantity by 1
+              mergedCart[index].quantity -= 1;
+            } else {
+              // Remove the item completely if quantity is 1
+              mergedCart.splice(index, 1);
+            }
             localStorage.setItem("cart", JSON.stringify(mergedCart));
             loadCartItems();
           });

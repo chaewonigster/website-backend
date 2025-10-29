@@ -151,16 +151,28 @@ app.get("/api/users", async (req, res) => {
 // 📜 Fetch order history of the logged-in user
 app.get("/api/order-history", async (req, res) => {
   try {
-    const { email } = req.query;
+    const email =
+      req.session?.user?.email ||
+      req.query.email ||
+      req.headers["x-user-email"];
+
     if (!email) {
-      return res.status(400).json({ error: "Email is required" });
+      return res.status(400).json({
+        success: false,
+        message: "Missing user email or not logged in",
+      });
     }
 
-    const orders = await Order.find({ buyerEmail: email }).sort({ date: -1 });
-    res.json(orders);
+    const orders = await Order.find({ buyerEmail: email }).sort({
+      timestamp: -1,
+    });
+    res.json({ success: true, orders });
   } catch (err) {
-    console.error("❌ Error fetching order history:", err);
-    res.status(500).json({ error: "Failed to fetch order history" });
+    console.error("Error fetching order history:", err);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch order history",
+    });
   }
 });
 

@@ -1207,7 +1207,7 @@ function isUserLoggedIn() {
 function addToCart(button) {
     if (!isUserLoggedIn()) {
         alert("Please log in first to add items to your cart.");
-        window.location.href = "login.html";
+        window.location.href = "Login.html";
         return;
     }
 
@@ -1245,7 +1245,7 @@ function closeCartPopup() {
 async function buyNow(productName, price) {
     if (!isUserLoggedIn()) {
         alert("Please log in first to buy items.");
-        window.location.href = "login.html";
+        window.location.href = "Login.html";
         return;
     }
 
