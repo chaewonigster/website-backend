@@ -517,6 +517,12 @@ app.get("/create-admin", async (req, res) => {
     res.status(500).json({ message: "Admin creation failed" });
   }
 });
+app.get("/facebook-data-deletion", (req, res) => {
+  return res.json({
+    url: "https://website-backend-1-w1qd.onrender.com/data-deletion.html",
+    message: "For data deletion, visit the provided URL.",
+  });
+});
 
 app.get("/admin/login", (req, res) => {
   res.sendFile(path.join(__dirname, "Public", "admin.html"));
