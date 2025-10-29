@@ -71,8 +71,8 @@
           45deg,
           rgba(255, 255, 255, 0.05) 0,
           rgba(255, 255, 255, 0.05) 10px,
-          transparent10px,
-          transparent20px
+          transparent 10px,
+          transparent 20px
         );
         transform: rotate(-45deg);
         z-index: 1;
@@ -215,8 +215,8 @@
           45deg,
           rgba(255, 255, 255, 0.05) 0,
           rgba(255, 255, 255, 0.05) 10px,
-          transparent10px,
-          transparent20px
+          transparent 10px,
+          transparent 20px
         );
         transform: rotate(-45deg);
         z-index: 1;
@@ -247,9 +247,10 @@
     </style>
   </head>
   <body>
-    <a href="LOGIN_USER.html" class="back-button"
-      ><i class="fas fa-arrow-left"></i
-    ></a>
+    <!-- ✅ Fixed Back Button -->
+    <a href="#" class="back-button" onclick="goBackProperly()">
+      <i class="fas fa-arrow-left"></i> Back
+    </a>
 
     <header>
       <div class="header-content">
@@ -279,64 +280,86 @@
       </div>
     </footer>
 
+    <!-- ✅ Back Button Script (same as nuggets.html) -->
     <script>
-      // ✅ Your product list
+      function goBackProperly() {
+        const rawUser = localStorage.getItem("user");
+
+        if (!rawUser) {
+          window.location.href = "index.html";
+          return;
+        }
+
+        let user;
+        try {
+          user = JSON.parse(rawUser);
+        } catch (e) {
+          console.warn("Invalid user data in localStorage:", e);
+          window.location.href = "index.html";
+          return;
+        }
+
+        const role = user.role || user.Role || (user.email ? "customer" : null);
+
+        if (role === "admin") {
+          window.location.href = "admin_dashboard.html";
+        } else if (role === "customer" || user.email) {
+          window.location.href = "LOGIN_USER.html";
+        } else {
+          window.location.href = "index.html";
+        }
+      }
+
       const others = [
         {
           name: "Kikiam 1/2",
           price: "₱45.00",
           image: "2.png",
           description:
-            "Traditional Filipino kikiam, made with ground meat and vegetables. A delightful snack or side dish with authentic flavors.",
+            "Traditional Filipino kikiam, made with ground meat and vegetables.",
         },
         {
           name: "Chicken Ball 1/4",
           price: "₱27.00",
           image: "3.png",
-          description:
-            "Crispy and flavorful chicken balls, perfect for appetizers or as a quick snack. Made with high-quality chicken meat.",
+          description: "Crispy and flavorful chicken balls.",
         },
         {
           name: "Squid Ball 1/4",
           price: "₱27.00",
           image: "4.png",
-          description:
-            "Delicious squid balls with a smooth texture and rich seafood flavor. Great for dipping or enjoying on their own.",
+          description: "Delicious squid balls with a smooth texture.",
         },
         {
           name: "Fish Ball 1kg",
           price: "₱55.00",
           image: "5.png",
-          description:
-            "Classic fish balls in a convenient 1kg pack. Versatile and tasty, perfect for various cooking methods.",
+          description: "Classic fish balls in a convenient 1kg pack.",
         },
         {
           name: "CDO Crispy Burger",
           price: "₱60.00",
           image: "25.png",
-          description:
-            "Crispy burger patties with a golden-brown exterior. Quick to prepare and satisfying for burger lovers.",
+          description: "Crispy burger patties with a golden-brown exterior.",
         },
         {
           name: "CDO Ulam Burger",
           price: "₱60.00",
           image: "26.png",
-          description:
-            "Ready-to-cook burger patties perfect for a quick meal. Packed with flavor and easy to prepare.",
+          description: "Ready-to-cook burger patties perfect for a quick meal.",
         },
         {
           name: "Noypi Patty",
           price: "₱40.00",
           image: "31.png",
           description:
-            "Local-style burger patty with a distinct Filipino flavor. Great for quick meals and sandwiches.",
+            "Local-style burger patty with a distinct Filipino flavor.",
         },
         {
           name: "Almar Patty",
           price: "₱40.00",
           image: "32.png",
-          description:
-            "Delicious burger patties made with quality meat. Perfect for burgers, sandwiches, or as a main dish.",
+          description: "Delicious burger patties made with quality meat.",
         },
       ];
 
@@ -344,18 +367,18 @@
         return products
           .map(
             (p) => `
-                <div class="product" data-name="${p.name}">
-                    <div class="product-description">${p.description}</div>
-                    <div class="product-content">
-                        <img src="${p.image}" alt="${p.name}">
-                        <h3>${p.name}</h3>
-                        <p>${p.price}</p>
-                        <div>
-                            <button class="btn btn-cart" onclick="addToCart(this)"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
-                            <button class="btn btn-buy" onclick="buyNow(this)"><i class="fas fa-bolt"></i> Buy Now</button>
-                        </div>
-                    </div>
-                </div>`
+            <div class="product" data-name="${p.name}">
+              <div class="product-description">${p.description}</div>
+              <div class="product-content">
+                <img src="${p.image}" alt="${p.name}">
+                <h3>${p.name}</h3>
+                <p>${p.price}</p>
+                <div>
+                  <button class="btn btn-cart" onclick="addToCart(this)"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+                  <button class="btn btn-buy" onclick="buyNow(this)"><i class="fas fa-bolt"></i> Buy Now</button>
+                </div>
+              </div>
+            </div>`
           )
           .join("");
       }
@@ -363,12 +386,10 @@
       document.querySelector(".products").innerHTML =
         generateProductsHTML(others);
 
-      // ✅ Helper to check login
       function isUserLoggedIn() {
         return localStorage.getItem("user") !== null;
       }
 
-      // ✅ Add to Cart (login required)
       function addToCart(element) {
         if (!isUserLoggedIn()) {
           alert("⚠️ You must log in to add items to cart.");
@@ -379,8 +400,6 @@
         const name = product.querySelector("h3").innerText;
         const price = product.querySelector("p").innerText;
         const imageSrc = product.querySelector("img").src;
-
-        // store in localStorage (same as LOGIN_USER.html logic)
         let cart = JSON.parse(localStorage.getItem("cart")) || [];
         cart.push({
           name,
@@ -389,11 +408,9 @@
           imageSrc,
         });
         localStorage.setItem("cart", JSON.stringify(cart));
-
         alert(`✅ Added ${name} to cart!`);
       }
 
-      // ✅ Buy Now (login required)
       async function buyNow(element) {
         if (!isUserLoggedIn()) {
           alert("⚠️ You must log in before buying.");
@@ -405,7 +422,6 @@
         const price = parseFloat(
           product.querySelector("p").innerText.replace("₱", "")
         );
-
         try {
           const response = await fetch("http://localhost:3000/order", {
             method: "POST",

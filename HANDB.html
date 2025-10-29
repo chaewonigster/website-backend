@@ -249,20 +249,6 @@
         margin: 0 auto;
       }
 
-      .footer-links {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        margin-top: 1rem;
-      }
-
-      .footer-links a {
-        color: var(--white-color);
-        text-decoration: none;
-        opacity: 0.7;
-        transition: opacity 0.3s ease;
-      }
-
       @media (max-width: 768px) {
         .products {
           grid-template-columns: 1fr;
@@ -271,9 +257,10 @@
     </style>
   </head>
   <body>
-    <a href="LOGIN_USER.html" class="back-button"
-      ><i class="fas fa-arrow-left"></i
-    ></a>
+    <!-- ✅ Fixed back button -->
+    <a href="#" class="back-button" onclick="goBackProperly()">
+      <i class="fas fa-arrow-left"></i>
+    </a>
 
     <header>
       <div class="header-content">
@@ -295,6 +282,44 @@
     </footer>
 
     <script>
+      // ✅ Proper back button logic (does NOT clear user session)
+      function goBackProperly() {
+        const rawUser = localStorage.getItem("user");
+
+        if (!rawUser) {
+          // No user saved → send to main index
+          window.location.href = "index.html";
+          return;
+        }
+
+        let user;
+        try {
+          user = JSON.parse(rawUser);
+        } catch (e) {
+          // If parsing fails, treat as not logged in
+          console.warn("Invalid user data in localStorage:", e);
+          window.location.href = "index.html";
+          return;
+        }
+
+        // ✅ Handle both new and old user formats
+        const role =
+          user.role ||
+          user.Role || // some backends capitalize it
+          (user.email ? "customer" : null); // infer role for normal users
+
+        if (role === "admin") {
+          window.location.href = "admin_dashboard.html";
+        } else if (role === "customer" || user.email) {
+          // if it’s a customer or has an email (typical user)
+          window.location.href = "LOGIN_USER.html";
+        } else {
+          // fallback if no role is found
+          window.location.href = "index.html";
+        }
+      }
+
+      // ✅ Product list
       const hamAndBacon = [
         {
           name: "Pampanga's Best Tocino 1/4",
@@ -378,6 +403,7 @@
         },
       ];
 
+      // ✅ Load products
       document.querySelector(".products").innerHTML = hamAndBacon
         .map(
           (p) => `
@@ -398,14 +424,25 @@
         )
         .join("");
 
+      // ✅ Login check
       function isUserLoggedIn() {
-        return localStorage.getItem("user") !== null;
+        const user = JSON.parse(localStorage.getItem("user"));
+        return user && user.role === "customer";
       }
 
+      // ✅ Redirect admins
+      (function checkAdminRedirect() {
+        const currentUser = JSON.parse(localStorage.getItem("user"));
+        if (currentUser && currentUser.role === "admin") {
+          window.location.href = "admin_dashboard.html";
+        }
+      })();
+
+      // ✅ Add to cart
       function addToCart(element) {
         if (!isUserLoggedIn()) {
           alert("⚠️ You must log in to add items to cart.");
-          window.location.href = "Login.html";
+          window.location.href = "index.html";
           return;
         }
 
@@ -423,10 +460,11 @@
         alert(`✅ Added ${name} to cart!`);
       }
 
+      // ✅ Buy now
       async function buyNow(element) {
         if (!isUserLoggedIn()) {
           alert("⚠️ You must log in before buying.");
-          window.location.href = "Login.html";
+          window.location.href = "index.html";
           return;
         }
 

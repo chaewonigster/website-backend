@@ -276,9 +276,9 @@
     </style>
   </head>
   <body>
-    <a href="LOGIN_USER.html" class="back-button"
-      ><i class="fas fa-arrow-left"></i
-    ></a>
+    <a href="#" class="back-button" onclick="goBackProperly()">
+      <i class="fas fa-arrow-left"></i> Back
+    </a>
 
     <header>
       <div class="header-content">
@@ -309,6 +309,33 @@
     </footer>
 
     <script>
+      function goBackProperly() {
+        const rawUser = localStorage.getItem("user");
+
+        if (!rawUser) {
+          window.location.href = "index.html";
+          return;
+        }
+
+        let user;
+        try {
+          user = JSON.parse(rawUser);
+        } catch (e) {
+          console.warn("Invalid user data in localStorage:", e);
+          window.location.href = "index.html";
+          return;
+        }
+
+        const role = user.role || user.Role || (user.email ? "customer" : null);
+
+        if (role === "admin") {
+          window.location.href = "admin_dashboard.html";
+        } else if (role === "customer" || user.email) {
+          window.location.href = "LOGIN_USER.html";
+        } else {
+          window.location.href = "index.html";
+        }
+      }
       const vegetables = [
         {
           name: "Greenpeas 1kg",
