@@ -116,6 +116,10 @@
             font-weight: bold;
             color: white;
         }
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
         .nav-links a, .nav-icons a {
             color: white;
             text-decoration: none;
@@ -230,9 +234,9 @@ button:active {
     0 0.2em 0 0 #dcdcdc, 0 0.225em 0 0 #cacaca, 0 0.225em 0.375em 0 #cecece;
 }
         img {
-  max-width: 100%;
-  height: auto;
-}
+            width: 200px;
+            transition: transform 0.5s ease-in-out;
+        }
 
         img:hover {
             transform: scale(1.1) rotate(5deg);
@@ -245,7 +249,6 @@ button:active {
             font-family: Arial, sans-serif;
         }
         body {
-            overflow-x: hidden;
             background-color: #f8f8f8;
         }
         nav {
@@ -254,7 +257,6 @@ button:active {
             left: 0;
             width: 100%;
             display: flex;
-            flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
             padding: 15px 50px;
@@ -264,18 +266,12 @@ button:active {
         .nav-brand {
             font-size: 24px;
             font-weight: bold;
-              flex: 1 1 100%;
-  text-align: center;
             color: white;
         }
-.nav-links {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  text-align: center;
-  width: 100%;
-}
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
         .nav-links a {
             color: white;
             text-decoration: none;
@@ -330,9 +326,7 @@ button:active {
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 30px;
             padding: 20px;
-            flex-wrap: wrap;
         }
-
         .product {
             background: rgba(128, 128, 128, 0.75);
             display: flex;
@@ -349,12 +343,6 @@ button:active {
     display: block;
     margin: 0 auto 10px;
 }
-.row {
-    flex-wrap: wrap;
-    }
-.product-list {
-    flex-wrap: wrap;
-    }
         .product h3, .product p {
             color: white;
         }
@@ -647,32 +635,6 @@ button:active {
 
 .shop-text:hover::after {
   width: 100%;
-}
-
-/* Responsive text sizes */
-@media (max-width: 768px) {
-  .nav-links a {
-    font-size: 14px;
-  }
-
-  .hero-content h1 {
-    font-size: 1.8rem;
-  }
-
-  .hero-content p {
-    font-size: 0.9rem;
-  }
-}
-
-/* On phones, stack brand + links + login button neatly */
-@media (max-width: 480px) {
-  nav {
-    flex-direction: column;
-  }
-
-  .nav-icons {
-    margin-top: 10px;
-  }
 }
 
     </style>
