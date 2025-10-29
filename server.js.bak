@@ -87,30 +87,12 @@ const Order = mongoose.model("Order", orderSchema);
 app.post("/api/order", async (req, res) => {
   try {
     console.log("Received order data:", req.body);
-    const { product, price, quantity, buyerEmail } = req.body;
+    const { product, price, quantity, buyerEmail } = req.body; // Include buyerEmail
 
     if (!product || price === undefined || !quantity) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    // 🧠 Step 1: Find the product
-    const foundProduct = await Product.findOne({ name: product });
-    if (!foundProduct) {
-      return res.status(404).json({ error: "Product not found" });
-    }
-
-    // 🧠 Step 2: Check stock availability
-    if (foundProduct.stock < quantity) {
-      return res
-        .status(400)
-        .json({ error: "Not enough stock available for this product" });
-    }
-
-    // 🧠 Step 3: Deduct stock and save
-    foundProduct.stock -= quantity;
-    await foundProduct.save();
-
-    // 🧠 Step 4: Determine buyer name
     let buyer = "guest";
     if (req.session.user) {
       const { firstname, middlename, lastname } = req.session.user;
@@ -119,7 +101,6 @@ app.post("/api/order", async (req, res) => {
       buyer = req.body.buyer;
     }
 
-    // 🧠 Step 5: Save order
     const newOrder = new Order({ product, price, quantity, buyer, buyerEmail });
     await newOrder.save();
 
@@ -130,7 +111,6 @@ app.post("/api/order", async (req, res) => {
     res.status(500).json({ error: "Failed to place order" });
   }
 });
-
 // ✅ Delete an order by ID
 app.delete("/api/orders/:id", async (req, res) => {
   try {
@@ -204,7 +184,6 @@ const Product = mongoose.model(
     image: String,
     description: String,
     category: String,
-    stock: { type: Number, default: 0 }, // ✅ added stock field
   })
 );
 
