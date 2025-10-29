@@ -10,10 +10,12 @@ const app = express();
 
 // ✅ CORS FIRST (must be before any routes or session)
 const allowedOrigins = [
-  "https://website-backend-1-w1qd.onrender.com", // ✅ allow your deployed site
-  "https://chaewonigster.github.io", // ✅ allow GitHub Pages (if used)
-  "http://127.0.0.1:5500", // ✅ allow local testing
+  "https://website-backend-1-w1qd.onrender.com", // ✅ your backend
+  "https://chaewonigster.github.io", // ✅ your frontend (GitHub Pages)
+  "http://127.0.0.1:5500", // ✅ local testing
   "http://localhost:5500",
+  "https://www.facebook.com", // ✅ Facebook login redirect
+  "https://connect.facebook.net", // ✅ Facebook SDK domain
 ];
 
 app.use(
@@ -357,6 +359,51 @@ app.get("/api/products", async (req, res) => {
     res
       .status(500)
       .json({ success: false, message: "Failed to fetch products" });
+  }
+});
+
+app.post("/api/facebook-login", async (req, res) => {
+  try {
+    const { email, name, facebookId } = req.body;
+
+    if (!email) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Email required from Facebook." });
+    }
+
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      // 🆕 Auto-register new user
+      user = new User({
+        firstname: name.split(" ")[0],
+        lastname: name.split(" ")[1] || "",
+        email,
+        password: await bcrypt.hash(facebookId, 10), // 🔐 store hash of fb id
+        role: "user",
+      });
+      await user.save();
+    }
+
+    // 🟢 Save session
+    req.session.user = {
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email: user.email,
+      role: user.role,
+    };
+
+    res.json({
+      success: true,
+      message: "Facebook login successful",
+      user,
+    });
+  } catch (err) {
+    console.error("Facebook login error:", err);
+    res
+      .status(500)
+      .json({ success: false, message: "Server error during Facebook login" });
   }
 });
 

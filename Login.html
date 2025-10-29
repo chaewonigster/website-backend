@@ -592,7 +592,12 @@
 
           <form id="loginForm">
             <div class="social-buttons">
-              <button type="button" class="social-btn facebook">
+              <button
+                type="button"
+                button
+                onclick="facebookLogin()"
+                class="social-btn facebook"
+              >
                 <i class="fab fa-facebook-f"></i>
               </button>
               <button type="button" class="social-btn google">
@@ -833,7 +838,12 @@
         </div>
       </div>
     </div>
-
+    <script
+      async
+      defer
+      crossorigin="anonymous"
+      src="https://connect.facebook.net/en_US/sdk.js"
+    ></script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         function createSnowflakes() {
@@ -1144,6 +1154,101 @@
 
         setupPasswordToggles();
       });
+
+      // 🟦 Facebook SDK Initialization
+      window.fbAsyncInit = function () {
+        FB.init({
+          appId: "1324269248860264", // your App ID
+          cookie: true,
+          xfbml: true,
+          version: "v21.0",
+        });
+      };
+
+      // Load Facebook SDK
+      (function (d, s, id) {
+        var js,
+          fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      })(document, "script", "facebook-jssdk");
+
+      // ✅ Facebook Login Function
+
+      // ✅ Called when user clicks the Facebook button
+      function facebookLogin() {
+        FB.login(
+          function (response) {
+            if (response.authResponse) {
+              FB.api(
+                "/me",
+                { fields: "name,email,picture" },
+                function (userInfo) {
+                  // ✅ Send user info to your backend for login/register
+                  fetch(
+                    "https://website-backend-1-w1qd.onrender.com/facebook-login",
+                    {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify(userInfo),
+                    }
+                  )
+                    .then((res) => res.json())
+                    .then((data) => {
+                      alert("Welcome " + data.name + "!");
+                      localStorage.setItem("user", JSON.stringify(data));
+                      window.location.href = "profile.html";
+                    })
+                    .catch((err) => console.error("Login error:", err));
+                }
+              );
+            } else {
+              alert("Facebook login failed or cancelled.");
+            }
+          },
+          { scope: "email,public_profile" }
+        );
+      }
+
+      // ✅ Initialize Facebook SDK
+      window.fbAsyncInit = function () {
+        FB.init({
+          appId: "1324269248860264", // ✅ your real App ID
+          cookie: true,
+          xfbml: true,
+          version: "v19.0", // ✅ latest Graph API version
+        });
+
+        FB.AppEvents.logPageView();
+
+        // ✅ Optional: check login state when SDK loads
+        FB.getLoginStatus(function (response) {
+          statusChangeCallback(response);
+        });
+      };
+
+      // ✅ Handle login state changes
+      function statusChangeCallback(response) {
+        if (response.status === "connected") {
+          console.log("✅ Logged in with Facebook");
+        } else {
+          console.log("❌ Not logged in with Facebook");
+        }
+      }
+
+      // ✅ Load the Facebook SDK script
+      (function (d, s, id) {
+        var js,
+          fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      })(document, "script", "facebook-jssdk");
     </script>
   </body>
 </html>
