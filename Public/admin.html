@@ -298,17 +298,34 @@
         display: flex;
       }
 
+/* 🩵 Fix: keep buttons inside the modal */
+.modal-content form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.modal-content button {
+  align-self: center;
+  margin-top: 10px;
+  width: 100%;
+  max-width: 200px;
+}
+
+/* Ensure modal doesn't overflow */
 .modal-content {
+  overflow: hidden;
   background-color: #fff;
-  margin: 10% auto;
-  padding: 20px;
+  padding: 30px;
   border-radius: 12px;
   width: 420px;
   max-width: 90%;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  margin: auto;
   position: relative;
-  animation: fadeIn 0.25s ease-in-out;
+  top: 50%;
+  transform: translateY(-50%);
 }
+
 
       .modal-header {
         display: flex;
@@ -655,10 +672,10 @@
           <div class="form-group">
             <label>Category</label>
             <select id="productCategory" class="form-control">
-              <option>Ice Cream</option>
-              <option>Frozen Vegetables</option>
-              <option>Frozen Meat</option>
-              <option>Frozen Seafood</option>
+              <option>Hotdogs & Cheesedogs</option>
+              <option>Balls & Street Food</option>
+              <option>Breakfast & Ulam Favorites</option>
+              <option>Frozen Goods & Vegetables</option>
             </select>
           </div>
 

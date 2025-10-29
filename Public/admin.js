@@ -504,7 +504,7 @@ function closeOrderModal() {
 }
 
 function escCloseHandler(e) {
-  if (e.key === "Escape") closeModal();
+  if (e.key === "Escape") closeOrderModal();
 }
 
 // Close when clicking the X or clicking outside the modal box
@@ -715,15 +715,21 @@ function openEditInventoryItem(id, name = "", stock = 0, reorderLevel = 10) {
         <p><strong>${escapeHtml(name)}</strong></p>
       </div>
 
-      <div class="form-group">
-        <label>Stock Quantity</label>
-        <input type="number" id="editStockQty" class="form-control" value="${stock}" min="0" />
-      </div>
+<div class="form-group">
+  <label>Price (₱)</label>
+  <input type="number" id="editPrice" class="form-control" step="0.01" min="0" />
+</div>
 
-      <div class="form-group">
-        <label>Reorder Level</label>
-        <input type="number" id="editReorderLevel" class="form-control" value="${reorderLevel}" min="0" />
-      </div>
+<div class="form-group">
+  <label>Stock Quantity</label>
+  <input type="number" id="editStockQty" class="form-control" value="${stock}" min="0" />
+</div>
+
+<div class="form-group">
+  <label>Reorder Level</label>
+  <input type="number" id="editReorderLevel" class="form-control" value="${reorderLevel}" min="0" />
+</div>
+
 
       <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:10px;">
         <button class="btn btn-primary" id="inventorySaveBtn">💾 Save</button>
@@ -790,8 +796,8 @@ async function saveInventoryChanges(id) {
 
     // Build payload: prefer to preserve existing product fields if we have them
     const payload = product
-      ? { ...product, stock, reorderLevel }
-      : { stock, reorderLevel };
+      ? { ...product, stock, reorderLevel, price }
+      : { stock, reorderLevel, price };
 
     // send update to admin endpoint (same endpoint product editor uses)
     const res = await fetch(`${BASE_API_URL}/admin/products/${id}`, {

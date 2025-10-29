@@ -684,7 +684,6 @@ button:active {
                 <img src="1.png" alt="TJ Classic">
                 <h3>TJ Classic</h3>
                 <p>₱195.00</p>
-                <p class="stock">Stock: <span id="stock-tj-classic">500</span></p>
                 <button class="btn" onclick="addToCart(this)">Add to Cart</button>
                 <button class="btn buy" onclick="buyNow(this)">Buy Now</button>
             </div>
@@ -1149,6 +1148,43 @@ button:active {
 
     <div id="pagination"></div>
 <script>
+     async function updateProductPrices() {
+    try {
+      // ✅ Use your backend endpoint — change to localhost if testing locally
+      const res = await fetch("https://website-backend-1-w1qd.onrender.com/api/products");
+      const data = await res.json();
+
+      if (!data.success || !data.data) {
+        console.error("❌ Invalid server response:", data);
+        return;
+      }
+
+      const products = data.data;
+
+      // ✅ Loop through all product cards and update price
+      document.querySelectorAll(".product").forEach(card => {
+        const nameElem = card.querySelector("h3");
+        const priceElem = card.querySelector("p");
+        if (!nameElem || !priceElem) return;
+
+        const frontendName = nameElem.innerText.trim().toLowerCase();
+        const match = products.find(p => p.name.trim().toLowerCase() === frontendName);
+
+        if (match) {
+          priceElem.textContent = `₱${parseFloat(match.price).toFixed(2)}`;
+        } else {
+          console.warn("⚠️ No DB match found for:", frontendName);
+        }
+      });
+
+      console.log("✅ Product prices updated from database!");
+    } catch (err) {
+      console.error("❌ Failed to fetch product prices:", err);
+    }
+  }
+
+  // ✅ Run when the page loads
+  document.addEventListener("DOMContentLoaded", updateProductPrices);
 document.addEventListener("DOMContentLoaded", function () {
     const itemsPerPage = 10; 
     let currentPage = 1;

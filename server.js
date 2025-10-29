@@ -391,13 +391,27 @@ app.post("/admin/login", async (req, res) => {
   }
 });
 
-app.post("/admin/products", isAdmin, async (req, res) => {
+app.put("/admin/products/:id", async (req, res) => {
   try {
-    const newProduct = new Product(req.body);
-    await newProduct.save();
-    res.json({ success: true, product: newProduct });
-  } catch (error) {
-    res.status(500).json({ success: false, message: "Failed to add product" });
+    const { name, category, price, stock, reorderLevel } = req.body;
+
+    const product = await Product.findById(req.params.id);
+    if (!product)
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" });
+
+    if (name) product.name = name;
+    if (category) product.category = category;
+    if (price !== undefined) product.price = price; // ✅ allow price updates
+    if (stock !== undefined) product.stock = stock;
+    if (reorderLevel !== undefined) product.reorderLevel = reorderLevel;
+
+    await product.save();
+    res.json({ success: true, message: "Product updated", data: product });
+  } catch (err) {
+    console.error("Error updating product:", err);
+    res.status(500).json({ success: false, message: "Error updating product" });
   }
 });
 
