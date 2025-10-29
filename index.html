@@ -234,9 +234,9 @@ button:active {
     0 0.2em 0 0 #dcdcdc, 0 0.225em 0 0 #cacaca, 0 0.225em 0.375em 0 #cecece;
 }
         img {
-            width: 200px;
-            transition: transform 0.5s ease-in-out;
-        }
+  max-width: 100%;
+  height: auto;
+}
 
         img:hover {
             transform: scale(1.1) rotate(5deg);
@@ -249,6 +249,7 @@ button:active {
             font-family: Arial, sans-serif;
         }
         body {
+            overflow-x: hidden;
             background-color: #f8f8f8;
         }
         nav {
@@ -326,7 +327,9 @@ button:active {
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 30px;
             padding: 20px;
+            flex-wrap: wrap;
         }
+
         .product {
             background: rgba(128, 128, 128, 0.75);
             display: flex;
@@ -343,6 +346,12 @@ button:active {
     display: block;
     margin: 0 auto 10px;
 }
+.row {
+    flex-wrap: wrap;
+    }
+.product-list {
+    flex-wrap: wrap;
+    }
         .product h3, .product p {
             color: white;
         }
@@ -635,6 +644,20 @@ button:active {
 
 .shop-text:hover::after {
   width: 100%;
+}
+
+/* Responsive text sizes */
+@media (max-width: 768px) {
+  h1 { font-size: 1.8rem; }
+  h2 { font-size: 1.4rem; }
+  p, a, button { font-size: 0.95rem; }
+}
+
+/* Adjust padding/margins for small screens */
+@media (max-width: 480px) {
+  section, .container, .footer {
+    padding: 1rem;
+  }
 }
 
     </style>
