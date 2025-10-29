@@ -366,6 +366,40 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
+// ✅ Add new product
+app.post("/api/products", async (req, res) => {
+  try {
+    const { name, category, price, stock, reorderLevel } = req.body;
+
+    if (!name || price === undefined || stock === undefined) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Missing fields" });
+    }
+
+    const newProduct = new Product({
+      name,
+      category,
+      price,
+      stock,
+      reorderLevel: reorderLevel || 10,
+      status: stock <= (reorderLevel || 10) ? "Low Stock" : "In Stock",
+    });
+
+    await newProduct.save();
+    res.json({
+      success: true,
+      message: "Product added successfully!",
+      data: newProduct,
+    });
+  } catch (err) {
+    console.error("Error adding product:", err);
+    res
+      .status(500)
+      .json({ success: false, message: "Server error adding product" });
+  }
+});
+
 app.get("/api/products", async (req, res) => {
   try {
     const products = await Product.find();

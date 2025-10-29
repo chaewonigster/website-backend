@@ -399,7 +399,7 @@ async function handleProductSubmit(e) {
   try {
     const endpoint = id
       ? `${BASE_API_URL}/admin/products/${id}`
-      : `${BASE_API_URL}/admin/products`;
+      : `${BASE_API_URL}/api/products`;
     const res = await fetch(endpoint, {
       method: id ? "PUT" : "POST",
       headers: { "Content-Type": "application/json" },
