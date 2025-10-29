@@ -116,10 +116,6 @@
             font-weight: bold;
             color: white;
         }
-        .nav-links {
-            display: flex;
-            gap: 30px;
-        }
         .nav-links a, .nav-icons a {
             color: white;
             text-decoration: none;
@@ -258,6 +254,7 @@ button:active {
             left: 0;
             width: 100%;
             display: flex;
+            flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
             padding: 15px 50px;
@@ -267,12 +264,18 @@ button:active {
         .nav-brand {
             font-size: 24px;
             font-weight: bold;
+              flex: 1 1 100%;
+  text-align: center;
             color: white;
         }
-        .nav-links {
-            display: flex;
-            gap: 30px;
-        }
+.nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+  width: 100%;
+}
         .nav-links a {
             color: white;
             text-decoration: none;
@@ -648,15 +651,27 @@ button:active {
 
 /* Responsive text sizes */
 @media (max-width: 768px) {
-  h1 { font-size: 1.8rem; }
-  h2 { font-size: 1.4rem; }
-  p, a, button { font-size: 0.95rem; }
+  .nav-links a {
+    font-size: 14px;
+  }
+
+  .hero-content h1 {
+    font-size: 1.8rem;
+  }
+
+  .hero-content p {
+    font-size: 0.9rem;
+  }
 }
 
-/* Adjust padding/margins for small screens */
+/* On phones, stack brand + links + login button neatly */
 @media (max-width: 480px) {
-  section, .container, .footer {
-    padding: 1rem;
+  nav {
+    flex-direction: column;
+  }
+
+  .nav-icons {
+    margin-top: 10px;
   }
 }
 
