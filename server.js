@@ -86,6 +86,22 @@ const orderSchema = new mongoose.Schema({
 
 const Order = mongoose.model("Order", orderSchema);
 
+const productSchema = new mongoose.Schema({
+  name: String,
+  stock: { type: Number, default: 0 },
+  reorderLevel: { type: Number, default: 10 },
+  status: { type: String, default: "In Stock" },
+});
+
+// ✅ Settings Model (auto-creates the "settings" collection when used)
+const settingsSchema = new mongoose.Schema({
+  storeName: { type: String, default: "Frozen Goods Store" },
+  storeEmail: { type: String, default: "frozen@example.com" },
+  currency: { type: String, default: "PHP (₱)" },
+});
+
+const Settings = mongoose.model("Settings", settingsSchema);
+
 app.post("/api/order", async (req, res) => {
   try {
     console.log("Received order data:", req.body);
@@ -407,6 +423,99 @@ app.post("/api/facebook-login", async (req, res) => {
   }
 });
 
+// ✅ Get single product by ID
+app.get("/api/products/:id", async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ error: "Product not found" });
+    res.json(product);
+  } catch (err) {
+    console.error("Error fetching product:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// ✅ Update existing product
+app.put("/api/products/:id", async (req, res) => {
+  try {
+    const { name, stock, reorderLevel, price, status } = req.body;
+
+    const product = await Product.findByIdAndUpdate(
+      req.params.id,
+      { name, stock, reorderLevel, price, status },
+      { new: true }
+    );
+
+    if (!product) return res.status(404).json({ error: "Product not found" });
+    res.json(product);
+  } catch (err) {
+    console.error("Error updating product:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+app.put("/api/products/:id", async (req, res) => {
+  try {
+    const { name, stock, reorderLevel, price, status } = req.body;
+
+    const product = await Product.findByIdAndUpdate(
+      req.params.id,
+      { name, stock, reorderLevel, price, status },
+      { new: true }
+    );
+
+    if (!product) return res.status(404).json({ error: "Product not found" });
+    res.json(product);
+  } catch (err) {
+    console.error("Error updating product:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// ✅ Get settings
+app.get("/api/settings", async (req, res) => {
+  try {
+    let settings = await Settings.findOne();
+    // If none exists, create default automatically
+    if (!settings) {
+      settings = await Settings.create({
+        storeName: "Frozen Goods Store",
+        storeEmail: "frozen@example.com",
+        currency: "PHP (₱)",
+      });
+    }
+    res.json(settings);
+  } catch (err) {
+    console.error("Error fetching settings:", err);
+    res.status(500).json({ error: "Server error fetching settings" });
+  }
+});
+
+// ✅ Update settings
+app.put("/api/settings", async (req, res) => {
+  try {
+    const { storeName, storeEmail, currency } = req.body;
+    const updated = await Settings.findOneAndUpdate(
+      {},
+      { storeName, storeEmail, currency },
+      { new: true, upsert: true }
+    );
+    res.json(updated);
+  } catch (err) {
+    console.error("Error saving settings:", err);
+    res.status(500).json({ error: "Server error saving settings" });
+  }
+});
+
+app.put("/api/settings", async (req, res) => {
+  const { storeName, storeEmail, currency } = req.body;
+  const updated = await Settings.findOneAndUpdate(
+    {},
+    { storeName, storeEmail, currency },
+    { new: true, upsert: true }
+  );
+  res.json(updated);
+});
 app.post("/admin/login", async (req, res) => {
   const { email, password } = req.body;
 

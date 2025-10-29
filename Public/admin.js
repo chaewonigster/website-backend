@@ -107,42 +107,120 @@ async function checkAdminSession() {
 }
 async function updateDashboardStats() {
   try {
-    const res = await fetch(`${BASE_API_URL}/api/orders`, {
+    // Fetch orders
+    const ordersRes = await fetch(`${BASE_API_URL}/api/orders`, {
       credentials: "include",
     });
-    const payload = await res.json();
-
-    const orders = Array.isArray(payload)
-      ? payload
-      : Array.isArray(payload.data)
-      ? payload.data
+    const ordersPayload = await ordersRes.json();
+    const orders = Array.isArray(ordersPayload)
+      ? ordersPayload
+      : Array.isArray(ordersPayload.data)
+      ? ordersPayload.data
       : [];
 
-    if (!orders.length) return;
+    // Fetch products
+    const productsRes = await fetch(`${BASE_API_URL}/api/products`, {
+      credentials: "include",
+    });
+    const productsPayload = await productsRes.json();
+    const products = Array.isArray(productsPayload)
+      ? productsPayload
+      : Array.isArray(productsPayload.data)
+      ? productsPayload.data
+      : [];
 
-    const now = new Date();
-    const last24h = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-
-    // 🧾 Total revenue (all orders)
+    // ---- CALCULATE STATS ----
     const totalRevenue = orders.reduce((sum, order) => {
       const total = (order.price ?? 0) * (order.quantity ?? 1);
       return sum + total;
     }, 0);
 
-    // 📦 Orders in last 24 hours
+    const now = new Date();
+    const last24h = new Date(now.getTime() - 24 * 60 * 60 * 1000);
     const ordersToday = orders.filter(
       (order) => new Date(order.timestamp) >= last24h
     ).length;
 
-    // 💰 Update the dashboard
-    document.querySelector(
-      ".stat-card:nth-child(1) .stat-value"
-    ).textContent = `₱${totalRevenue.toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-    })}`;
+    const totalProducts = products.length;
 
-    document.querySelector(".stat-card:nth-child(2) .stat-value").textContent =
-      ordersToday;
+    // 🔸 Determine low-stock items + update product status
+    let lowStockItems = 0;
+    for (const product of products) {
+      const stock = Number(product.stock ?? 0);
+      const reorderLevel = Number(product.reorderLevel ?? 200);
+
+      if (stock <= 0) {
+        product.status = "Out of Stock";
+        lowStockItems++;
+      } else if (stock <= reorderLevel) {
+        product.status = "Low Stock";
+        lowStockItems++;
+      } else {
+        product.status = "In Stock";
+      }
+
+      // 🔹 (Optional) Update product status in backend if you want to save it
+      // await fetch(`${BASE_API_URL}/api/products/${product._id}`, {
+      //   method: "PUT",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({ status: product.status }),
+      //   credentials: "include",
+      // });
+    }
+
+    // ---- UPDATE DASHBOARD UI ----
+    const cards = document.querySelectorAll(".stat-card");
+    if (cards.length >= 4) {
+      // total revenue
+      cards[0].querySelector(
+        ".stat-value"
+      ).textContent = `₱${totalRevenue.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+      })}`;
+
+      // orders today
+      cards[1].querySelector(".stat-value").textContent = ordersToday;
+
+      // total products
+      cards[2].querySelector(".stat-value").textContent = totalProducts;
+
+      // low stock items
+      const lowStockEl = cards[3].querySelector(".stat-value");
+      lowStockEl.textContent = lowStockItems;
+
+      const lowStockNote = cards[3].querySelector(".stat-note");
+      if (lowStockNote) {
+        if (lowStockItems > 0) {
+          lowStockNote.textContent = "↓ Needs attention";
+          lowStockNote.style.color = "red";
+        } else {
+          lowStockNote.textContent = "All good";
+          lowStockNote.style.color = "green";
+        }
+      }
+    }
+
+    // ---- OPTIONAL: Update Product Table ----
+    const productTable = document.querySelector("#productTable tbody");
+    if (productTable) {
+      productTable.innerHTML = "";
+      products.forEach((p) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${p.name}</td>
+          <td>${p.stock}</td>
+          <td>${p.reorderLevel ?? 200}</td>
+          <td style="color: ${
+            p.status === "Out of Stock"
+              ? "red"
+              : p.status === "Low Stock"
+              ? "orange"
+              : "green"
+          };">${p.status}</td>
+        `;
+        productTable.appendChild(row);
+      });
+    }
   } catch (err) {
     console.error("Error updating dashboard stats:", err);
   }
@@ -649,7 +727,7 @@ async function loadInventory() {
 
     tbody.innerHTML = "";
     products.forEach((p) => {
-      const reorderLevel = p.reorderLevel ?? 10;
+      const reorderLevel = p.reorderLevel ?? 200;
       const statusClass =
         p.stock === 0
           ? "status-inactive"
@@ -766,75 +844,82 @@ function removeInventoryEditModal() {
  * - Merge new stock/reorderLevel into product object
  * - PUT to /admin/products/:id (same endpoint used by product form)
  */
-async function saveInventoryChanges(id) {
-  const stockEl = document.getElementById("editStockQty");
-  const reorderEl = document.getElementById("editReorderLevel");
-  if (!stockEl || !reorderEl) return alert("Inputs not found.");
-
-  const stock = parseInt(stockEl.value, 10);
-  const reorderLevel = parseInt(reorderEl.value, 10);
-
-  if (isNaN(stock) || isNaN(reorderLevel)) {
-    return alert("Please enter valid numeric values.");
-  }
-
+async function saveInventoryChanges(productId) {
   try {
-    // Try to fetch the current product first (so we don't accidentally overwrite other fields)
-    let product = null;
-    try {
-      const getRes = await fetch(`${BASE_API_URL}/api/products/${id}`, {
-        credentials: "include",
-      });
-      const getPayload = await getRes.json();
-      // backend may return product directly or under .data
-      product =
-        getPayload && getPayload.data ? getPayload.data : getPayload || null;
-    } catch (err) {
-      // not fatal — we will still attempt to send minimal payload
-      console.warn("Could not fetch existing product (continuing):", err);
-    }
+    // ✅ Collect updated values
+    const stock = parseInt(document.querySelector("#editStockQty").value) || 0;
+    const reorderLevel =
+      parseInt(document.querySelector("#editReorderLevel").value) || 0;
+    const price = parseFloat(document.querySelector("#editPrice").value) || 0;
 
-    // Build payload: prefer to preserve existing product fields if we have them
-    const payload = product
-      ? { ...product, stock, reorderLevel, price }
-      : { stock, reorderLevel, price };
+    // ✅ Use existing product name instead of trying to read a missing field
+    const name =
+      document
+        .querySelector("#inventoryEditModal p strong")
+        ?.textContent.trim() || "";
 
-    // send update to admin endpoint (same endpoint product editor uses)
-    const res = await fetch(`${BASE_API_URL}/admin/products/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(payload),
+    console.log("🟢 Saving changes for product:", {
+      productId,
+      name,
+      stock,
+      reorderLevel,
+      price,
     });
 
-    // attempt to parse JSON safely
-    let data = {};
+    // ✅ Compute status automatically
+    let status = "In Stock";
+    if (stock <= 0) status = "Out of Stock";
+    else if (stock <= reorderLevel) status = "Low Stock";
+
+    const updatedData = { name, stock, reorderLevel, price, status };
+    console.log(
+      "🟡 Sending PUT to:",
+      `${BASE_API_URL}/api/products/${productId}`
+    );
+    console.log("🟡 Payload:", updatedData);
+
+    // ✅ PUT request
+    const updateRes = await fetch(
+      `${BASE_API_URL}/admin/products/${productId}`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(updatedData),
+      }
+    );
+
+    console.log("🟢 Response status:", updateRes.status);
+
+    const text = await updateRes.text();
+    console.log("🟣 Raw backend response:", text);
+
+    if (!updateRes.ok) throw new Error(`Backend returned ${updateRes.status}`);
+
+    let data;
     try {
-      data = await res.json();
-    } catch (err) {
-      console.warn("Non-JSON response from update:", err);
+      data = JSON.parse(text);
+    } catch {
+      console.warn("⚠️ Could not parse JSON, using raw text:", text);
+      data = text;
     }
 
-    // handle a common set of success shapes
-    const success =
-      (typeof data.success !== "undefined" && data.success) ||
-      (res.ok && (data || Object.keys(data).length > 0));
-
-    if (success) {
-      alert("✅ Inventory updated successfully!");
-      removeInventoryEditModal();
-      // refresh the UI
-      if (typeof loadInventory === "function") loadInventory();
-      if (typeof loadProducts === "function") loadProducts();
-    } else {
-      console.warn("Update failed response:", res.status, data);
-      // show backend message if available
-      const msg = data && (data.message || data.error || data.msg);
-      alert("❌ Failed to update inventory." + (msg ? " — " + msg : ""));
-    }
+    console.log("✅ Product updated successfully:", data);
+    alert("Product saved!");
+    removeInventoryEditModal();
+    await updateDashboardStats(); // Refresh stats
   } catch (err) {
-    console.error("Error saving inventory changes:", err);
-    alert("❌ Error saving changes (see console).");
+    console.error("❌ Error saving inventory changes:", err);
+
+    if (err instanceof Response) {
+      console.log("⚠️ Response error:", await err.text());
+    }
+
+    alert(
+      `Failed to save changes.\n\n${
+        err?.message || "Check console for details."
+      }`
+    );
   }
 }
 
@@ -859,3 +944,62 @@ function openEditProduct(id, name, category, price, stock) {
   document.getElementById("productModalTitle").textContent = "Edit Product";
   openProductModal();
 }
+
+// =========================
+// SETTINGS SECTION LOGIC
+// =========================
+
+// 🔹 Automatically fill in store settings from backend
+async function loadSettings() {
+  try {
+    const res = await fetch(`${BASE_API_URL}/api/settings`);
+    if (!res.ok) throw new Error("Failed to fetch settings");
+
+    const data = await res.json();
+    console.log("Loaded settings:", data);
+
+    document.querySelector("#settings input[type='text']").value =
+      data.storeName || "";
+    document.querySelector("#settings input[type='email']").value =
+      data.storeEmail || "";
+    document.querySelector("#settings select").value =
+      data.currency || "PHP (₱)";
+  } catch (err) {
+    console.warn("⚠️ Could not load settings:", err.message);
+  }
+}
+
+// 🔹 Handle Save button click
+document
+  .querySelector("#settings form")
+  .addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const storeName = document
+      .querySelector("#settings input[type='text']")
+      .value.trim();
+    const storeEmail = document
+      .querySelector("#settings input[type='email']")
+      .value.trim();
+    const currency = document.querySelector("#settings select").value;
+
+    try {
+      const res = await fetch(`${BASE_API_URL}/api/settings`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ storeName, storeEmail, currency }),
+      });
+
+      if (!res.ok) throw new Error(`Backend returned ${res.status}`);
+
+      alert("✅ Settings saved successfully!");
+    } catch (err) {
+      console.error("❌ Error saving settings:", err);
+      alert("Failed to save settings. Please try again.");
+    }
+  });
+
+// ✅ Load settings automatically when user opens the section
+document
+  .querySelector("[onclick=\"showSection('settings')\"]")
+  .addEventListener("click", loadSettings);
