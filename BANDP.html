@@ -328,6 +328,28 @@
       // --- Detect login status ---
       const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
 
+      const BASE_API_URL = "https://website-backend-1-w1qd.onrender.com";
+
+      document.getElementById("backButton").addEventListener("click", (e) => {
+        e.preventDefault();
+
+        fetch(`${BASE_API_URL}/status`, {
+          credentials: "include",
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.loggedIn) {
+              window.location.href = "LOGIN_USER.html";
+            } else {
+              window.location.href = "index.html";
+            }
+          })
+          .catch((err) => {
+            console.error("Error checking login status:", err);
+            window.location.href = "index.html";
+          });
+      });
+
       // --- Handle back button ---
       document.getElementById("backButton").addEventListener("click", (e) => {
         e.preventDefault();

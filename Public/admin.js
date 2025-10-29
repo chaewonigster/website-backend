@@ -1003,3 +1003,10 @@ document
 document
   .querySelector("[onclick=\"showSection('settings')\"]")
   .addEventListener("click", loadSettings);
+
+// 🟣 Logout
+document.getElementById("logoutBtn").addEventListener("click", (e) => {
+  e.preventDefault();
+  localStorage.removeItem("user");
+  window.location.href = "../index.html";
+});
