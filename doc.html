@@ -462,7 +462,7 @@
   </head>
   <body>
     <h1>Team Member Profile</h1>
-    <a href="index.html" class="top-left-button">BACK</a>
+    <a href="#" class="top-left-button" onclick="goBackProperly()">BACK</a>
 
     <div class="team-member">
       <a href="teamp.html" class="profile-link">
@@ -518,5 +518,34 @@
         </div>
       </div>
     </footer>
+    <script>
+      function goBackProperly() {
+        const rawUser = localStorage.getItem("user");
+
+        if (!rawUser) {
+          window.location.href = "index.html";
+          return;
+        }
+
+        let user;
+        try {
+          user = JSON.parse(rawUser);
+        } catch (e) {
+          console.warn("Invalid user data in localStorage:", e);
+          window.location.href = "index.html";
+          return;
+        }
+
+        const role = user.role || user.Role || (user.email ? "customer" : null);
+
+        if (role === "admin") {
+          window.location.href = "admin_dashboard.html";
+        } else if (role === "customer" || user.email) {
+          window.location.href = "LOGIN_USER.html";
+        } else {
+          window.location.href = "index.html";
+        }
+      }
+    </script>
   </body>
 </html>
