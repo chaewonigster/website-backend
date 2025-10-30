@@ -350,16 +350,6 @@
           });
       });
 
-      // --- Handle back button ---
-      document.getElementById("backButton").addEventListener("click", (e) => {
-        e.preventDefault();
-        if (isLoggedIn) {
-          window.location.href = "LOGIN_USER.html";
-        } else {
-          window.location.href = "index.html";
-        }
-      });
-
       // --- Product data ---
       const chickens = [
         {
