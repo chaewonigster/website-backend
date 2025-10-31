@@ -650,6 +650,13 @@
             <div class="card-header">
               <h2 class="card-title">Orders Management</h2>
             </div>
+            <div class="search-box">
+              <input
+                type="text"
+                placeholder="Search orders by customer name, email, phone, or order ID..."
+                onkeyup="filterOrders(this.value)"
+              />
+            </div>
 <table id="ordersTable">
   <thead>
     <tr>

@@ -1017,3 +1017,14 @@ document.getElementById("logoutBtn").addEventListener("click", (e) => {
   localStorage.removeItem("user");
   window.location.href = "../index.html";
 });
+
+function filterOrders(query) {
+  query = query.toLowerCase();
+  const rows = document.querySelectorAll("#ordersTable tbody tr");
+
+  rows.forEach((row) => {
+    const rowText = row.innerText.toLowerCase();
+    // Show the row if it includes the search query, otherwise hide it
+    row.style.display = rowText.includes(query) ? "" : "none";
+  });
+}
