@@ -480,9 +480,11 @@ async function loadOrders() {
 
       if (!grouped[key]) {
         grouped[key] = {
-          id: order._id, // ✅ Keep the first order ID
+          id: order._id,
           buyer: order.buyer,
           buyerEmail: order.buyerEmail,
+          phone: order.phone || "N/A",
+          address: order.address || "N/A",
           timestamp: date,
           items: [],
           total: 0,
@@ -521,17 +523,20 @@ async function loadOrders() {
 
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td>${group.id || "—"}</td>
-        <td>${group.buyer || "Unknown"}</td>
-        <td>${group.buyerEmail || "N/A"}</td>
-        <td>${dateStr}</td>
-        <td>${itemList}</td>
-        <td>₱${group.total.toFixed(2)}</td>
-        <td>${status}</td>
-        <td style="text-align:center;">
-          <button class="action-btn btn-primary" onclick="viewGroupedOrder(${index})">🔍 View</button>
-        </td>
-      `;
+  <td>${group.id || "—"}</td>
+  <td>${group.buyer || "Unknown"}</td>
+  <td>${group.buyerEmail || "N/A"}</td>
+  <td>${group.phone || "N/A"}</td>
+  <td>${group.address || "N/A"}</td>
+  <td>${dateStr}</td>
+  <td>${itemList}</td>
+  <td>₱${group.total.toFixed(2)}</td>
+  <td>${status}</td>
+  <td style="text-align:center;">
+    <button class="action-btn btn-primary" onclick="viewGroupedOrder(${index})">🔍 View</button>
+  </td>
+`;
+
       tbody.appendChild(tr);
     });
 
@@ -548,17 +553,19 @@ function viewGroupedOrder(index) {
   if (!order) return;
 
   const details = `
-    <p><strong>Customer:</strong> ${order.buyer}</p>
-    <p><strong>Email:</strong> ${order.buyerEmail}</p>
-    <p><strong>Date:</strong> ${new Date(order.timestamp).toLocaleString()}</p>
-    <p><strong>Items:</strong><br>${order.items
-      .map((i) => `${i.name} ×${i.quantity} — ₱${i.subtotal.toFixed(2)}`)
-      .join("<br>")}</p>
-    <p><strong>Total:</strong> ₱${order.total.toFixed(2)}</p>
-    <p><strong>Status:</strong> ${
-      order.statuses[order.statuses.length - 1] || "Order Placed"
-    }</p>
-  `;
+  <p><strong>Customer:</strong> ${order.buyer}</p>
+  <p><strong>Email:</strong> ${order.buyerEmail}</p>
+  <p><strong>Phone:</strong> ${order.phone}</p>
+  <p><strong>Address:</strong> ${order.address}</p>
+  <p><strong>Date:</strong> ${new Date(order.timestamp).toLocaleString()}</p>
+  <p><strong>Items:</strong><br>${order.items
+    .map((i) => `${i.name} ×${i.quantity} — ₱${i.subtotal.toFixed(2)}`)
+    .join("<br>")}</p>
+  <p><strong>Total:</strong> ₱${order.total.toFixed(2)}</p>
+  <p><strong>Status:</strong> ${
+    order.statuses[order.statuses.length - 1] || "Order Placed"
+  }</p>
+`;
 
   document.getElementById("orderDetails").innerHTML = details;
   openOrderModal(); // ✅ now uses proper modal open helper

@@ -34,7 +34,7 @@ app.use(
 
 // ✅ JSON body parser
 app.use(express.json());
-
+app.use(express.urlencoded({ extended: true }));
 // ✅ Static files
 app.use(express.static(path.join(__dirname, "Public")));
 app.use(express.static(__dirname));
@@ -80,7 +80,11 @@ const orderSchema = new mongoose.Schema({
   price: Number,
   quantity: Number,
   buyer: String,
-  buyerEmail: String, // 📧 added email field
+  buyerEmail: String,
+  address: String, // ✅ added
+  city: String, // ✅ added
+  zip: String, // ✅ added
+  phone: String, // ✅ added
   timestamp: { type: Date, default: Date.now },
 });
 
@@ -104,45 +108,62 @@ const Settings = mongoose.model("Settings", settingsSchema);
 
 app.post("/api/order", async (req, res) => {
   try {
-    console.log("Received order data:", req.body);
-    const { product, price, quantity, buyerEmail } = req.body;
+    console.log("🧾 Received order data:", req.body);
 
+    const {
+      product,
+      price,
+      quantity,
+      buyer,
+      buyerEmail,
+      address,
+      city,
+      zip,
+      phone,
+    } = req.body;
+
+    // ✅ Validation
     if (!product || price === undefined || !quantity) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    // 🧠 Step 1: Find the product
+    // ✅ Check product exists
     const foundProduct = await Product.findOne({ name: product });
     if (!foundProduct) {
       return res.status(404).json({ error: "Product not found" });
     }
 
-    // 🧠 Step 2: Check stock availability
+    // ✅ Check stock
     if (foundProduct.stock < quantity) {
-      return res
-        .status(400)
-        .json({ error: "Not enough stock available for this product" });
+      return res.status(400).json({ error: "Not enough stock available" });
     }
 
-    // 🧠 Step 3: Deduct stock and save
+    // ✅ Deduct stock
     foundProduct.stock -= quantity;
     await foundProduct.save();
 
-    // 🧠 Step 4: Determine buyer name
-    let buyer = "guest";
-    if (req.session.user) {
-      const { firstname, middlename, lastname } = req.session.user;
-      buyer = `${firstname} ${middlename} ${lastname}`.trim();
-    } else if (req.body.buyer) {
-      buyer = req.body.buyer;
-    }
+    // ✅ Save order with full customer info
+    const newOrder = new Order({
+      product,
+      price,
+      quantity,
+      buyer,
+      buyerEmail,
+      address,
+      city,
+      zip,
+      phone,
+      timestamp: new Date(),
+    });
 
-    // 🧠 Step 5: Save order
-    const newOrder = new Order({ product, price, quantity, buyer, buyerEmail });
     await newOrder.save();
 
-    console.log("✅ New Order Saved:", newOrder);
-    res.json({ success: true, message: "Order placed successfully!" });
+    console.log("✅ Order saved:", newOrder);
+    res.json({
+      success: true,
+      message: "Order placed successfully!",
+      order: newOrder,
+    });
   } catch (error) {
     console.error("❌ Error placing order:", error);
     res.status(500).json({ error: "Failed to place order" });

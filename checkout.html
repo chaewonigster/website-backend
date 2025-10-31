@@ -805,10 +805,10 @@
 
         if (cart.length === 0) {
           cartItemsContainer.innerHTML = `
-        <div class="empty-cart">
-          <i class="fas fa-shopping-basket"></i>
-          <p>Your cart is empty</p>
-        </div>`;
+              <div class="empty-cart">
+                <i class="fas fa-shopping-basket"></i>
+                <p>Your cart is empty</p>
+              </div>`;
           subtotalElement.innerText = "₱0.00";
           shippingElement.innerText = "₱0.00";
           toStep2Button.disabled = true;
@@ -843,15 +843,15 @@
           total += itemTotal;
 
           const itemHTML = `
-        <div class="item-details">
-          <span class="item-name">${item.name}</span>
-          <span class="item-quantity">Qty: ${quantity}</span>
-        </div>
-        <span class="item-price">₱${itemTotal.toFixed(2)}</span>
-        <button class="delete-btn" data-index="${index}">
-          <i class="fas fa-trash"></i>
-        </button>
-      `;
+              <div class="item-details">
+                <span class="item-name">${item.name}</span>
+                <span class="item-quantity">Qty: ${quantity}</span>
+              </div>
+              <span class="item-price">₱${itemTotal.toFixed(2)}</span>
+              <button class="delete-btn" data-index="${index}">
+                <i class="fas fa-trash"></i>
+              </button>
+            `;
 
           const itemDiv = document.createElement("div");
           itemDiv.classList.add("cart-item");
@@ -954,17 +954,25 @@
           }
 
           document.getElementById("shipping-address-summary").innerHTML = `
-        <p>${firstname} ${lastname}</p>
-        <p>${address}</p>
-        <p>${city}, ${zip}</p>
-        <p>Phone: ${phone}</p>
-      `;
+              <p>${firstname} ${lastname}</p>
+              <p>${address}</p>
+              <p>${city}, ${zip}</p>
+              <p>Phone: ${phone}</p>
+            `;
           showStep(3);
         });
 
         placeOrderButton.addEventListener("click", async () => {
           const cart = JSON.parse(localStorage.getItem("cart")) || [];
           if (cart.length === 0) return alert("Your cart is empty!");
+
+          const firstname = document.getElementById("firstname").value;
+          const lastname = document.getElementById("lastname").value;
+          const email = document.getElementById("email").value;
+          const address = document.getElementById("address").value;
+          const city = document.getElementById("city").value;
+          const zip = document.getElementById("zip").value;
+          const phone = document.getElementById("phone").value;
 
           const subtotal = cart.reduce(
             (sum, item) => sum + Number(item.price) * Number(item.quantity),
@@ -979,8 +987,12 @@
             product: cart.map((item) => item.name).join(", "),
             price: total,
             quantity,
-            buyer: `${user.firstname} ${user.lastname}`.trim(),
-            buyerEmail: user.email,
+            buyer: `${firstname} ${lastname}`.trim(), // ✅ from input
+            buyerEmail: email, // ✅ from input
+            address,
+            city,
+            zip,
+            phone,
             date: new Date().toISOString(),
             status: "Order Placed",
             items: cart,
@@ -1003,8 +1015,12 @@
                     product: item.name,
                     price: item.price,
                     quantity: item.quantity,
-                    buyer: `${user.firstname} ${user.lastname}`.trim(),
-                    buyerEmail: user.email,
+                    buyer: `${firstname} ${lastname}`.trim(), // ✅ from form
+                    buyerEmail: email, // ✅ from form
+                    address,
+                    city,
+                    zip,
+                    phone,
                   }),
                 }
               );

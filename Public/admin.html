@@ -423,6 +423,106 @@
       }
 
       /* 🩵 Fix: make order rows visible */
+
+      /* 📦 NEW: Enhanced Order Details Styling */
+      .order-detail-section {
+        margin-bottom: 20px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+      }
+
+      .order-detail-section h4 {
+        color: #2c3e50;
+        margin-bottom: 10px;
+        font-size: 16px;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 5px;
+      }
+
+      .order-info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-top: 10px;
+      }
+
+      .order-info-item {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .order-info-label {
+        font-size: 12px;
+        color: #7f8c8d;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+      }
+
+      .order-info-value {
+        font-size: 14px;
+        color: #2c3e50;
+        font-weight: 500;
+      }
+
+      .address-box {
+        background: white;
+        padding: 12px;
+        border-radius: 6px;
+        border-left: 3px solid #3498db;
+      }
+
+      .items-list {
+        list-style: none;
+        padding: 0;
+      }
+
+      .items-list li {
+        padding: 10px;
+        background: white;
+        margin-bottom: 8px;
+        border-radius: 6px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .item-name {
+        font-weight: 500;
+        color: #2c3e50;
+      }
+
+      .item-details {
+        color: #7f8c8d;
+        font-size: 13px;
+      }
+
+      .payment-info {
+        background: white;
+        padding: 12px;
+        border-radius: 6px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .contact-info {
+        background: white;
+        padding: 12px;
+        border-radius: 6px;
+      }
+
+      .contact-item {
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .contact-item:last-child {
+        margin-bottom: 0;
+      }
     </style>
   </head>
 
@@ -556,6 +656,8 @@
       <th>Order ID</th>
       <th>Customer</th>
       <th>Email</th>
+      <th>Phone</th>
+      <th>Address</th>
       <th>Date</th>
       <th>Items</th>
       <th>Total</th>
@@ -714,7 +816,77 @@
       <h2>Order Details</h2>
       <span class="close-btn">&times;</span>
     </div>
-    <div id="orderDetails"></div>
+    <div id="orderDetails">
+      <!-- 📦 Enhanced order details will be populated by JavaScript -->
+      <!-- Example structure for reference:
+      <div class="order-detail-section">
+        <h4>📋 Order Information</h4>
+        <div class="order-info-grid">
+          <div class="order-info-item">
+            <span class="order-info-label">Order ID</span>
+            <span class="order-info-value">#12345</span>
+          </div>
+          <div class="order-info-item">
+            <span class="order-info-label">Date</span>
+            <span class="order-info-value">Oct 31, 2025</span>
+          </div>
+          <div class="order-info-item">
+            <span class="order-info-label">Status</span>
+            <span class="order-info-value">Pending</span>
+          </div>
+          <div class="order-info-item">
+            <span class="order-info-label">Payment Method</span>
+            <span class="order-info-value">Cash on Delivery</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="order-detail-section">
+        <h4>👤 Customer Information</h4>
+        <div class="contact-info">
+          <div class="contact-item">
+            <strong>Name:</strong> Juan Dela Cruz
+          </div>
+          <div class="contact-item">
+            <strong>Email:</strong> juan@email.com
+          </div>
+          <div class="contact-item">
+            <strong>Phone:</strong> +63 912 345 6789
+          </div>
+        </div>
+      </div>
+
+      <div class="order-detail-section">
+        <h4>📍 Delivery Address</h4>
+        <div class="address-box">
+          123 Main Street, Barangay Example<br>
+          Quezon City, Metro Manila 1100<br>
+          Philippines
+        </div>
+      </div>
+
+      <div class="order-detail-section">
+        <h4>🛒 Order Items</h4>
+        <ul class="items-list">
+          <li>
+            <div>
+              <div class="item-name">Product Name</div>
+              <div class="item-details">Qty: 2 × ₱100.00</div>
+            </div>
+            <strong>₱200.00</strong>
+          </li>
+        </ul>
+      </div>
+
+      <div class="order-detail-section">
+        <h4>💰 Payment Summary</h4>
+        <div class="payment-info">
+          <strong>Total Amount:</strong>
+          <strong style="color: #27ae60; font-size: 18px;">₱200.00</strong>
+        </div>
+      </div>
+      -->
+    </div>
   </div>
 </div>
 
